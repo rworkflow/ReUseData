@@ -1,0 +1,23 @@
+Package: ReUseData
+Title: Reproducible and ReUsable Data Resources
+Version: 0.0.1
+Authors@R: 
+    person(given = "Qiang",
+           family = "Hu",
+           role = c("aut", "cre"),
+           email = "qiang.hu@roswellpark.org",
+           comment = c(ORCID = "YOUR-ORCID-ID"))	   
+Description: A package to produce and manage data resources by the
+	     Rcwl package. It can be used to download, modify and manage genomic
+	     reference, annotation and other resource files.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
