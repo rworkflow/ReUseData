@@ -23,11 +23,3 @@ searchRecipe <- function(keywords, cachePath = "ReUseDataRecipe") {
     res <- bfcquery(bfc, query = keywords)
     res[, c("rname", "rpath")]  ## FIXME: return same format as "updateRecipe". 
 }
-
-searchData <- function(keywords) {
-    return(keywords)
-}
-
-## todo:
-## 1. should we save data into R_user_dir? or recipes only?
-## 2. should we search the meta file? where is the default location? 
