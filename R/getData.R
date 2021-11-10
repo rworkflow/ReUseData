@@ -1,9 +1,9 @@
 
-runCWLDataBatch <- function(cwl, outdir, prefix, version = "",
+getDataBatch <- function(cwl, outdir, prefix, version = "",
                             notes = "", docker = TRUE,
                             BPPARAM = SerialParam(), ...){
     res <- bplapply(1, runBatch, libs = c("Rcwl", "tools"),
-                    fun = runCWLData,
+                    fun = getData,
                     cwl = cwl,
                     outdir = outdir,
                     prefix = prefix,
@@ -36,7 +36,7 @@ runCWLDataBatch <- function(cwl, outdir, prefix, version = "",
 #' @export
 #' @example
 #' 
-runCWLData <- function(cwl, outdir, prefix, version = "", notes = "", docker = TRUE, ...){
+getData <- function(cwl, outdir, prefix, version = "", notes = "", docker = TRUE, ...){
     if(docker == "singularity"){
         reqclass <- unlist(lapply(requirements(cwl), function(x)x$class))
         idx <- match("DockerRequirement", reqclass)
