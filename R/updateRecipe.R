@@ -17,47 +17,14 @@
 #' tools <- UpdateRecipe()
 #' }
 
-updateData <- function(cachePath = "ReUseData", force = FALSE) {
-
-    browser()
-    ## find/create the cache path, and create a BFC object.
-    bfcpath <- Sys.getenv("cachePath")  ## FIXME: create the system env for "cachePath"
-    if(bfcpath != ""){
-        cachePath <- file.path(bfcpath, "ReUseData")
-    }else{
-        if(!file.exists(cachePath) & !grepl("^/", cachePath)){
-            cachePath <- R_user_dir(cachePath, which = "cache")
-        }
-    }
-    bfc <- BiocFileCache(cachePath, ask = FALSE)
-
-    ## if "force=TRUE", remove local dataset??
-    if(force){
-        message("Warning: existing caches will be removed")
-        bfcremove(bfc, bfcinfo(bfc)$rid)
-    }
-
-    ## generate the meta_data.csv file.
-    meta.data <- meta_data(dir = cachePath, outdir = tempdir())
-    
-    
-
-}
-
 loadRecipe <- function(rcpname) {
     rcppath <- searchRecipe(rcpname)$rpath
     source(rcppath)
     return(eval(parse(text = rcpname)))  ## FIXME: return the object to R env
 }
 
-updateRecipe <- function(cachePath = "ReUseDataRecipe", force = FALSE, branch = NULL){
+updateRecipe <- function(cachePath = "ReUseDataRecipe", force = FALSE){
     ## browser()
-    if(is.null(branch) & grepl("alpha|unstable", version$status)){
-        branch <- "dev"
-    }else if(is.null(branch)){
-        branch <- "master"
-    }
-
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -77,12 +44,11 @@ updateRecipe <- function(cachePath = "ReUseDataRecipe", force = FALSE, branch = 
     }
     
     message("Update recipes...")
-    dlpath <- file.path(cachePath, paste0(branch, ".zip"))
-    download.file(paste0("https://github.com/rworkflow/ReUseDataRecipe/archive/refs/heads/",
-                         branch, ".zip"),
+    dlpath <- file.path(cachePath, "master.zip")
+    download.file("https://github.com/rworkflow/ReUseDataRecipe/archive/refs/heads/master.zip",
                   dlpath)
     unzip(dlpath, exdir = cachePath)
-    fpath <- list.files(file.path(cachePath, paste0("ReUseDataRecipe-", branch)),
+    fpath <- list.files(file.path(cachePath, "ReUseDataRecipe-master"),
                         full.names = TRUE)
 
     ## add any non-cached recipes to local cache
@@ -95,10 +61,11 @@ updateRecipe <- function(cachePath = "ReUseDataRecipe", force = FALSE, branch = 
                 add1 <- bfcadd(bfc, rnames[i], fpath = fpath[i],
                                rtype = "local", action = "asis")
                 message(basename(add1), " added")
-            }
+            }            
         }
     }
-    return(bfcinfo(bfc)) ## FIXME: use a new class "dataHub"? to print the recipe names, etc. 
+    return(bfcinfo(bfc)[, c("rname", "fpath")])
+    ## FIXME: use a new class "dataHub"? to print the recipe names, etc. 
     ## return(cwlHub(bfc))
 }
 
