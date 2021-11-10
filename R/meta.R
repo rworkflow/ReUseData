@@ -35,13 +35,13 @@ meta_data <- function(dir = "", outdir = dir) {
         out <- rbind(out, c(params, val))
         colnames(out) <- c("params", keys)
     }
-
+    
     ## write csv file
-    outdir <- file.path(outdir, "meta_data.csv")
-    write.csv(out, file = outdir)
-    return(out)
-    cat(paste0("The meta file for available data is generated at: ",
-               "\n", normalizePath(outdir), "\n"))
+    ## outdir <- file.path(outdir, "meta_data.csv")
+    ## write.csv(out, file = outdir)
+    return(data.frame(out))
+    ## cat(paste0("The meta file for available data is generated at: ",
+    ##            "\n", normalizePath(outdir), "\n"))
 }
 
 ## generate a csv file for all available recipes on the GitHub repository.
