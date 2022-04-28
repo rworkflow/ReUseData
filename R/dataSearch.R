@@ -2,13 +2,15 @@
 #'
 #' @param keywords keywords
 #' @param cachePath ReUseData by default
-#' @return return a DataHub object to be defined?
+#' @return a `dataHub` object containing the information about local
+#'     data cache, e.g., data name, data path, etc.
 #' @examples
-#' searchRecipe("gencode")
+#' dataSearch(c("gencode", "human", "38"))
 #' @export
 #' 
-searchRecipe <- function(keywords, cachePath = "ReUseDataRecipe") {
+dataSearch <- function(keywords, cachePath = "ReUseData") {
 
+    ## browser()
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -20,6 +22,7 @@ searchRecipe <- function(keywords, cachePath = "ReUseDataRecipe") {
     }
     bfc <- BiocFileCache(cachePath, ask = FALSE)
 
-    res <- bfcquery(bfc, query = keywords)
-    res[, c("rname", "rpath")]  ## FIXME: return same format as "updateRecipe". 
+    res <- bfcquery(bfc, query = keywords,
+                    field = c("rname", "fpath", "params", "Notes", "Version", "Date"))
+    dataHub(bfc[res$rid])
 }

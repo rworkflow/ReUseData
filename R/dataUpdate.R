@@ -1,11 +1,15 @@
 #' update the data records by reading the .yml files using BiocFileCache
 #'
-#' @param dir data path
-#' @param cachePath the cache path for recording all available datasets
-#' @example
-#' updatedata(dir = "~/workspace/SharedData")
+#' @param dir a character string for the path to save the data.
+#' @param cachePath the cache path for recording all available
+#'     datasets. Default is "ReUseData".
+#' @return a `dataHub` object containing the information about local
+#'     data cache, e.g., data name, data path, etc.
+#' @examples
+#' dataUpdate(dir = "~/workspace/SharedData")
+#' @export
 #' 
-updateData <- function(dir, cachePath = "ReUseData") {
+dataUpdate <- function(dir, cachePath = "ReUseData") {
     ## browser()
     
     ## find/create the cache path, and create a BFC object.
@@ -37,9 +41,8 @@ updateData <- function(dir, cachePath = "ReUseData") {
             message(basename(add1), " added")
         }
         bm <- data.frame(rid = bfcrid(bfc),
-                         meta[, c("params", "Notes", "Version", "Date")])
+                         meta[, c("params", "notes", "version", "date")])
         bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- bm
     }
-    return(bfcinfo(bfc)[, c("rname", "fpath")]) ## FIXME: use a new class "dataHub"? to print the recipe names, etc. 
-    ## return(cwlHub(bfc))
+    return(dataHub(bfc))
 }

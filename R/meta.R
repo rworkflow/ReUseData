@@ -23,7 +23,7 @@ meta_data <- function(dir = "", outdir = dir) {
         params <- paste(params, collapse = "; ")
 
         ## read standard output from YAML
-        keys <- c("Output", "Notes", "Version", "Date")
+        keys <- c("output", "notes", "version", "date")
         val <- c()
         for (key in keys) {
             keyfull <- paste0("# ", key, ": ")

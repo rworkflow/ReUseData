@@ -52,10 +52,10 @@ getData <- function(cwl, outdir, prefix, version = "", notes = "", docker = TRUE
                   docker = docker, ...)
     yfile <- file.path(outdir, paste0(prefix, ".yml"))
     notes <- paste(notes, collapse = " ")
-    apd <- c(paste("# Output:", res$output),
-             paste("# Notes:", notes),
-             paste("# Version:", version),
-             paste("# Date:", Sys.Date()))
+    apd <- c(paste("# output:", res$output),
+             paste("# notes:", notes),
+             paste("# version:", version),
+             paste("# date:", Sys.Date()))
     write(apd, yfile, append = TRUE)
     lapply(requirements(cwl), function(x){
         if(x$class == "InitialWorkDirRequirement" &&

@@ -1,4 +1,4 @@
-#' updateRecipe
+#' recipeUpdate
 #'
 #' Function to sync and get the most updated data recipes from the
 #' "rworkflows/ReUseDataRecipes" GitHub repository. 
@@ -18,12 +18,12 @@
 #' }
 
 loadRecipe <- function(rcpname) {
-    rcppath <- searchRecipe(rcpname)$rpath
+    rcppath <- recipeSearch(rcpname)$rpath
     source(rcppath)
     return(eval(parse(text = rcpname)))  ## FIXME: return the object to R env
 }
 
-updateRecipe <- function(cachePath = "ReUseDataRecipe", force = FALSE){
+recipeUpdate <- function(cachePath = "ReUseDataRecipe", force = FALSE){
     ## browser()
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
