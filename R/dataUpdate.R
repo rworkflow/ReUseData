@@ -10,8 +10,7 @@
 #' @export
 #' 
 dataUpdate <- function(dir, cachePath = "ReUseData") {
-    ## browser()
-    
+    ## browser()    
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")  ## FIXME: create the system env for "cachePath"
     if(bfcpath != ""){
@@ -27,7 +26,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData") {
     meta <- meta_data(dir = dir, outdir = dir)
 
     message("Updating data record...")
-    fpath <- meta$Output
+    fpath <- meta$output
     
     ## add any non-cached recipes to local cache
     if(length(fpath) > 0){

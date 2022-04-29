@@ -23,6 +23,6 @@ dataSearch <- function(keywords, cachePath = "ReUseData") {
     bfc <- BiocFileCache(cachePath, ask = FALSE)
 
     res <- bfcquery(bfc, query = keywords,
-                    field = c("rname", "fpath", "params", "Notes", "Version", "Date"))
+                    field = c("rname", "fpath", "params", "notes", "version", "date"))
     dataHub(bfc[res$rid])
 }
