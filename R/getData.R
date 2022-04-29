@@ -14,6 +14,8 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
     return(res[[1]])
 } 
 
+#' getData: Generate the curated dataset from an provided data recipe.
+#' 
 #' @param cwl the `cwlProcess` object from `searchData()` or
 #'     `loadData()`.
 #' @param outdir The directory to store the outputs. Will
@@ -32,10 +34,11 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #'     values for the `cwlProcess` object, and some user added notes,
 #'     versions etc. `.sh`: The script for data downloading and
 #'     curation.  `.md`: ... (to-be-filled)
+#' @importFrom Rcwl runCWL
 #' @importFrom tools md5sum
 #' @export
-#' @example
-#' 
+## #' @examples
+
 getData <- function(cwl, outdir, prefix, version = "", notes = "", docker = TRUE, ...){
     if(docker == "singularity"){
         reqclass <- unlist(lapply(requirements(cwl), function(x)x$class))

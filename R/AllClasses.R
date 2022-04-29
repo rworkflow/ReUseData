@@ -1,12 +1,19 @@
+#' dataHub
+#'
+#' `dataHub` class, constructor, and methods. 
+#' @rdname dataHub-class 
+#' @exportClass dataHub
+#' 
 dataHub <- setClass("dataHub", contains = "cwlHub", slots = c(path = "character", params="character"))
 
-#' The `dataHub` constructor for `BiocFileCache` object.
+#' @rdname dataHub-class
 #' @param BFC A BiocFileCache object created for data and recipes.
-#' @importFrom S4Vectors DataFrame
+#' @return dataHub: a `dataHub` object.
+#' @importClassesFrom RcwlPipelines cwlHub
 #' @export
-
+#' 
 dataHub <- function(BFC){
-    cwlh <- cwlHub(BFC)
+    cwlh <- RcwlPipelines:::cwlHub(BFC)
     path <- bfcinfo(BFC)$fpath
     params <- bfcmeta(BFC, "dataMeta")$params  ## FIXME: don't really need to include "params" or "path"... 
     new("dataHub", cwlh, path = path, params = params)
@@ -17,7 +24,11 @@ dataHub <- function(BFC){
 ## 'title()' inherited to return the 'rname' column in mcols(cwlHub).
 ## '[' inherited to return the subset of cwlHub with cwlHub["BFCid"]. 
 
-## show method
+#' @rdname dataHub-class
+#' @param x A `dataHub` object
+#' @importFrom S4Vectors mcols get_showHeadLines get_showTailLines
+#' @importMethodsFrom RcwlPipelines mcols
+#' @exportMethod show
 
 setMethod("show", "dataHub", function(object){
     rid <- object@rid
@@ -56,18 +67,16 @@ setMethod("show", "dataHub", function(object){
     }
 })
 
-#' params
-#'
-#' @rdname dataHub-methods
+#' @rdname dataHub-class
+#' @return dataParams: the "parameter" values for the `dataHub` object.
 #' @export
-params <- function(object){
+dataParams <- function(object){
     mcols(object)$params
 }
 
-#' notes
-#'
-#' @rdname dataHub-methods
+#' @rdname dataHub-class
+#' @return dataNotes: the "notes" for the `dataHub` object.
 #' @export
-notes <- function(object){
-    mcols(object)$Notes
+dataNotes <- function(object){
+    mcols(object)$notes
 }

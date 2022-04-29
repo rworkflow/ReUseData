@@ -10,18 +10,13 @@
 #'     branch.
 #' @importFrom tools R_user_dir
 #' @import BiocFileCache
+#' @import Rcwl
 #' @import utils
 #' @export
 #' @examples
 #' \dontrun{
 #' tools <- UpdateRecipe()
 #' }
-
-loadRecipe <- function(rcpname) {
-    rcppath <- recipeSearch(rcpname)$rpath
-    source(rcppath)
-    return(eval(parse(text = rcpname)))  ## FIXME: return the object to R env
-}
 
 recipeUpdate <- function(cachePath = "ReUseDataRecipe", force = FALSE){
     ## browser()
