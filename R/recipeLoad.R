@@ -1,4 +1,5 @@
-## This script is modified from "RcwlPipelines::cwlLoad", but the "
+## This script is modified from "RcwlPipelines::cwlLoad". 
+## FIXME update "cachePath", with support of github repo "rworkflows/ReUseDataRecipes". 
 ## FIXME: update ".load_rcp" when multiple "cwlProcess" objects matched. 
 ## FIXME: update ".load_rcp_URL" when supporting url as input for recipeLoad().
 ## FIXME: update ".load_rcp_git" when supporting git repo as input for recipeLoad().

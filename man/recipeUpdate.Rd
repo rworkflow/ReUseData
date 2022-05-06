@@ -4,21 +4,28 @@
 \alias{recipeUpdate}
 \title{recipeUpdate}
 \usage{
-recipeUpdate(cachePath = "ReUseDataRecipe", force = FALSE)
+recipeUpdate(
+  cachePath = "ReUseDataRecipe",
+  force = FALSE,
+  repo = "rworkflow/ReUseDataRecipe"
+)
 }
 \arguments{
 \item{cachePath}{The cache path of the BiocFileCache object to
 store the ReUseData recipes.}
 
-\item{force}{Whether to clean existing recipes cache.}
+\item{force}{Whether to clean existing recipes cache. Default is
+FALSE.}
 
-\item{branch}{The branch of github recipes repository. It can be
-"master" and "dev". "force = TRUE" is recommended when swithing
-branch.}
+\item{repo}{The GitHub repository for data recipes. By default, it
+reads the "rworkflows/ReUseDataRecipes" GitHub
+repository. Users can also specify a GitHub repo for their
+private data recipes.}
 }
 \description{
-Function to sync and get the most updated data recipes from the
-"rworkflows/ReUseDataRecipes" GitHub repository.
+Function to sync and get the most updated data recipes through the
+pubic "rworkflows/ReUseDataRecipes" GitHub repository or user
+specified private GitHub repo.
 }
 \examples{
 \dontrun{

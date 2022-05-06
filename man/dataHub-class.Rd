@@ -5,6 +5,7 @@
 \alias{show,dataHub-method}
 \alias{dataParams}
 \alias{dataNotes}
+\alias{dataPath}
 \title{dataHub}
 \usage{
 dataHub(BFC)
@@ -16,6 +17,8 @@ dataHub(BFC)
 dataParams(object)
 
 dataNotes(object)
+
+dataPath(object)
 }
 \arguments{
 \item{BFC}{A BiocFileCache object created for data and recipes.}
@@ -28,6 +31,8 @@ dataHub: a \code{dataHub} object.
 dataParams: the "parameter" values for the \code{dataHub} object.
 
 dataNotes: the "notes" for the \code{dataHub} object.
+
+dataPath: the file path to the \code{dataHub} object.
 }
 \description{
 \code{dataHub} class, constructor, and methods.

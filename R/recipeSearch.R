@@ -1,10 +1,11 @@
-#' search recipes on GitHub repository
+#' search existing data recipes.
 #'
-#' @param keywords keywords
-#' @param cachePath ReUseData by default
-#' @return return a DataHub object to be defined?
+#' @param keywords character vector of keywords to be matched to the recipe names.
+#' @param cachePath A character string for the recipe caching path. "ReUseDataRecipe" by default.
+#' @return return a recipeHub object.
 #' @examples
 #' recipeSearch("gencode")
+#' recipeSearch(c("STAR", "index"))
 #' @export
 #' 
 recipeSearch <- function(keywords, cachePath = "ReUseDataRecipe") {
@@ -21,5 +22,5 @@ recipeSearch <- function(keywords, cachePath = "ReUseDataRecipe") {
     bfc <- BiocFileCache(cachePath, ask = FALSE)
 
     res <- bfcquery(bfc, query = keywords)
-    res[, c("rname", "rpath")]  ## FIXME: return same format as "updateRecipe". 
+    recipeHub(bfc[res$rid])
 }

@@ -1,7 +1,7 @@
 cwlVersion: v1.2
 class: CommandLineTool
 baseCommand:
-- bash
+- sh
 - script.sh
 requirements:
 - class: InitialWorkDirRequirement
