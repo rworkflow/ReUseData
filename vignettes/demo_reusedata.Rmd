@@ -1,3 +1,12 @@
+```{r}
+recipeUpdate(cachePath = "ReUseDataRecipe-private", repo="Liubuntu/ReUseDataRecipe_private")  ## works!
+recipeSearch("gencode", cachePath="ReUseDataRecipe-private")  ## works!
+ref_genome <- recipeMake(shscript = "",
+                         paramID = c("fasta"),
+                         paramType=c("string"),
+                         tools = c("samtools", "picard", "bwa"))
+```
+
 ## example:
 step 1: [dataUpdate()], dataSearch(), return ("dataHub"? with) data path. 
 step 2: if data not exist, [recipeUpdate()], recipeSearch(), return ("dataHub"? with) filepath in local cache. 
