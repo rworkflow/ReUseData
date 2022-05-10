@@ -44,11 +44,11 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe", force = FALSE, repo = "r
 
     ## FIXME: CREATE A private github repo for private data recipes. 
     message("Update recipes...")
-    dlpath <- file.path(cachePath, "ReUseDataRecipe-master.zip")
+    dlpath <- file.path(cachePath, "recipes.zip")
     download.file(paste0("https://github.com/", repo, "/archive/refs/heads/master.zip"),
                   dlpath)
     unzip(dlpath, exdir = cachePath)
-    fpath <- list.files(file.path(cachePath, "ReUseDataRecipe-master"), full.names=TRUE)
+    fpath <- list.files(file.path(cachePath, paste0(basename(repo), "-master")), full.names=TRUE)
     ## add any non-cached recipes to local cache
     if(length(fpath) > 0){
         rnames <- sub(".R$", "", basename(fpath))
