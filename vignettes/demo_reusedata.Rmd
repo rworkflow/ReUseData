@@ -1,0 +1,101 @@
+## example:
+step 1: [dataUpdate()], dataSearch(), return ("dataHub"? with) data path. 
+step 2: if data not exist, [recipeUpdate()], recipeSearch(), return ("dataHub"? with) filepath in local cache. 
+
+
+```{R}
+devtools::load_all()
+library(Rcwl)
+```
+
+## Using data
+
+update all data records, and search data. 
+
+```{r, eval = FALSE}
+datapath <- "~/workspace/SharedData"  ## save data to a shared folder in group
+dataUpdate(dir = datapath) ## search local cache (a shared folder within the group) for all available YAML file (go with each data), return a table for all available data.  
+aa <- dataSearch(c("gencode", "human", "38")) ## return a "dataHub" object, showing data path. 
+``` 
+
+Internally, `meta_data` was run inside `data_Update`, to generate a
+summary table for all available dataset by reading the .yml files.
+
+```{r}
+metaData <- meta_data(dir = datapath)
+```
+
+## Data not exist
+
+Update data recipes from GitHub (`recipeUpdate`), search data recipes
+(`recipeSearch`), generate data (`getData`), and write to shared
+folder (needs writing permission).
+
+```{r} 
+recipeUpdate()
+recipeSearch("gencode")  ## return a "dataHub" with recipe name. (recipes are "rcwlProcess" object)
+rcp <- recipeLoad("gencode_gtf")  ## load recipe from local rworkflows/ReUseDataRecipes repo.
+
+rcp
+inputs(rcp)
+
+rcp$specie = "human"
+rcp$version = "38"
+
+res <- getData(rcp, outdir = datapath,
+               prefix = "gencode_human_38", 
+               note = c("human", "gencode", "gtf"), ## recommended!
+               showLog=TRUE,
+               docker = FALSE)
+dataSearch(c("gencode", "human", "38"))
+
+gencode_gtf$specie <- "mouse"
+gencode_gtf$version <- "M27"
+res1 <- getData(gencode_gtf, outdir = datapath,
+                prefix = "gencode_mouse_M27",
+                note = c("mouse", "gencode", "gtf"),
+                showLog = TRUE,
+                docker = FALSE)
+dataSearch(c("gencode", "mouse", "M27"))
+
+recipeSearch(c("STAR", "index"))
+rcp <- recipeLoad("STAR_index")
+
+inputs(rcp)
+rcp$ref <- ""
+rcp$gtf <- ""
+rcp$genomeDir <- "STARindex"
+rcp$threads <- 1
+rcp$sjdb <- 100
+
+getData(rcp, outdir = datapath,
+           prefix = "reference_genome_",
+           note = c("reference", "genome", "human"),
+           showLog = TRUE)
+```
+
+## Recipe not exist
+
+- make a request to administrator. OR 
+- write your own script to get data (downloading/curation, etc.),
+  referring to the available scripts:
+  https://github.com/rworkflow/ReUseDataRecipe
+
+
+## todo:
+
+1. getData, always print "Note" and "Version"? -- DONE!
+2. create a "meta_recipe.csv", searchable by recipeSearch() function.  -- REMOVE!
+3. create a "meta_data.csv", searchable by dataSearch() function.  -- DONE! 
+   - `meta_data(dir)` can be multiple paths... 
+4. "recipeUpdate()": cache existing recipes from GitHub.   -- DONE!
+5. "recipeSearch()" to search cached path of recipe. -- DONE!
+6. "recipeLoad()", run the recipe as a whole, and generate a cwlProcess object, only load the cwlProcess object into R, assign values, and generate data. -- renamed as "getData"???
+7. "dataUpdate" function: cache existing data by providing the datapath, generate a bfc in cachepath (e.g., "ReUseData") for search purpose.   -- DONE! 
+8. "dataSearch()" use keywords to search existing data in bfc. -- DONE!
+   - exact match? currently case sensitive by `bfcquery()`... 
+   
+9. create "dataHub" class, extend "cwlHub", only show some info, e.g., rid, fpath, Version, Date, etc.  -- DONE!
+10. FIXME update "recipeLoad(cachePath=)", with support of github repo "rworkflows/ReUseDataRecipes". 
+
+## Questions:
