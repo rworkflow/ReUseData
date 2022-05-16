@@ -1,17 +1,14 @@
-#' meta_data()
-#'
+#' meta_data
+#' 
 #' Functions to generate the meta csv file for local cached dataset.
-#' @param dir The path to the data folder.
-#' @param outdir The path the the output csv file.
-#' @examples
-#' meta_data("../res")
-#' @return a csv file with columns: yml file name, Output path, Notes, Version, Date, etc. 
+#' @param dir The path to the shared data folder.
+#' @return a `data.frame` with yml file name, parameter values, data
+#'     file paths, date, and user-specified notes, version when
+#'     generating the data with `getData()`. 
+#' @examples meta_data("../SharedData")
 
-## todo: "dir" use cached path? "outdir"? 
-## FIXME: multiple output files. 
-
-meta_data <- function(dir = "", outdir = dir) {
-    ymls <- list.files(dir, pattern = ".yml", full.names = TRUE)
+meta_data <- function(dir = "") {
+    ymls <- list.files(dir, pattern = ".yml", full.names = TRUE, recursive = TRUE)
     dnames <- sub(".yml$", "", basename(ymls))  ## file name.
 
     out <- c()
@@ -24,24 +21,18 @@ meta_data <- function(dir = "", outdir = dir) {
 
         ## read standard output from YAML
         keys <- c("output", "notes", "version", "date")
-        val <- c()
+        val <- data.frame(yml = ymls[i], params = params)
         for (key in keys) {
             keyfull <- paste0("# ", key, ": ")
             kval <- res[grep(keyfull, res)]
             kval <- sub(keyfull, "", kval)
             if (length(kval) == 0) kval = ""
-            val <- c(val, kval)
+            val <- data.frame(val, kval) ## multiple output files return multiple records.
         }
-        out <- rbind(out, c(params, val))
-        colnames(out) <- c("params", keys)
+        out <- rbind(out, val)
     }
-    
-    ## write csv file
-    ## outdir <- file.path(outdir, "meta_data.csv")
-    ## write.csv(out, file = outdir)
-    return(data.frame(out))
-    ## cat(paste0("The meta file for available data is generated at: ",
-    ##            "\n", normalizePath(outdir), "\n"))
+    colnames(out) <- c("yml", "params", keys)
+    out
 }
 
 ## generate a csv file for all available recipes on the GitHub repository.
@@ -51,7 +42,4 @@ meta_data <- function(dir = "", outdir = dir) {
 ##     bfc <- bfcFileCache(cachePath, ask = FALSE)
 ##     bfc
 ## }
-
-## search in the "meta_data.csv" file, and return the file path
-## ("Output" column) for the matched data.
 
