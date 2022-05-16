@@ -12,7 +12,7 @@ recipeUpdate(
 }
 \arguments{
 \item{cachePath}{The cache path of the BiocFileCache object to
-store the ReUseData recipes.}
+store the ReUseData recipes. "ReUseDataRecipe" by default.}
 
 \item{force}{Whether to clean existing recipes cache. Default is
 FALSE.}
@@ -29,6 +29,7 @@ specified private GitHub repo.
 }
 \examples{
 \dontrun{
-tools <- UpdateRecipe()
+rcps <- recipeUpdate()
+rcps
 }
 }

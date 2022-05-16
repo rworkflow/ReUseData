@@ -1,4 +1,4 @@
-```{r}
+```{r recipeUpdate_private_repo}
 recipeUpdate(cachePath = "ReUseDataRecipe-private", repo="Liubuntu/ReUseDataRecipe_private")  ## works!
 recipeSearch("gencode", cachePath="ReUseDataRecipe-private")  ## works!
 ref_genome <- recipeMake(shscript = "",
@@ -6,6 +6,69 @@ ref_genome <- recipeMake(shscript = "",
                          paramType=c("string"),
                          tools = c("samtools", "picard", "bwa"))
 ```
+
+
+## Example 1: reference genome GRCh38, Homo sapiens, MT
+```{r recipeMake_ref21} 
+script <- "
+chr=$1
+wget http://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.$chr.fa.gz
+gzip -d Homo_sapiens.GRCh38.dna.chromosome.$chr.fa.gz 
+samtools faidx Homo_sapiens.GRCh38.dna.chromosome.$chr.fa
+bwa index Homo_sapiens.GRCh38.dna.chromosome.$chr.fa
+"
+ref <- recipeMake(shscript = script,
+                  paramID = c("chr"),
+                  paramType = c("string"),
+                  outputID = "ref_genome",
+                  outputGlob = "Homo_sapiens.*",
+                  requireTools = c("samtools=1.3", "bwa")  ## name must exactly match the tool name.
+                  )
+ref$chr <- "MT"
+res <- getData(ref,
+               outdir = "../SharedData/tmp",
+               prefix = "ref_genome_MT",
+               notes = c("reference", "genome", "MT", "human"),
+               version = "v0",
+               ## docker = TRUE, ## by default: TRUE. 
+               cwlArgs = "--tmpdir-prefix tmp/")  ## a fix for my desktop, https://cwl.discourse.group/t/docker-error-invalid-mount-config-for-type-bind/598
+```
+
+## Example 2: gencode gtf file download and unzip
+
+```{r recipeMake_gencode}  
+file.copy("/home/qian/workspace/SharedData/gencode_human_38.sh", "gencode_test.sh")
+dd <- recipeMake(shscript = "gencode_test.sh", 
+                 paramID = c("species", "version"),
+                 paramType = c("string", "string"),
+                 outputID = "gencode_gtf",  ## outputType: by default, File[]
+                 outputGlob = "*.gtf"
+                 ## , requireTools = c() ## wget, gzip 
+                 )  
+inputs(dd)
+dd$species <- "human"
+dd$version <- "38"
+getData(dd,
+        outdir = "../SharedData/tmp",
+        prefix = "gencode_human_38",
+        notes = c("gencode", "human", "38"),
+        version = "v0",
+        ## docker = TRUE,  ## corresponds to recipeMake(requireTools)
+        cwlArgs = "--tmpdir-prefix tmp/"
+        )
+
+dd$species <- "mouse"
+dd$version <- "M27"
+getData(dd,
+        outdir = "../SharedData/tmp",
+        prefix = "gencode_mouse_M27",
+        notes = c("gencode", "mouse", "M27"),
+        version = "v0",
+        ## docker = TRUE,
+        cwlArgs = "--tmpdir-prefix tmp/"
+        )
+```
+
 
 ## example:
 step 1: [dataUpdate()], dataSearch(), return ("dataHub"? with) data path. 

@@ -2,21 +2,22 @@
 % Please edit documentation in R/recipeSearch.R
 \name{recipeSearch}
 \alias{recipeSearch}
-\title{search recipes on GitHub repository}
+\title{search existing data recipes.}
 \usage{
 recipeSearch(keywords, cachePath = "ReUseDataRecipe")
 }
 \arguments{
-\item{keywords}{keywords}
+\item{keywords}{character vector of keywords to be matched to the recipe names.}
 
-\item{cachePath}{ReUseData by default}
+\item{cachePath}{A character string for the recipe caching path. "ReUseDataRecipe" by default.}
 }
 \value{
-return a DataHub object to be defined?
+return a recipeHub object.
 }
 \description{
-search recipes on GitHub repository
+search existing data recipes.
 }
 \examples{
 recipeSearch("gencode")
+recipeSearch(c("STAR", "index"))
 }
