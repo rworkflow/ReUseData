@@ -9,7 +9,7 @@
 #' dataUpdate(dir = "~/workspace/SharedData")
 #' @export
 #' 
-dataUpdate <- function(dir, cachePath = "ReUseData") {
+dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE) {
     ## browser()    
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")  ## FIXME: create the system env for "cachePath"
@@ -23,8 +23,11 @@ dataUpdate <- function(dir, cachePath = "ReUseData") {
     bfc <- BiocFileCache(cachePath, ask = FALSE)
     bfcremove(bfc, bfcinfo(bfc)$rid)
     
-    meta <- meta_data(dir = dir, outdir = dir)
-
+    meta <- meta_data(dir = dir)
+    if (outMeta) {
+        write.csv(meta, file = file.path(dir, "meta_data.csv"))
+    }
+        
     message("Updating data record...")
     fpath <- meta$output
     
