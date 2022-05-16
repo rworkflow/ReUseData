@@ -61,9 +61,10 @@ setMethod("show", "dataHub", function(object){
         rownames <- paste0("  ", .some(rid, nhead, ntail))
         out <- matrix(c(.some(rep("|", length(rid)), nhead, ntail, fill=""),
                         .some(mc$rname, nhead, ntail),
-                        .some(mc$params, nhead, ntail)),
-                      ncol=3L,
-                      dimnames=list(rownames, c("", "title", "Params")))
+                        .some(mc$params, nhead, ntail),
+                        .some(mc$fpath, nhead, ntail)),
+                      ncol=4L,
+                      dimnames=list(rownames, c("", "title", "params", "Path")))
         cat("\n")
         print(out, quote=FALSE, right=FALSE)
     }
