@@ -20,7 +20,7 @@ meta_data <- function(dir = "") {
         params <- paste(params, collapse = "; ")
 
         ## read standard output from YAML
-        keys <- c("output", "notes", "version", "date")
+        keys <- c("output", "notes", "version", "date", "tag")
         val <- data.frame(yml = ymls[i], params = params)
         for (key in keys) {
             keyfull <- paste0("# ", key, ": ")

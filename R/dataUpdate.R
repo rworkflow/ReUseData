@@ -43,7 +43,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE) {
             message(basename(add1), " added")
         }
         bm <- data.frame(rid = bfcrid(bfc),
-                         meta[, c("params", "notes", "version", "date")])
+                         meta[, c("params", "notes", "version", "date", "tag")])
         bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- bm
     }
     return(dataHub(bfc))
