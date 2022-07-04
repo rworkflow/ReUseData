@@ -217,8 +217,11 @@ setGeneric("as.list")
 tag <- function(object){
     mcols(object)$tag
 }
-"tag<-" <- function(object, value){
+"tag<-" <- function(object, value, append = TRUE){
     ## mcols(dat1)@listData$tag <- value
+    if(append){
+        value <- paste0(tag(object), value)
+    }
     dm <- bfcmeta(object, "dataMeta")
     idx <- match(object@rid, dm$rid)
     dm$tag[idx] <- value
@@ -265,5 +268,45 @@ dataSearch("#STAR")
 tags(dh) <- df_tag
 dataSearch("#STAR")
 
+## mutect2
+script <- "
+path=$1
+idx=$2
+wget https://storage.googleapis.com/$path
+if [[ $idx ]]; then wget https://storage.googleapis.com/$path.$idx; fi
+"
+googleBucket <- recipeMake(shscript = script,
+                           paramID = c("rpath", "index"),
+                           paramType = c("string", "string?"),
+                           outputID = "dfile",
+                           outputGlob = "$(inputs.rpath.split('/').slice(-1)[0])*")
+
+googleBucket$rpath <- "gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf"
+googleBucket$index <- "idx"
+getData(googleBucket,
+        outdir = "/projects/rpci/shared/references/Mutect2",
+        prefix = "Mutect2-exome-panel",
+        notes = c("mutect2", "b37", "exome-panel", "pon"), showLog=TRUE)
+
+googleBucket$rpath <- "gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf"
+googleBucket$index <- "idx"
+getData(googleBucket,
+        outdir = "/projects/rpci/shared/references/Mutect2",
+        prefix = "af-only-gnomad",
+        notes = c("mutect2", "b37", "af-only-gnomad"), showLog=TRUE)
+
+googleBucket$rpath <- "gatk-best-practices/somatic-b37/small_exac_common_3.vcf"
+googleBucket$index <- "idx"
+getData(googleBucket,
+        outdir = "/projects/rpci/shared/references/Mutect2",
+        prefix = "small_exac_common_3",
+        notes = c("mutect2", "b37", "small_exac_common"), showLog=TRUE)
+
+r3 <- dataSearch("mutect2")
+r3 <- r3[c(1,3,5)]
+tag(r3) <- rep("#mutect2#b37", 3)
+dataSearch(c("#mutect2", "#b37"))
+
+as.list(r3)
 
 ```

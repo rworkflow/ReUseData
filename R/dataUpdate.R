@@ -9,7 +9,7 @@
 #' dataUpdate(dir = "~/workspace/SharedData")
 #' @export
 #' 
-dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE) {
+dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE) {
     ## browser()    
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")  ## FIXME: create the system env for "cachePath"
@@ -21,6 +21,11 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE) {
         }
     }
     bfc <- BiocFileCache(cachePath, ask = FALSE)
+
+    if(keepTags) {
+        tag_old <- tags(dataHub(bfc))
+    }
+    
     bfcremove(bfc, bfcinfo(bfc)$rid)
     
     meta <- meta_data(dir = dir)
@@ -46,5 +51,10 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE) {
                          meta[, c("params", "notes", "version", "date", "tag")])
         bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- bm
     }
-    return(dataHub(bfc))
+
+    dh <- dataHub(bfc)
+    if(keepTags){
+        tags(dh) <- tag_old
+    }
+    return(dh)
 }
