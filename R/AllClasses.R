@@ -7,7 +7,6 @@
 #' `dataHub` class, constructor, and methods. 
 #' @rdname dataHub-class 
 #' @exportClass dataHub
-#' 
 dataHub <- setClass("dataHub", contains = "cwlHub")
 
 #' @rdname dataHub-class
@@ -15,7 +14,6 @@ dataHub <- setClass("dataHub", contains = "cwlHub")
 #' @return dataHub: a `dataHub` object.
 #' @importClassesFrom RcwlPipelines cwlHub
 #' @export
-#' 
 dataHub <- function(BFC){
     cwlh <- RcwlPipelines:::cwlHub(BFC)
     new("dataHub", cwlh)
@@ -69,6 +67,13 @@ setMethod("show", "dataHub", function(object){
         print(out, quote=FALSE, right=FALSE)
     }
 })
+
+#' @rdname dataHub-class
+#' @return dataParams: the "parameter" values for the `dataHub` object.
+#' @export
+title <- function(object){
+    mcols(object)$rname
+}
 
 #' @rdname dataHub-class
 #' @return dataParams: the "parameter" values for the `dataHub` object.
@@ -160,4 +165,49 @@ setMethod("show", "recipeHub", function(object){
     }
 })
 
+#' subset dataHub
+#' @rdname dataHub-class
+#' @param x A `dataHub` object.
+#' @param i The integer index of the `dataHub` object.
+#' @export
+setMethod("[", c("dataHub"), function(x, i) {
+    rids <- x@rid[i]
+    return(x[rids])
+})
+setGeneric("[")
 
+#' combine dataHub
+#' @rdname dataHub-class
+#' @param x A `dataHub` object to be combined.
+#' @param ... More `dataHub` objects to combine.
+#' @export
+setMethod("c", c("dataHub"), function(x, ...) {
+    object <- list(x, ...)
+    rids <- unlist(lapply(object, function(x)x@rid))
+    x@rid <- unique(rids)
+    return(x)
+})
+setGeneric("c")
+
+#' dataHub to list
+#' @rdname dataHub-class
+#' @param x A `dataHub` object.
+#' @param type The type of workflow input list, such as cwl.
+#' @export
+toList <- function(x, type = NULL){
+    tl <- title(x)
+    pth <- dataPath(x)
+    if(!is.null(type) && type == "cwl"){
+        dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
+        dtype <- ifelse(dtype, "Directory", "File")
+        dl <- vector("list", length(pth))
+        for(i in 1:length(pth)){
+            dl[[i]] <- list(class = dtype[i],
+                            path = pth[i])
+        }
+    }else{
+        dl <- as.list(dataPath(x))
+    }
+    names(dl) <- title(x)
+    return(dl)
+}

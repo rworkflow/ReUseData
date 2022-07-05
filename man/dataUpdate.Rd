@@ -4,7 +4,7 @@
 \alias{dataUpdate}
 \title{update the data records by reading the .yml files using BiocFileCache}
 \usage{
-dataUpdate(dir, cachePath = "ReUseData")
+dataUpdate(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE)
 }
 \arguments{
 \item{dir}{a character string for the path to save the data.}
@@ -20,5 +20,5 @@ data cache, e.g., data name, data path, etc.
 update the data records by reading the .yml files using BiocFileCache
 }
 \examples{
-dataUpdate(dir = "~/workspace/SharedData")
+## dataUpdate(dir = "~/workspace/SharedData")
 }

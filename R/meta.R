@@ -5,7 +5,8 @@
 #' @return a `data.frame` with yml file name, parameter values, data
 #'     file paths, date, and user-specified notes, version when
 #'     generating the data with `getData()`. 
-#' @examples meta_data("../SharedData")
+#' @examples
+#' ## meta_data("../SharedData")
 
 meta_data <- function(dir = "") {
     ymls <- list.files(dir, pattern = ".yml", full.names = TRUE, recursive = TRUE)

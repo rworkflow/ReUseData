@@ -19,5 +19,5 @@ data cache, e.g., data name, data path, etc.
 search recipes on GitHub repository
 }
 \examples{
-dataSearch(c("gencode", "human", "38"))
+## dataSearch(c("gencode", "human", "38"))
 }

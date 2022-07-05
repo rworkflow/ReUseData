@@ -6,7 +6,7 @@
 #' @return a `dataHub` object containing the information about local
 #'     data cache, e.g., data name, data path, etc.
 #' @examples
-#' dataUpdate(dir = "~/workspace/SharedData")
+#' ## dataUpdate(dir = "~/workspace/SharedData")
 #' @export
 #' 
 dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE) {

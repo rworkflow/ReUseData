@@ -1,4 +1,4 @@
 library(testthat)
-library(RcwlData)
+library(ReUseData)
 
-test_check("RcwlData")
+test_check("ReUseData")

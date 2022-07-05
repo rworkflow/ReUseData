@@ -3,9 +3,13 @@
 \name{dataHub}
 \alias{dataHub}
 \alias{show,dataHub-method}
+\alias{title}
 \alias{dataParams}
 \alias{dataNotes}
 \alias{dataPath}
+\alias{[,dataHub,ANY,ANY,ANY-method}
+\alias{c,dataHub-method}
+\alias{toList}
 \title{dataHub}
 \usage{
 dataHub(BFC)
@@ -14,19 +18,35 @@ dataHub(BFC)
 
 \S4method{show}{dataHub}(object)
 
+title(object)
+
 dataParams(object)
 
 dataNotes(object)
 
 dataPath(object)
+
+\S4method{[}{dataHub,ANY,ANY,ANY}(x, i)
+
+\S4method{c}{dataHub}(x, ...)
+
+toList(x, type = NULL)
 }
 \arguments{
 \item{BFC}{A BiocFileCache object created for data and recipes.}
 
-\item{x}{A \code{dataHub} object}
+\item{x}{A \code{dataHub} object.}
+
+\item{i}{The integer index of the \code{dataHub} object.}
+
+\item{...}{More \code{dataHub} objects to combine.}
+
+\item{type}{The type of workflow input list, such as cwl.}
 }
 \value{
 dataHub: a \code{dataHub} object.
+
+dataParams: the "parameter" values for the \code{dataHub} object.
 
 dataParams: the "parameter" values for the \code{dataHub} object.
 

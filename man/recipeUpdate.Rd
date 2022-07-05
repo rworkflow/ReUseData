@@ -7,7 +7,7 @@
 recipeUpdate(
   cachePath = "ReUseDataRecipe",
   force = FALSE,
-  repo = "rworkflow/ReUseDataRecipe"
+  repos = "rworkflow/ReUseDataRecipe"
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ store the ReUseData recipes. "ReUseDataRecipe" by default.}
 \item{force}{Whether to clean existing recipes cache. Default is
 FALSE.}
 
-\item{repo}{The GitHub repository for data recipes. By default, it
+\item{repos}{The GitHub repository for data recipes. By default, it
 reads the "rworkflows/ReUseDataRecipes" GitHub
 repository. Users can also specify a GitHub repo for their
 private data recipes.}

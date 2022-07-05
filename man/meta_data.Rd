@@ -2,21 +2,21 @@
 % Please edit documentation in R/meta.R
 \name{meta_data}
 \alias{meta_data}
-\title{meta_data()}
+\title{meta_data}
 \usage{
-meta_data(dir = "", outdir = dir)
+meta_data(dir = "")
 }
 \arguments{
-\item{dir}{The path to the data folder.}
-
-\item{outdir}{The path the the output csv file.}
+\item{dir}{The path to the shared data folder.}
 }
 \value{
-a csv file with columns: yml file name, Output path, Notes, Version, Date, etc.
+a \code{data.frame} with yml file name, parameter values, data
+file paths, date, and user-specified notes, version when
+generating the data with \code{getData()}.
 }
 \description{
 Functions to generate the meta csv file for local cached dataset.
 }
 \examples{
-meta_data("../res")
+## meta_data("../SharedData")
 }

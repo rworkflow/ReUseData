@@ -174,76 +174,76 @@ getData(rcp, outdir = datapath,
 
 ## Data aggregate by software
 ```{r}
-dataUpdate("/projects/rpci/shared/references/", outMeta = TRUE)
+dataUpdate("/projects/rpci/shared/references/")
 recipeSearch("reference", "ReUseDataRecipe-private")
 dat1 <- dataSearch(c("reference","fasta", "hs37d5"))
 dat2 <- dataSearch(c("GENCODE"))
 
 
-setMethod("[", c("dataHub"), function(x, i) {
-    rids <- x@rid[i]
-    return(x[rids])
-})
-setGeneric("[")
+## setMethod("[", c("dataHub"), function(x, i) {
+##     rids <- x@rid[i]
+##     return(x[rids])
+## })
+## setGeneric("[")
 
-setMethod("c", c("dataHub"), function(x, ...) {
-    object <- list(x, ...)
-    rids <- unlist(lapply(object, function(x)x@rid))
-    x@rid <- unique(rids)
-    return(x)
-})
+## setMethod("c", c("dataHub"), function(x, ...) {
+##     object <- list(x, ...)
+##     rids <- unlist(lapply(object, function(x)x@rid))
+##     x@rid <- unique(rids)
+##     return(x)
+## })
 
-setGeneric("c")
+## setGeneric("c")
 
-setMethod("as.list", c("dataHub"), function(x, type = NULL) {
-    tl <- title(x)
-    pth <- dataPath(x)
-    if(!is.null(type) && type == "cwl"){
-        dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
-        dtype <- ifelse(dtype, "Directory", "File")
-        dl <- vector("list", length(pth))
-        for(i in 1:length(pth)){
-            dl[[i]] <- list(class = dtype[i],
-                            path = pth[i])
-        }
-    }else{
-        dl <- as.list(dataPath(x))
-    }
-    names(dl) <- title(x)
-    return(dl)
-})
-setGeneric("as.list")
+## setMethod("as.list", c("dataHub"), function(x, type = NULL) {
+##     tl <- title(x)
+##     pth <- dataPath(x)
+##     if(!is.null(type) && type == "cwl"){
+##         dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
+##         dtype <- ifelse(dtype, "Directory", "File")
+##         dl <- vector("list", length(pth))
+##         for(i in 1:length(pth)){
+##             dl[[i]] <- list(class = dtype[i],
+##                             path = pth[i])
+##         }
+##     }else{
+##         dl <- as.list(dataPath(x))
+##     }
+##     names(dl) <- title(x)
+##     return(dl)
+## })
+## setGeneric("as.list")
 
-tag <- function(object){
-    mcols(object)$tag
-}
-"tag<-" <- function(object, value, append = TRUE){
-    ## mcols(dat1)@listData$tag <- value
-    if(append){
-        value <- paste0(tag(object), value)
-    }
-    dm <- bfcmeta(object, "dataMeta")
-    idx <- match(object@rid, dm$rid)
-    dm$tag[idx] <- value
-    bfc <- BiocFileCache(object@cache, ask = FALSE)
-    bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- dm
-    return(object)
-}
+## tag <- function(object){
+##     mcols(object)$tag
+## }
+## "tag<-" <- function(object, value, append = TRUE){
+##     ## mcols(dat1)@listData$tag <- value
+##     if(append){
+##         value <- paste0(tag(object), value)
+##     }
+##     dm <- bfcmeta(object, "dataMeta")
+##     idx <- match(object@rid, dm$rid)
+##     dm$tag[idx] <- value
+##     bfc <- BiocFileCache(object@cache, ask = FALSE)
+##     bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- dm
+##     return(object)
+## }
 
 
-tags <- function(object){
-    mcols(object)[, c("fpath", "tag")]
-}
-#' @param values A data.frame of fpath and tags to update the metadata.
-"tags<-" <- function(object, values){
-    dm <- bfcmeta(object, "dataMeta")
-    rids <- object@rid[match(values$fpath, dataPath(object))]
-    dm$tag[match(rids, dm$rid)] <- values$tag
+## tags <- function(object){
+##     mcols(object)[, c("fpath", "tag")]
+## }
+## #' @param values A data.frame of fpath and tags to update the metadata.
+## "tags<-" <- function(object, values){
+##     dm <- bfcmeta(object, "dataMeta")
+##     rids <- object@rid[match(values$fpath, dataPath(object))]
+##     dm$tag[match(rids, dm$rid)] <- values$tag
 
-    bfc <- BiocFileCache(object@cache, ask = FALSE)
-    bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- dm
-    return(object)
-}
+##     bfc <- BiocFileCache(object@cache, ask = FALSE)
+##     bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- dm
+##     return(object)
+## }
 
 ### Example
 dat1 <- dataSearch(c("reference","STAR", "GRCh38"))
@@ -252,21 +252,15 @@ dat2 <- dataSearch(c("GENCODE"))
 ## merge for STAR alignment
 r1 <- c(dat1[17], dat2[2])
 
-tag(r1) <- rep("#STAR#GRCh38", 2)
+tag(r1, force=T) <- rep("#STAR#GRCh38", 2)
 tag(r1)
 
 ## use example
 r2 <- dataSearch("#STAR")
-as.list(r2)
-as.list(r2, "cwl")
+to_list(r2)
+to_list(r2, "cwl")
 
-## backup tags
-df_tag <- tags(r1)
-dh <- dataUpdate("/projects/rpci/shared/references/")
-dataSearch("#STAR")
-
-tags(dh) <- df_tag
-dataSearch("#STAR")
+tags(r2)
 
 ## mutect2
 script <- "
@@ -305,8 +299,8 @@ getData(googleBucket,
 r3 <- dataSearch("mutect2")
 r3 <- r3[c(1,3,5)]
 tag(r3) <- rep("#mutect2#b37", 3)
-dataSearch(c("#mutect2", "#b37"))
 
-as.list(r3)
+r3 <- dataSearch(c("#mutect2", "#b37"))
+to_list(r3)
 
 ```

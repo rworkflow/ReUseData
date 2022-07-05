@@ -56,7 +56,7 @@ class). Please use \code{Rcwl::cwlProcess} for more options and
 functionalities.
 }
 \examples{
-ref_genome <- recipeMake(shscript = "", paramID = c("fasta"), paramType=c("string"), )
+## ref_genome <- recipeMake(shscript = "", paramID = c("fasta"), paramType=c("string"), )
 
 
 }
