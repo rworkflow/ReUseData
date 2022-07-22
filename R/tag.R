@@ -8,7 +8,11 @@ setGeneric("tag", function(object)standardGeneric("tag"))
 
 #' @rdname tag
 setMethod("tag", "dataHub", function(object) {
-    mcols(object)$tag
+    if("tag" %in% colnames(mcols(object))){
+        mcols(object)$tag
+    }else{
+        NULL
+    }
 })
 
 
@@ -59,7 +63,11 @@ setGeneric("tags", function(object)standardGeneric("tags"))
 
 #' @rdname tags
 setMethod("tags", "dataHub", function(object) {
-    mcols(object)[, c("fpath", "tag")]
+    if("tag" %in% colnames(mcols(object))){
+        mcols(object)[, c("fpath", "tag")]
+    }else{
+        NULL
+    }
 })
 
 #' add tags
