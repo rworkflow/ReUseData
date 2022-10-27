@@ -21,6 +21,6 @@ recipeSearch <- function(keywords, cachePath = "ReUseDataRecipe") {
     }
     bfc <- BiocFileCache(cachePath, ask = FALSE)
 
-    res <- bfcquery(bfc, query = keywords)
+    res <- bfcquery(bfc, query = keywords, ignore.case = TRUE)
     recipeHub(bfc[res$rid])
 }
