@@ -73,26 +73,6 @@ getData(dd,
         )
 ```
 
-## Example 4: 
-```{r}
-script <- "
-species=$1
-version=$2
-wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_$species/release_$version/gencode.v$version.transcripts.fa.gz
-"
-gencode_transcriptome <- recipeMake(script, 
-                                    paramID = c("species", "version"),
-                                    paramType = c("character", "character"),
-                                    outputGlob = "*.transcripts.fa.gz")
-## write above into .R script, upload to ReUseDataRecipe github repo
-gencode_ref$species <- "mouse"
-gencode_ref$version <- "M31" 
-getData(gencode, outdir = "../SharedData",
-        prefix = "gencode_mouse_M31",
-        notes = c("gencode", "mouse", "M31"),
-        version = "v0")
-
-```
 ## Example 3: genome lift-over download 
 
 ```{r recipeMake_liftover}
@@ -136,6 +116,105 @@ rcp_liftover <- addMeta(cwl = rcp_liftover,
 cat(meta2md(rcp_liftover))
 ## FIXME: in "meta2md", need to read mtime which is not currently available in data recipes: mcols(recipeSearch("liftover"))$mtime
 ```
+
+## Example 4: gencode transcript 
+
+NOTE: the script doesn't apply to human 19, which has "pc_transcripts" in the file name.
+
+```{r}
+script <- "
+species=$1
+version=$2
+if [[ $species = human ]] && [[ version -eq 19 ]]
+then
+  trans='pc_transcripts'
+else 
+  trans='transcript'
+fi
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_$species/release_$version/gencode.v$version.$trans.fa.gz
+"
+
+rcp_gencode_trans <- recipeMake(script, 
+                                paramID = c("species", "version"),
+                                paramType = c("string", "string"),
+                                outputID = "transcript",
+                                outputGlob = "*.transcripts.fa.gz") ## grep 
+## write above into .R script, upload to ReUseDataRecipe github repo
+
+## version M31 (uses genome assembly version: GRCm39)
+rcp_gencode_trans$species <- "mouse"
+rcp_gencode_trans$version <- "M31" 
+res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
+               prefix = "gencode_transcriptome_mouse_M31",
+               notes = c("gencode", "mouse", "M31"),
+               showLog = TRUE)  ## do not add "version" if already included in parameters. 
+
+## version M25 (uses genome assembly version: GRCm38.p6)
+rcp_gencode_trans$species <- "mouse"
+rcp_gencode_trans$version <- "M25" 
+res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
+               prefix = "gencode_transcriptome_mouse_M25",
+               notes = c("gencode", "mouse", "M25"),
+               showLog = TRUE)
+
+## version 42 (human, uses genome assembly version: GRCh38.p13)
+rcp_gencode_trans$species <- "human"
+rcp_gencode_trans$version <- "42" 
+res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
+               prefix = "gencode_transcriptome_human_42",
+               notes = c("gencode", "human", "42"),
+               showLog = TRUE)
+
+## version 19 (human, uses genome assembly version: GRCh37.p13)
+rcp_gencode_trans$species <- "human"
+rcp_gencode_trans$version <- "19"
+res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
+               prefix = "gencode_transcriptome_human_19",
+               notes = c("gencode", "human", "19"),
+               showLog = TRUE)
+```
+
+## Example 5: gencode genome assembly 
+
+```{r}
+script <- "
+species=$1
+version=$2
+if [[ $version = GRCh38 ]]
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_$species/release_42/$version.primary_assembly.genome.fa.gz
+elif [[ $version = GRCh37 ]]
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_$species/release_19/$version.p13.genome.fa.gz
+elif [[ $species = mouse ]] && [[ $version = GRCm39]]
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M31/$version.primary_assembly.genome.fa.gz
+elif [[ $species = mouse ]] && [[ $version = GRCm38 ]]
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M25/$version.primary_assembly.genome.fa.gz
+elif [[ $species = mouse ]] && [[ $version = NCBIM37 ]] 
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M1/$version.genome.fa.gz
+"
+rcp_gencode_refgenome <- recipeMake(script, 
+                                paramID = c("species", "version"),
+                                paramType = c("string", "string"),
+                                outputID = "transcript",
+                                outputGlob = "*.transcripts.fa.gz") ## grep 
+## write above into .R script, upload to ReUseDataRecipe github repo
+
+## GRCh38
+rcp_gencode_trans$species <- "human"
+rcp_gencode_trans$version <- "GRCh38" 
+res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_genome",
+               prefix = "gencode_genome_human_grch38",
+               notes = c("gencode", "human", "GRCh38"),
+               showLog = TRUE)  ## do not add "version" if already included in parameters. 
+## GRCh37
+rcp_gencode_trans$species <- "human"
+rcp_gencode_trans$version <- "GRCh37" 
+res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_genome",
+               prefix = "gencode_genome_human_grch37",
+               notes = c("gencode", "human", "GRCh37"),
+               showLog = TRUE)  ## do not add "version" if already included in parameters.
+
+```
+
 
 # For users
 
