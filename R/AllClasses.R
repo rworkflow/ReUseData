@@ -59,10 +59,11 @@ setMethod("show", "dataHub", function(object){
         rownames <- paste0("  ", .some(rid, nhead, ntail))
         out <- matrix(c(.some(rep("|", length(rid)), nhead, ntail, fill=""),
                         .some(mc$rname, nhead, ntail),
-                        .some(mc$params, nhead, ntail),
+                        ## .some(mc$params, nhead, ntail),
                         .some(mc$fpath, nhead, ntail)),
-                      ncol=4L,
-                      dimnames=list(rownames, c("", "title", "params", "Path")))
+                      ncol=3L,
+                      ## dimnames=list(rownames, c("", "title", "params", "Path")))
+                      dimnames=list(rownames, c("", "title", "Path")))
         cat("\n")
         print(out, quote=FALSE, right=FALSE)
     }
@@ -194,7 +195,7 @@ setGeneric("c")
 #' @param x A `dataHub` object.
 #' @param type The type of workflow input list, such as cwl.
 #' @export
-toList <- function(x, type = NULL){
+toList <- function(x, type = NULL, format = NULL){
     tl <- title(x)
     pth <- dataPath(x)
     if(!is.null(type) && type == "cwl"){
@@ -205,9 +206,14 @@ toList <- function(x, type = NULL){
             dl[[i]] <- list(class = dtype[i],
                             path = pth[i])
         }
-    }else{
+    }else {
         dl <- as.list(dataPath(x))
     }
     names(dl) <- title(x)
+    if (format == "json") {
+        dl <- jsonlite::toJSON(dl, pretty = TRUE, auto_unbox = TRUE)
+    } else if (format == "yml") {
+        dl <- yaml::as.yaml(dl)
+    }
     return(dl)
 }

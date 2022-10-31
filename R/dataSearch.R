@@ -24,8 +24,7 @@ dataSearch <- function(keywords, cachePath = "ReUseData") {
     res <- bfcquery(bfc, query = keywords,
                     field = c("rname", "fpath", "params", "notes", "version", "date", "tag"))
     if(any(grepl("#", keywords))){
-        res <- bfcquery(bfc, query = keywords,
-                        field = c("tag"))
+        res <- bfcquery(bfc, query = keywords, field = c("tag"), ignore.case = TRUE)
     }
     dataHub(bfc[res$rid])
 }

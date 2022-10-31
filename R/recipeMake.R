@@ -46,6 +46,8 @@ recipeMake <- function(shscript = "",  ## FIXME: support a valid URL for downloa
     if(file.exists(shscript)){
         shscript <- paste(readLines(shscript), collapse = "\n")
     }
+    shscript <- gsub('\\$\\{(.*?)\\}', '"$\\1"', shscript)
+    ## This remove {} from evaluting as javascript. So abcd${test}_abcd${test} => abcd"$test"_abcd"$test"
     req1 <- requireShellScript(script = shscript)
     req2 <- requireNetwork()
     req3 <- requireJS()

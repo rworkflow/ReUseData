@@ -19,14 +19,17 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #' @param cwl the `cwlProcess` object from `searchData()` or
 #'     `loadData()`.
 #' @param outdir The directory to store the outputs. Will
-#'     automatically create if not exist.
+#'     automatically create if not exist or provided.
 #' @param prefix The string that labels the data which will be added
-#'     as prefix to the 4 output files. e.g., "gencode_human_38".
-#' @param version User assigned version for the data generated. e.g.,
-#'     "38", "v1.0", etc.
+#'     as prefix to the 4 output files. "gencode_human_38".
+#' @param version User specified version for the data generated for
+#'     local data management. Takes string. Default is "". When
+#'     provided, it will be pasted with `prefix` argument using "_" to
+#'     serve as the final prefix for output files. E.g.,
+#'     "gencode_human_38_v1.0".
 #' @param notes User assigned notes/keywords to retrieve the data by
 #'     `searchData()` function.  e.g., "human", "reference genome",
-#'     "gencode", "gtf", etc.
+#'     "gencode", "gtf", etc. Multiple notes will be pasted using blank space. 
 #' @param docker Default is TRUE.
 #' @param ... Arguments to be passed into `Rcwl:runCWL()`.
 #' @return The data files and 4 meta files: `.cwl`: The cwl script
@@ -36,8 +39,7 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #'     curation.  `.md`: ... (to-be-filled)
 #' @importFrom Rcwl runCWL
 #' @importFrom tools md5sum
-#' @export
-## #' @examples
+#' @export # #' @examples
 
 getData <- function(cwl, outdir, prefix, version = "", notes = "", docker = TRUE, ...){
     if(docker == "singularity"){

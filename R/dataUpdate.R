@@ -22,8 +22,13 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
     }
     bfc <- BiocFileCache(cachePath, ask = FALSE)
 
-    if(keepTags) {
-        tag_old <- tags(dataHub(bfc))
+
+    if("tag" %in% colnames(mcols(dataHub(bfc)))){
+        if(keepTags) {
+            tag_old <- tags(dataHub(bfc))
+        }
+    }else{
+        keepTags <- FALSE
     }
     
     bfcremove(bfc, bfcinfo(bfc)$rid)
