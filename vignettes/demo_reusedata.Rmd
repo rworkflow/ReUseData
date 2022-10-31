@@ -12,7 +12,6 @@ recipeUpdate(cachePath = "ReUseDataRecipe-private", repo="Liubuntu/ReUseDataReci
 recipeSearch("gencode", cachePath="ReUseDataRecipe-private")  ## works!
 ```
 
-
 ## Example 1: reference genome GRCh38, Homo sapiens, MT
 ```{r recipeMake_ref21} 
 script <- "
@@ -73,6 +72,51 @@ getData(dd,
         cwlArgs = "--tmpdir-prefix tmp/"
         )
 ```
+
+## Example 3: genome lift-over download 
+
+```{r recipeMake_liftover}
+script <- "
+from=$1
+to=$2
+wget https://ftp.ensembl.org/pub/assembly_mapping/homo_sapiens/${from}_to_${to}.chain.gz"
+rcp_liftover <- recipeMake(shscript = script,
+                           paramID = c("from", "to"),  ## required for "recipeMake"?? ## FIXME: add default value or pass check. 
+                           paramType = c("string", "string"),  ## FIXME: remove requirement in "recipeMake". 
+                           outputID = "genome_lift_over",  ## same as above?? 
+                           outputGlob = "*.chain.gz")  ## required for "getData" creating md4sum file?
+
+## put above code into "genome_liftover.R" and upload to "https://github.com/rworkflow/ReUseDataRecipe". 
+rm(rcp_liftover)
+
+## update, search, and load new recipe
+recipeUpdate()
+recipeSearch("liftover")
+rcp_liftover <- recipeLoad("genome_liftover")
+
+## evaluate recipe to generate data 
+inputs(rcp_liftover)
+rcp_liftover$from <- "GRCh37"
+rcp_liftover$to <- "GRCh38"
+getData(rcp_liftover,
+        outdir = "../SharedData",
+        prefix = "liftover",
+        notes = c("lift_over", "GRCh37 to GRCh38"),  ## "notes" will be pasted with " ", so avoid using blank space for notes.
+        version = "v0",
+        ## cwlArgs = "--tmpdir-prefix tmp/",
+        showLog=TRUE)
+
+## add meta data for recipe
+devtools::load_all("../RcwlMeta")
+rcp_liftover <- addMeta(cwl = rcp_liftover,
+                        label = "liftover",
+                        doc = "genome liftover",
+                        inputLabels = c("from", "to"),
+                        inputDocs = c("original genome build", "target genome build"))
+cat(meta2md(rcp_liftover))
+## FIXME: in "meta2md", need to read mtime which is not currently available in data recipes: mcols(recipeSearch("liftover"))$mtime
+```
+
 
 # For users
 
@@ -252,7 +296,7 @@ dat2 <- dataSearch(c("GENCODE"))
 ## merge for STAR alignment
 r1 <- c(dat1[17], dat2[2])
 
-tag(r1, force=T) <- rep("#STAR#GRCh38", 2)
+tag(r1, append=F) <- rep("#STAR#GRCh38", 2)
 tag(r1)
 
 ## use example
@@ -267,7 +311,7 @@ script <- "
 path=$1
 idx=$2
 wget https://storage.googleapis.com/$path
-if [[ $idx ]]; then wget https://storage.googleapis.com/$path.$idx; fi
+if [ ! -z $idx ]; then wget https://storage.googleapis.com/$path.$idx; fi
 "
 googleBucket <- recipeMake(shscript = script,
                            paramID = c("rpath", "index"),
@@ -278,29 +322,31 @@ googleBucket <- recipeMake(shscript = script,
 googleBucket$rpath <- "gatk-best-practices/somatic-b37/Mutect2-exome-panel.vcf"
 googleBucket$index <- "idx"
 getData(googleBucket,
-        outdir = "/projects/rpci/shared/references/Mutect2",
+        outdir = "../SharedData/Mutect2",
         prefix = "Mutect2-exome-panel",
         notes = c("mutect2", "b37", "exome-panel", "pon"), showLog=TRUE)
 
-googleBucket$rpath <- "gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf"
-googleBucket$index <- "idx"
-getData(googleBucket,
-        outdir = "/projects/rpci/shared/references/Mutect2",
-        prefix = "af-only-gnomad",
-        notes = c("mutect2", "b37", "af-only-gnomad"), showLog=TRUE)
+## googleBucket$rpath <- "gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf"
+## googleBucket$index <- "idx"
+## getData(googleBucket,
+##         outdir = "../SharedData/Mutect2",
+##         prefix = "af-only-gnomad",
+##         notes = c("mutect2", "b37", "af-only-gnomad"), showLog=TRUE)
 
 googleBucket$rpath <- "gatk-best-practices/somatic-b37/small_exac_common_3.vcf"
 googleBucket$index <- "idx"
 getData(googleBucket,
-        outdir = "/projects/rpci/shared/references/Mutect2",
+        outdir = "../SharedData/Mutect2",
         prefix = "small_exac_common_3",
         notes = c("mutect2", "b37", "small_exac_common"), showLog=TRUE)
 
+dataUpdate("../SharedData")
+
 r3 <- dataSearch("mutect2")
-r3 <- r3[c(1,3,5)]
-tag(r3) <- rep("#mutect2#b37", 3)
+r3 <- r3[c(1,3)]
+tag(r3) <- rep("#mutect2#b37", 2)
 
 r3 <- dataSearch(c("#mutect2", "#b37"))
-to_list(r3)
-
+toList(r3)
+toList(r3, "cwl")
 ```
