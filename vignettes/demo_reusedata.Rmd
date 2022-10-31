@@ -74,6 +74,26 @@ getData(dd,
         )
 ```
 
+## Example 4: 
+```{r}
+script <- "
+species=$1
+version=$2
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_$species/release_$version/gencode.v$version.transcripts.fa.gz
+"
+gencode_transcriptome <- recipeMake(script, 
+                                    paramID = c("species", "version"),
+                                    paramType = c("character", "character"),
+                                    outputGlob = "*.transcripts.fa.gz")
+## write above into .R script, upload to ReUseDataRecipe github repo
+gencode_ref$species <- "mouse"
+gencode_ref$version <- "M31" 
+getData(gencode, outdir = "../SharedData",
+        prefix = "gencode_mouse_M31",
+        notes = c("gencode", "mouse", "M31"),
+        version = "v0")
+
+```
 # For users
 
 step 1: [dataUpdate()], dataSearch(), return ("dataHub"? with) data path. 
