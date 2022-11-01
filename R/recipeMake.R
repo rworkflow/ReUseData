@@ -72,11 +72,19 @@ recipeMake <- function(shscript = "",  ## FIXME: support a valid URL for downloa
         output_param <- OutputParam(id=id, type="File[]", glob=outputGlob)
         output_param_list[[i]] <- output_param
     }
-   
+
+    rcpinputs <- input_param_list ## if empty, rcpinputs is list()
+    if (length(input_param_list))
+        rcpinputs <- do.call(InputParamList, input_param_list)
+
+    rcpoutputs <- output_param_list ## if empty, rcpoutputs is list()
+    if (length(output_param_list))
+        rcpoutputs <- do.call(OutputParamList, output_param_list)
+
     cwlProcess(cwlVersion = "v1.2",
                baseCommand = ShellScript(),
                requirements = reqs,
-               inputs = do.call(InputParamList, input_param_list),
-               outputs = do.call(OutputParamList, output_param_list)
+               inputs = rcpinputs,
+               outputs = rcpoutputs,
                )
 }
