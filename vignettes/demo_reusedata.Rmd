@@ -79,7 +79,8 @@ getData(dd,
 script <- "
 from=$1
 to=$2
-wget https://ftp.ensembl.org/pub/assembly_mapping/homo_sapiens/${from}_to_${to}.chain.gz"
+wget https://ftp.ensembl.org/pub/assembly_mapping/homo_sapiens/${from}_to_${to}.chain.gz
+"
 rcp_liftover <- recipeMake(shscript = script,
                            paramID = c("from", "to"),  ## required for "recipeMake"?? ## FIXME: add default value or pass check. 
                            paramType = c("string", "string"),  ## FIXME: remove requirement in "recipeMake". 
@@ -176,6 +177,8 @@ res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome"
 
 ## Example 5: gencode genome assembly 
 
+NOTE: all are different, should we write separate recipes? 
+
 ```{r}
 script <- "
 species=$1
@@ -212,10 +215,27 @@ res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_genome",
                prefix = "gencode_genome_human_grch37",
                notes = c("gencode", "human", "GRCh37"),
                showLog = TRUE)  ## do not add "version" if already included in parameters.
-
 ```
 
+## Example 6, single shell script without any input parameters. 
 
+Need to change cwlProcess class to take null/InputParamList. 
+
+```{r}
+script <- "
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_42/GRCh38.primary_assembly.genome.fa.gz
+"
+rcp_gencode_grch38 <- recipeMake(script, 
+                                 outputID = "transcript",
+                                 outputGlob = "*.genome.fa.gz")
+## write above into .R script, upload to ReUseDataRecipe github repo
+res <- getData(rcp_gencode_grch38,
+               outdir = "../SharedData/gencode_genome",
+               prefix = "gencode_genome_grch38",
+               notes = c("gencode", "human", "GRCh38"),
+               showLog = TRUE)
+
+```
 # For users
 
 step 1: [dataUpdate()], dataSearch(), return ("dataHub"? with) data path. 
