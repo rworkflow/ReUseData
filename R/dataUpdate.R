@@ -36,6 +36,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
     meta <- meta_data(dir = dir)
     if (outMeta) {
         write.csv(meta, file = file.path(dir, "meta_data.csv"))
+        message("\nMeta file for all available datasets generated: ", file.path(dir, "meta_data.csv"))
     }
         
     message("Updating data record...")
