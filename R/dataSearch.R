@@ -22,7 +22,8 @@ dataSearch <- function(keywords, cachePath = "ReUseData") {
     bfc <- BiocFileCache(cachePath, ask = FALSE)
 
     res <- bfcquery(bfc, query = keywords,
-                    field = c("rname", "fpath", "params", "notes", "version", "date", "tag"))
+                    field = c("rname", "fpath", "params", "notes", "version", "date", "tag"),
+                    ignore.case = TRUE)
     if(any(grepl("#", keywords))){
         res <- bfcquery(bfc, query = keywords, field = c("tag"), ignore.case = TRUE)
     }
