@@ -1,6 +1,9 @@
-#' update the data records by reading the .yml files using BiocFileCache
+#' update the local data records by reading the yaml files in the
+#' specified directory recursively.
 #'
-#' @param dir a character string for the path to save the data.
+#' @param dir a character string for the directory where all data are
+#'     saved. Data information will be collected recursively within
+#'     this directory.
 #' @param cachePath the cache path for recording all available
 #'     datasets. Default is "ReUseData".
 #' @return a `dataHub` object containing the information about local

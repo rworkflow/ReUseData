@@ -1,12 +1,13 @@
 #' recipeUpdate
 #'
-#' Function to sync and get the most updated data recipes through the
-#' pubic "rworkflows/ReUseDataRecipes" GitHub repository or user
-#' specified private GitHub repo.
+#' Function to sync and get the most updated and newly added data
+#' recipes through the pubic "rworkflows/ReUseDataRecipes" GitHub
+#' repository or user specified private GitHub repo.
 #' @param cachePath The cache path of the BiocFileCache object to
-#'     store the ReUseData recipes. "ReUseDataRecipe" by default. 
+#'     store the ReUseData recipes. "ReUseDataRecipe" by default.
 #' @param force Whether to clean existing recipes cache. Default is
-#'     FALSE.
+#'     FALSE. Only use if any old recipes that are previously cached
+#'     locally are updated. 
 #' @param repos The GitHub repository for data recipes. By default, it
 #'     reads the "rworkflows/ReUseDataRecipes" GitHub
 #'     repository. Users can also specify a GitHub repo for their
@@ -38,7 +39,7 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe", force = FALSE, repos = "
     ## if "force=TRUE", remove local recipes, and reload/update all
     ## recipes from remote repo.
     if(force){
-        message("Warning: existing caches will be removed")
+        message("Warning: existing caches will be removed and regenerated!")
         bfcremove(bfc, bfcinfo(bfc)$rid)
     }
 
