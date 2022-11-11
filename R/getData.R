@@ -55,6 +55,14 @@ getData <- function(cwl, outdir, prefix, version = "", notes = "", docker = TRUE
                   yml_prefix = prefix,
                   yml_outdir = outdir,
                   docker = docker, ...)
+    ## if no output generated: 
+    if (is.null(res$output)) {
+        allfiles <- list.files(outdir, pattern=paste0(prefix, "."), full.names=TRUE)
+        file.remove(allfiles)
+        stop(paste0("HINT: The output file was not successfully generated. ",
+                    "Please check the recipe (output globbing pattern, ",
+                    "input parameters, parameter types, etc.)"))
+        }
     yfile <- file.path(outdir, paste0(prefix, ".yml"))
     notes <- paste(notes, collapse = " ")
     apd <- c(paste("# output:", res$output),
