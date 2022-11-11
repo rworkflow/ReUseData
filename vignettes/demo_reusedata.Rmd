@@ -1,3 +1,15 @@
+## TODO: 
+
+- If data not successfully generated, should remove the empty .yml file to avoid error in `dataSearch()` -- done!
+- reorganize recipes. For reference genome download/indexing, use ensembl, 1000 genomes, not gencode. (example 1, example 5)
+- `STAR_index.R` rewrite use `recipeMake` function. SPECIAL CASE: inputparam type=list(), position, output type Directory, glob $(inputs.genomeDir). 
+- add meta for gencode transcript recipe. Demo use `gencode_annotation.R`, and `ensembl_liftover.R`. -- done!
+- add any new recipe? 
+- organize demo for `getData`. 
+- Special cases: 
+  - take existing `script.sh`.
+  - recipeMake arguments types. 
+
 ```{R}
 devtools::load_all()
 library(Rcwl)
@@ -21,155 +33,207 @@ gzip -d Homo_sapiens.GRCh38.dna.chromosome.$chr.fa.gz
 samtools faidx Homo_sapiens.GRCh38.dna.chromosome.$chr.fa
 bwa index Homo_sapiens.GRCh38.dna.chromosome.$chr.fa
 "
-ref <- recipeMake(shscript = script,
-                  paramID = c("chr"),
-                  paramType = c("string"), ## FIXME: require a data.frame, ID, type, check columns for NA, etc. In R, no long in R, use double? Validate! 2e54.(integer, 53 bits integer precision)
-                  outputID = "ref_genome",  ## outputType: File[] in code. 
-                  outputGlob = "Homo_sapiens.*",   
-                  requireTools = c("samtools=1.3", "bwa")  ## name must exactly match the tool name.
-                  )
-ref$chr <- "MT" ## FIXME: validate AEAP!! 
-res <- getData(ref,  ## FIXME: check existence (warning, overwrite=TRUE) automatic directory gen related to that recipe!!!
-               outdir = "../SharedData/tmp",
+rcp_ref <- recipeMake(shscript = script,
+                      paramID = c("chr"),
+                      paramType = c("string"), ## FIXME: require a data.frame, ID, type, check columns for NA, etc. In R, no long in R, use double? Validate! 2e54.(integer, 53 bits integer precision)
+                      outputID = "ref_genome",  ## outputType: File[] in code. 
+                      outputGlob = "Homo_sapiens.*",   
+                      requireTools = c("samtools=1.3", "bwa")  ## name must exactly match the tool name.
+                      )
+rcp_ref$chr <- "MT" ## FIXME: validate AEAP!! 
+res <- getData(rcp_ref,  ## FIXME: check existence (warning, overwrite=TRUE) automatic directory gen related to that recipe!!!
+               outdir = "../SharedData/ensembl_refgenome",
                prefix = "ref_genome_MT",
-               notes = c("reference", "genome", "MT", "human"),
-               version = "v0",
+               notes = c("ensembl", "reference", "genome", "MT", "human"),
+               ## version = "v0",
                ## docker = TRUE, ## by default: TRUE. 
-               cwlArgs = "--tmpdir-prefix tmp/")  ## a fix for my desktop, https://cwl.discourse.group/t/docker-error-invalid-mount-config-for-type-bind/598
+               ## cwlArgs = "--tmpdir-prefix tmp/",  ## a fix for my desktop, https://cwl.discourse.group/t/docker-error-invalid-mount-config-for-type-bind/598
+               showLog = TRUE)
 ```
 
-## Example 2: gencode gtf file download and unzip
+## Example 2: gencode annotation gtf file download and unzip (tested!!!)
 
-```{r recipeMake_gencode}  
-file.copy("/home/qian/workspace/SharedData/gencode_human_38.sh", "gencode_test.sh")
-dd <- recipeMake(shscript = "gencode_test.sh", 
-                 paramID = c("species", "version"),
-                 paramType = c("string", "string"),
-                 outputID = "gencode_gtf",  ## outputType: by default, File[]
-                 outputGlob = "*.gtf"
-                 ## , requireTools = c() ## wget, gzip 
-                 )  
-inputs(dd)
-dd$species <- "human"
-dd$version <- "38"
-getData(dd,
-        outdir = "../SharedData",
-        prefix = "gencode_human_38",
-        notes = c("gencode", "human", "38"),
-        version = "v0",
-        ## docker = TRUE,  ## corresponds to recipeMake(requireTools)
-        cwlArgs = "--tmpdir-prefix tmp/"
-        )
-
-dd$species <- "mouse"
-dd$version <- "M27"
-getData(dd,
-        outdir = "../SharedData",
-        prefix = "gencode_mouse_M27",
-        notes = c("gencode", "mouse", "M27"),
-        version = "v0",
-        ## docker = TRUE,
-        cwlArgs = "--tmpdir-prefix tmp/"
-        )
-```
-
-## Example 3: genome lift-over download 
-
-```{r recipeMake_liftover}
-script <- "
-from=$1
-to=$2
-wget https://ftp.ensembl.org/pub/assembly_mapping/homo_sapiens/${from}_to_${to}.chain.gz
-"
-rcp_liftover <- recipeMake(shscript = script,
-                           paramID = c("from", "to"),  ## required for "recipeMake"?? ## FIXME: add default value or pass check. 
-                           paramType = c("string", "string"),  ## FIXME: remove requirement in "recipeMake". 
-                           outputID = "genome_lift_over",  ## same as above?? 
-                           outputGlob = "*.chain.gz")  ## required for "getData" creating md4sum file?
-
-## put above code into "genome_liftover.R" and upload to "https://github.com/rworkflow/ReUseDataRecipe". 
-rm(rcp_liftover)
-
-## update, search, and load new recipe
-recipeUpdate()
-recipeSearch("liftover")
-rcp_liftover <- recipeLoad("genome_liftover")
-
-## evaluate recipe to generate data 
-inputs(rcp_liftover)
-rcp_liftover$from <- "GRCh37"
-rcp_liftover$to <- "GRCh38"
-getData(rcp_liftover,
-        outdir = "../SharedData",
-        prefix = "liftover",
-        notes = c("lift_over", "GRCh37 to GRCh38"),  ## "notes" will be pasted with " ", so avoid using blank space for notes.
-        version = "v0",
-        ## cwlArgs = "--tmpdir-prefix tmp/",
-        showLog=TRUE)
-
-## add meta data for recipe
-devtools::load_all("../RcwlMeta")
-rcp_liftover <- addMeta(cwl = rcp_liftover,
-                        label = "liftover",
-                        doc = "genome liftover",
-                        inputLabels = c("from", "to"),
-                        inputDocs = c("original genome build", "target genome build"))
-cat(meta2md(rcp_liftover))
-## FIXME: in "meta2md", need to read mtime which is not currently available in data recipes: mcols(recipeSearch("liftover"))$mtime
-```
-
-## Example 4: gencode transcript 
-
-NOTE: the script doesn't apply to human 19, which has "pc_transcripts" in the file name.
-
-```{r}
+```{r recipeMake_gencode}
 script <- "
 species=$1
 version=$2
-if [[ $species = human ]] && [[ version -eq 19 ]]
-then
-  trans='pc_transcripts'
-else 
-  trans='transcript'
-fi
-wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_$species/release_$version/gencode.v$version.$trans.fa.gz
+wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_$species/release_$version/gencode.v$version.annotation.gtf.gz
+gzip -d gencode.v$version.annotation.gtf.gz
 "
-
-rcp_gencode_trans <- recipeMake(script, 
+## file.copy("/home/qian/workspace/SharedData/gencode_human_38.sh", "gencode_test.sh")
+rcp_gencode_annot <- recipeMake(shscript = script,
                                 paramID = c("species", "version"),
                                 paramType = c("string", "string"),
-                                outputID = "transcript",
-                                outputGlob = "*.transcripts.fa.gz") ## grep 
-## write above into .R script, upload to ReUseDataRecipe github repo
+                                outputID = "annotation",  ## outputType: by default, File[]
+                                outputGlob = "gencode.v*.annotation.gtf"
+                                ## , requireTools = c() ## wget, gzip 
+                                )
 
-## version M31 (uses genome assembly version: GRCm39)
-rcp_gencode_trans$species <- "mouse"
-rcp_gencode_trans$version <- "M31" 
-res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
+rcp_gencode_annot <- addMeta(cwl = rcp_gencode_annot,
+                             label = "gencode annotation",
+                             doc = "Download and unzip annotation files from gencode",
+                             inputLabels = c("species", "version"),
+                             inputDocs = c("'human' or 'mouse'",
+                                           paste0("Character string. Case sensitive. ",
+                                                  "must match available versions for each species under source URL link. ",
+                                                  "e.g., 'M31' (species='mouse'), '42' (species='human') ")),
+                             outputLabels = c("annotation"),
+                             outputDocs = c("the unzipped annotation file: `gencode.v$version.annotation.gtf`"),
+                             extensions = list(`$namespaces` = list(
+                                                   url = "<http://ftp.ebi.ac.uk/pub/databases/gencode/>",
+                                                   date = Sys.Date(),
+                                                   example = paste("rcp <- recipeLoad('gencode_annotation')",
+                                                                   "rcp$species <- 'human'",
+                                                                   "rcp$version <- '42'",
+                                                                   "getData(rcp, outdir = 'data/folder', prefix = 'gencode_annotation_human_42', notes = c('gencode', 'annotation', 'human', '42')", sep="\n")))
+                             )
+
+cat(meta2md(rcp_gencode_annot))
+
+## write above code in .R file, and upload to "rworkflow/ReUseDataRecipe" GitHub repo.
+rm(rcp_gencode_annot)
+
+recipeUpdate(force=TRUE)
+recipeSearch(c("gencode", "annotation"))
+rcp <- recipeLoad("gencode_annotation")
+inputs(rcp)
+
+rcp$species <- "human"
+rcp$version <- "42"
+getData(rcp,
+        outdir = "../SharedData/gencode_annotation",
+        prefix = "gencode_annotation_human_42",
+        notes = c("gencode", "human", "42"),
+        showLog = TRUE
+        ## version = "v0",
+        ## docker = TRUE,  ## corresponds to recipeMake(requireTools)
+        ## cwlArgs = "--tmpdir-prefix tmp/"
+        )
+
+rcp$species <- "mouse"
+rcp$version <- "M31"
+getData(rcp,
+        outdir = "../SharedData/gencode_annotation",
+        prefix = "gencode_mouse_m31",
+        notes = c("gencode", "mouse", "M31"),
+        ## docker = TRUE,
+        ## cwlArgs = "--tmpdir-prefix tmp/"
+        showlog=TRUE
+        )
+```
+
+As new data generated, we'll update the data path so new data can be searchable. 
+```{r}
+dataUpdate(dir = "~/workspace/SharedData")
+```
+
+## Example 3: ensembl genome lift-over file download and unzip (tested!!!)
+
+recipeMake: `https://github.com/rworkflow/ReUseDataRecipe/blob/master/ensembl_liftover.R`
+```{r recipeMake_liftover_mouse}
+script <- "
+species=$1
+from=$2
+to=$3
+if [ $species == 'human' ]
+then 
+  species='homo_sapiens'
+elif [ $species == mouse ]
+then 
+  species='mus_musculus'
+fi
+wget https://ftp.ensembl.org/pub/assembly_mapping/$species/${from}_to_${to}.chain.gz
+gzip -d ${from}_to_${to}.chain.gz"
+
+rcp_liftover <- recipeMake(shscript = script,
+                           paramID = c("species", "from", "to"), 
+                           paramType = c("string", "string", "string"), 
+                           outputID = "liftover",  ## required! 
+                           outputGlob = "*.chain")  ## required!!
+```
+
+```{r recipeLoadMeta}
+recipeUpdate(force=TRUE)
+rm(rcp_liftover)
+recipeSearch("liftover")
+rcp <- recipeLoad("ensembl_liftover")
+meta(rcp)
+cat(RcwlMeta::meta2md(rcp)) 
+```
+
+```{r recipeEvaluation}
+inputs(rcp)
+rcp$species <- "mouse"
+rcp$from <- "NCBIM37"
+rcp$to <- "GRCm38"
+getData(rcp,
+        outdir = "../SharedData/ensembl_liftover",
+        ## prefix = "ensembl_liftover_ncbim37_grcm38",
+        notes = c("ensembl", "liftover", "NCBIM37", "GRCM38"),
+        ## version = "v0",
+        ## cwlArgs = "--tmpdir-prefix tmp/",
+        ## showLog=TRUE)
+        showLog = FALSE)
+## generate data: GRCh37 to GRCh38
+
+inputs(rcp)
+rcp$species <- "human"
+rcp$from <- "GRCh37"
+rcp$to <- "GRCh38"
+getData(rcp,
+        outdir = "../SharedData/ensembl_liftover",
+        prefix = "ensembl_liftover_grch37_38",
+        notes = c("ensembl", "liftover", "GRCh37", "GRCh38"),  ## "notes" will be pasted with " ", so avoid using blank space for notes
+        ## version = "v0",
+        ## cwlArgs = "--tmpdir-prefix tmp/",
+        showLog=TRUE)
+
+dataUpdate(dir = "~/workspace/SharedData")
+dataSearch("liftover")
+dataSearch(c("liftover", "grcm38"))
+```
+
+## Example 4: gencode transcript -- done!
+
+recipeMake: `https://github.com/rworkflow/ReUseDataRecipe/blob/master/gencode_transcripts.R`
+
+```{r recipeLoad}
+recipeUpdate(force=TRUE)
+recipeSearch(c("gencode", "trans"))
+rcp <- recipeLoad("gencode_transcripts")
+meta(rcp)
+cat(meta2md(rcp))
+```
+
+```{r recipeEvaluation}
+## version M31 (uses genome assembly version: GRCm39)  worked!!!
+rcp$species <- "mouse"
+rcp$version <- "M31" 
+res <- getData(rcp, outdir = "../SharedData/gencode_transcriptome",
                prefix = "gencode_transcriptome_mouse_M31",
-               notes = c("gencode", "mouse", "M31"),
+               notes = c("gencode", "transcripts", "mouse", "M31"),
                showLog = TRUE)  ## do not add "version" if already included in parameters. 
 
-## version M25 (uses genome assembly version: GRCm38.p6)
-rcp_gencode_trans$species <- "mouse"
-rcp_gencode_trans$version <- "M25" 
-res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
-               prefix = "gencode_transcriptome_mouse_M25",
-               notes = c("gencode", "mouse", "M25"),
-               showLog = TRUE)
+## version M20. (test meta... done!) 
+rcp$species <- "mouse"
+rcp$version <- "M20" 
+res <- getData(rcp, outdir = "../SharedData/gencode_transcriptome",
+               prefix = "gencode_transcriptome_mouse_M20",
+               notes = c("gencode", "transcripts", "mouse", "M20"),
+               showLog = TRUE)  ## do not add "version" if already included in parameters. 
 
 ## version 42 (human, uses genome assembly version: GRCh38.p13)
-rcp_gencode_trans$species <- "human"
-rcp_gencode_trans$version <- "42" 
-res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
+rcp$species <- "human"
+rcp$version <- "42" 
+res <- getData(rcp, outdir = "../SharedData/gencode_transcriptome",
                prefix = "gencode_transcriptome_human_42",
                notes = c("gencode", "human", "42"),
                showLog = TRUE)
 
 ## version 19 (human, uses genome assembly version: GRCh37.p13)
-rcp_gencode_trans$species <- "human"
-rcp_gencode_trans$version <- "19"
-res <- getData(rcp_gencode_trans, outdir = "../SharedData/gencode_transcriptome",
+rcp$species <- "human"
+rcp$version <- "19"
+res <- getData(rcp, outdir = "../SharedData/gencode_transcriptome",
                prefix = "gencode_transcriptome_human_19",
                notes = c("gencode", "human", "19"),
                showLog = TRUE)
@@ -226,8 +290,9 @@ script <- "
   wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_42/GRCh38.primary_assembly.genome.fa.gz
 "
 rcp_gencode_grch38 <- recipeMake(script, 
-                                 outputID = "transcript",
-                                 outputGlob = "*.genome.fa.gz")
+                                 outputID = "genome",
+                                 outputGlob = "GRCh38.primary_assembly.genome.fa.gz")
+
 ## write above into .R script, upload to ReUseDataRecipe github repo
 res <- getData(rcp_gencode_grch38,
                outdir = "../SharedData/gencode_genome",
@@ -235,7 +300,62 @@ res <- getData(rcp_gencode_grch38,
                notes = c("gencode", "human", "GRCh38"),
                showLog = TRUE)
 
+script <- "
+    wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/GRCh37.p13.genome.fa.gz
+"
+rcp_gencode_grch37 <- recipeMake(script, 
+                                 outputID = "genome",
+                                 outputGlob = "GRCh37.p13.genome.fa.gz")
+
+## write above into .R script, upload to ReUseDataRecipe github repo
+res <- getData(rcp_gencode_grch37,
+               outdir = "../SharedData/gencode_genome",
+               prefix = "gencode_genome_grch37",
+               notes = c("gencode", "human", "GRCh37"),
+               showLog = TRUE)
+
+script <- "
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M31/GRCm39.primary_assembly.genome.fa.gz
+"
+rcp_gencode_grcm39 <- recipeMake(script, 
+                                 outputID = "genome",
+                                 outputGlob = "GRCm39.primary_assembly.genome.fa.gz")
+
+res <- getData(rcp_gencode_grcm39,
+               outdir = "../SharedData/gencode_genome",
+               prefix = "gencode_genome_grcm39",
+               notes = c("gencode", "mouse", "GRCm39"),
+               showLog = TRUE)
+
+script <- "
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M25/GRCm38.primary_assembly.genome.fa.gz
+"
+rcp_gencode_grcm38 <- recipeMake(script, 
+                                 outputID = "genome",
+                                 outputGlob = "GRCm38.primary_assembly.genome.fa.gz")
+
+res <- getData(rcp_gencode_grcm38,
+               outdir = "../SharedData/gencode_genome",
+               prefix = "gencode_genome_grcm38",
+               notes = c("gencode", "mouse", "GRCm38"),
+               showLog = TRUE)
+
+## todo:
+script <- "
+  wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M1/NCBIM37.genome.fa.gz
+"
+rcp_gencode_ncbim37 <- recipeMake(script, 
+                                 outputID = "genome",
+                                 outputGlob = "NCBIM37.primary_assembly.genome.fa.gz")
+
+res <- getData(rcp_gencode_ncbim37,
+               outdir = "../SharedData/gencode_genome",
+               prefix = "gencode_genome_ncbim37",
+               notes = c("gencode", "mouse", "NCBIM37"),
+               showLog = TRUE)
+
 ```
+
 # For users
 
 step 1: [dataUpdate()], dataSearch(), return ("dataHub"? with) data path. 
