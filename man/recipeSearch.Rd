@@ -4,12 +4,15 @@
 \alias{recipeSearch}
 \title{search existing data recipes.}
 \usage{
-recipeSearch(keywords, cachePath = "ReUseDataRecipe")
+recipeSearch(keywords = character(), cachePath = "ReUseDataRecipe")
 }
 \arguments{
-\item{keywords}{character vector of keywords to be matched to the recipe names.}
+\item{keywords}{character vector of keywords to be matched to the
+recipe names. If not specified, function returns the full
+recipe list.}
 
-\item{cachePath}{A character string for the recipe caching path. "ReUseDataRecipe" by default.}
+\item{cachePath}{A character string for the recipe caching
+path. "ReUseDataRecipe" by default.}
 }
 \value{
 return a recipeHub object.
@@ -18,6 +21,7 @@ return a recipeHub object.
 search existing data recipes.
 }
 \examples{
+recipeSearch()
 recipeSearch("gencode")
 recipeSearch(c("STAR", "index"))
 }

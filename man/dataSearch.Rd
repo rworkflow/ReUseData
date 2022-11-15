@@ -4,10 +4,14 @@
 \alias{dataSearch}
 \title{search recipes on GitHub repository}
 \usage{
-dataSearch(keywords, cachePath = "ReUseData")
+dataSearch(keywords = character(), cachePath = "ReUseData")
 }
 \arguments{
-\item{keywords}{keywords}
+\item{keywords}{character vector of keywords to be matched to the
+local datasets. It matches the "notes" when generating the data
+using \code{getData(notes = )}. Keywords can be a tag with the data
+in \verb{#tag} format. If not specified, function returns the full
+data list.}
 
 \item{cachePath}{ReUseData by default}
 }
@@ -19,5 +23,7 @@ data cache, e.g., data name, data path, etc.
 search recipes on GitHub repository
 }
 \examples{
+## dataSearch()
 ## dataSearch(c("gencode", "human", "38"))
+## dataSearch("#samtools")
 }

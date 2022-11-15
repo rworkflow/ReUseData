@@ -15,7 +15,8 @@ recipeUpdate(
 store the ReUseData recipes. "ReUseDataRecipe" by default.}
 
 \item{force}{Whether to clean existing recipes cache. Default is
-FALSE.}
+FALSE. Only use if any old recipes that are previously cached
+locally are updated.}
 
 \item{repos}{The GitHub repository for data recipes. By default, it
 reads the "rworkflows/ReUseDataRecipes" GitHub
@@ -23,9 +24,9 @@ repository. Users can also specify a GitHub repo for their
 private data recipes.}
 }
 \description{
-Function to sync and get the most updated data recipes through the
-pubic "rworkflows/ReUseDataRecipes" GitHub repository or user
-specified private GitHub repo.
+Function to sync and get the most updated and newly added data
+recipes through the pubic "rworkflows/ReUseDataRecipes" GitHub
+repository or user specified private GitHub repo.
 }
 \examples{
 \dontrun{

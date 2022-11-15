@@ -11,7 +11,7 @@
 #' @examples
 #' ## dataSearch()
 #' ## dataSearch(c("gencode", "human", "38"))
-#' @@ dataSearch("#samtools")
+#' ## dataSearch("#samtools")
 #' @export
 #' 
 dataSearch <- function(keywords=character(), cachePath = "ReUseData") {

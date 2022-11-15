@@ -30,7 +30,7 @@ dataPath(object)
 
 \S4method{c}{dataHub}(x, ...)
 
-toList(x, type = NULL)
+toList(x, type = NULL, format = "list")
 }
 \arguments{
 \item{BFC}{A BiocFileCache object created for data and recipes.}

@@ -1,5 +1,9 @@
 ## TODO: 
 
+- how to extract the file path column "fpath" from `dataHub` returned by dataSearch()??? toList().  -- done!
+- add function: dataClean() to search all available yml files, if fpath exist. If not, remove all related files (yml,cwl,md5,sh, etc. -- todo...
+- `recipeSearch()` `dataSearch()`, if keywords is empty, then return all available recipes/data. -- done!
+
 - If data not successfully generated, should remove the empty .yml file to avoid error in `dataSearch()` -- done!
 - reorganize recipes. For reference genome download/indexing, use ensembl, 1000 genomes, not gencode. (example 1, example 5)
 - `STAR_index.R` rewrite use `recipeMake` function. SPECIAL CASE: inputparam type=list(), position, output type Directory, glob $(inputs.genomeDir). 
@@ -68,7 +72,6 @@ rcp_gencode_annot <- recipeMake(shscript = script,
                                 outputGlob = "gencode.v*.annotation.gtf"
                                 ## , requireTools = c() ## wget, gzip 
                                 )
-
 rcp_gencode_annot <- addMeta(cwl = rcp_gencode_annot,
                              label = "gencode annotation",
                              doc = "Download and unzip annotation files from gencode",
@@ -237,6 +240,36 @@ res <- getData(rcp, outdir = "../SharedData/gencode_transcriptome",
                prefix = "gencode_transcriptome_human_19",
                notes = c("gencode", "human", "19"),
                showLog = TRUE)
+```
+
+## Example 5: google bucket
+
+```{r}
+## Example:
+recipeUpdate(force=TRUE)
+recipeSearch(c("gcp", "omni"))
+rcp <- recipeLoad("gcp_broad_gatk_hg38_1000G_omni2.5")
+getData(rcp,
+        outdir = "/home/qian/workspace/SharedData/gcp_public_data_broad_references_hg38_v0",
+        prefix = "gcp_broad_hg38_v0_1000G_omni2.5",
+        notes = c("gcp", "broad", "reference", "hg38", "v0", "1000G", "omni2.5"),
+        showLog = TRUE)
+dataUpdate(dir="/home/qian/workspace/SharedData", outMeta = TRUE)
+res <- dataSearch(c("1000g", "omni2.5"))
+mcols(res)$fpath  
+```
+```{r}
+recipeUpdate(force=TRUE)
+rcp <- recipeLoad('gcp_broad_gatk_hg19_1000G_omni2.5')
+getData(rcp, 
+        outdir = '/home/qian/workspace/SharedData/gcp_public_data_broad_references_hg19_v0',
+        prefix = 'gcp_broad_hg19_v0_1000G_omni2.5',
+        notes = c('gcp', 'broad', 'reference', 'hg19', 'v0', '1000G', 'omni2.5', 'b37'),
+        showLog = TRUE)
+dataUpdate(dir="/home/qian/workspace/SharedData", outMeta = TRUE)
+res <- dataSearch(c("1000g", "omni2.5"))
+mcols(res)$fpath  
+
 ```
 
 ## Example 5: gencode genome assembly 

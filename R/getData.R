@@ -39,7 +39,8 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #'     curation.  `.md`: ... (to-be-filled)
 #' @importFrom Rcwl runCWL
 #' @importFrom tools md5sum
-#' @export # #' @examples
+#' @export
+## #' @examples
 
 getData <- function(cwl, outdir, prefix, version = "", notes = "", docker = TRUE, ...){
     if(docker == "singularity"){

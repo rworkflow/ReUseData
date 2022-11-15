@@ -41,8 +41,20 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
         write.csv(meta, file = file.path(dir, "meta_data.csv"))
         message("\nMeta file for all available datasets generated: ", file.path(dir, "meta_data.csv"))
     }
-        
-    message("Updating data record...")
+
+    ## if any data not exist (meta$output), then delete that record. 
+    ind <- meta$output == "" | !file.exists(meta$output)
+    if (any(ind)) {
+        message("\nCleaning up invalid data records...")
+        ## dirs <- unique(dirname(meta$yml[ind]))
+        ## ptns <- gsub(".yml", "", basename(meta$yml[ind]))
+        ## fls <- list.files(dirs, pattern = paste0(ptns, collapse="|"),
+        ##                   full.names=TRUE)    
+        ## file.remove(fls)
+        meta <- meta[!ind, ]
+    }
+    
+    message("\nUpdating data record...")
     fpath <- meta$output
     
     ## add any non-cached recipes to local cache

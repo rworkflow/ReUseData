@@ -11,17 +11,20 @@ getData(cwl, outdir, prefix, version = "", notes = "", docker = TRUE, ...)
 \code{loadData()}.}
 
 \item{outdir}{The directory to store the outputs. Will
-automatically create if not exist.}
+automatically create if not exist or provided.}
 
 \item{prefix}{The string that labels the data which will be added
-as prefix to the 4 output files. e.g., "gencode_human_38".}
+as prefix to the 4 output files. "gencode_human_38".}
 
-\item{version}{User assigned version for the data generated. e.g.,
-"38", "v1.0", etc.}
+\item{version}{User specified version for the data generated for
+local data management. Takes string. Default is "". When
+provided, it will be pasted with \code{prefix} argument using "_" to
+serve as the final prefix for output files. E.g.,
+"gencode_human_38_v1.0".}
 
 \item{notes}{User assigned notes/keywords to retrieve the data by
 \code{searchData()} function.  e.g., "human", "reference genome",
-"gencode", "gtf", etc.}
+"gencode", "gtf", etc. Multiple notes will be pasted using blank space.}
 
 \item{docker}{Default is TRUE.}
 

@@ -2,12 +2,15 @@
 % Please edit documentation in R/dataUpdate.R
 \name{dataUpdate}
 \alias{dataUpdate}
-\title{update the data records by reading the .yml files using BiocFileCache}
+\title{update the local data records by reading the yaml files in the
+specified directory recursively.}
 \usage{
 dataUpdate(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE)
 }
 \arguments{
-\item{dir}{a character string for the path to save the data.}
+\item{dir}{a character string for the directory where all data are
+saved. Data information will be collected recursively within
+this directory.}
 
 \item{cachePath}{the cache path for recording all available
 datasets. Default is "ReUseData".}
@@ -17,7 +20,8 @@ a \code{dataHub} object containing the information about local
 data cache, e.g., data name, data path, etc.
 }
 \description{
-update the data records by reading the .yml files using BiocFileCache
+update the local data records by reading the yaml files in the
+specified directory recursively.
 }
 \examples{
 ## dataUpdate(dir = "~/workspace/SharedData")
