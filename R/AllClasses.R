@@ -195,7 +195,7 @@ setGeneric("c")
 #' @param x A `dataHub` object.
 #' @param type The type of workflow input list, such as cwl.
 #' @export
-toList <- function(x, type = NULL, format = NULL){
+toList <- function(x, type = NULL, format = "list"){
     tl <- title(x)
     pth <- dataPath(x)
     if(!is.null(type) && type == "cwl"){
@@ -214,6 +214,6 @@ toList <- function(x, type = NULL, format = NULL){
         dl <- jsonlite::toJSON(dl, pretty = TRUE, auto_unbox = TRUE)
     } else if (format == "yml") {
         dl <- yaml::as.yaml(dl)
-    }
+    } 
     return(dl)
 }
