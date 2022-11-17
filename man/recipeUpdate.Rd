@@ -11,26 +11,28 @@ recipeUpdate(
 )
 }
 \arguments{
-\item{cachePath}{The cache path of the BiocFileCache object to
-store the ReUseData recipes. "ReUseDataRecipe" by default.}
+\item{cachePath}{A character string specifying the name for the
+\code{BiocFileCache} object to store the ReUseData recipes. Once
+specified here, must use the same for \code{cachePath} argument in
+\code{recipeSearch}, and \code{recipeLoad}. Default is "ReUseDataRecipe".}
 
-\item{force}{Whether to clean existing recipes cache. Default is
-FALSE. Only use if any old recipes that are previously cached
-locally are updated.}
+\item{force}{Whether to remove existing and regenerate recipes
+cache. Default is FALSE. Only use if any old recipes that have
+been previously cached locally are updated remotely (on GitHub
+\code{repos}).}
 
-\item{repos}{The GitHub repository for data recipes. By default, it
-reads the "rworkflows/ReUseDataRecipes" GitHub
-repository. Users can also specify a GitHub repo for their
-private data recipes.}
+\item{repos}{The GitHub repository where data recipes are saved. By
+default, it reads the "rworkflows/ReUseDataRecipes" GitHub
+repository where recipes are publicly shared for direct use and
+as examples for users to build their own recipes.}
 }
 \description{
 Function to sync and get the most updated and newly added data
 recipes through the pubic "rworkflows/ReUseDataRecipes" GitHub
-repository or user specified private GitHub repo.
+repository or user-specified private GitHub repo.
 }
 \examples{
 \dontrun{
-rcps <- recipeUpdate()
-rcps
+recipeUpdate()
 }
 }

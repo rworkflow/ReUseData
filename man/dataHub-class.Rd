@@ -34,9 +34,9 @@ dataTags(object)
 
 \S4method{dataTags}{dataHub}(object)
 
-dataTags(object) <- value
+dataTags(object, append = TRUE) <- value
 
-\S4method{dataTags}{dataHub}(object) <- value
+\S4method{dataTags}{dataHub}(object, append = FALSE) <- value
 
 \S4method{[}{dataHub,ANY,ANY,ANY}(x, i)
 
@@ -48,6 +48,8 @@ toList(x, format = c("list", "json", "yaml"), type = NULL)
 \item{BFC}{A BiocFileCache object created for data and recipes.}
 
 \item{object}{A \code{dataHub} object.}
+
+\item{append}{Whether to append new tag or replace all tags.}
 
 \item{value}{The tag values to assign to datasets in \code{dataHub} object.}
 
@@ -61,8 +63,6 @@ toList(x, format = c("list", "json", "yaml"), type = NULL)
 match. Default is list.}
 
 \item{type}{The type of workflow input list, such as cwl.}
-
-\item{append}{Whether to append new tag or replace all tags.}
 }
 \value{
 dataHub: a \code{dataHub} object.

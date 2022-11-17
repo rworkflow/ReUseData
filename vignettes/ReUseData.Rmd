@@ -63,6 +63,14 @@ toList(dd, format = "json")
 toList(dd, format = "yaml")
 ```
 
+## Data recipe construction and evaluation
+
+recipe construction: 
+
+Convert existing shell scripts for data processing into data recipes,
+by specifying input parameters, and output globbing pattern. The the
+data recipe is represented in _R_ as an S4 class `cwlProcess`. 
+
 ```{r}
 shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
 readLines(shfile)
@@ -72,6 +80,13 @@ rcp <- recipeMake(shscript = shfile,
                   outputID = "annotation", 
                   outputGlob = "gencode.v*.annotation.gtf"
                   )
+rcp
+```
+
+Users can then assign values to the input parameters, and evaluate the
+recipe (`getData`) to generate data. 
+
+```{r}
 rcp$species <- "human"
 rcp$version <- "42"
 res <- getData(rcp,
@@ -79,9 +94,36 @@ res <- getData(rcp,
         prefix = "gencode_annotation_human_42",
         notes = c("gencode", "human", "42"),
         showLog = TRUE)
-res$output
-dir(tempdir(), pattern = "gencode_annotation_human_42")
+```
 
+The file path to newly generated dataset can be easily retrieved. 
+
+```{r}
+res$output
+```
+
+There are some automatically generated files to help track the data
+recipe evaluation, including `*.sh` to record the original shell
+script, `*.cwl` file as the official workflow script which was
+internally submitted for data recipe evaluation, `*.yml` file as part
+of CWL workflow evalution, which also record data annotations, and
+`*.md5` checksum file to check/verify the integrity of generated data
+file.
+
+```{r}
+dir(tempdir(), pattern = "gencode_annotation_human_42")
+```
+
+The `*.yml` file contains information about recipe input parameters,
+the file path to output file, the notes for the dataset, and
+auto-added date for data generation time. A later data search using
+`dataSearch()` will refer to this file for keywords match.
+
+```{r}
+readLines(res$yml)
+```
+
+```{r}
 script <- '
 aa=$1
 bb=$2
@@ -111,17 +153,38 @@ res$out
 readLines(res$out)
 ```
 
-We can also take a look at the yml file when evaluting the recipe to
-generate data. It contains information about recipe input parameters,
-the file path to output file, the notes for the dataset, and
-auto-added date for data generation time. A later data search using
-`dataSearch()` will refer to this file for keywords match.
 
 ```{r}
 readLines(res$yml)
 ```
 
+## Data recipe caching and updating
 
+`recipeUpdate()` creates a local cache for data recipes that are saved
+in specified GitHub repository (if first time use), syncs and updates
+data recipes from the GitHub repo to local caching system, so any
+newly added recipes can be readily accessed and loaded directly in
+_R_.  
+
+**NOTE:** 
+
+- The `cachePath` argument need to match between `recipeUpdate`,
+`recipeLoad` and `recipeSearch` functions.
+- use `force=TRUE` when any old recipes that are previously cached are
+updated.
+
+```{r}
+recipeUpdate(cachePath = "ReUseDataRecipe",
+             repos = "rworkflow/ReUseDataRecipe",
+             force = TRUE)
+```
+
+## Data recipe searching and loading
+
+```{r}
+recipeSearch(c())
+rcp <- recipeLoad()
+```
 
 # Installation
 1. Install the package from _Bioconductor_.

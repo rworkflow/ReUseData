@@ -2,16 +2,19 @@
 #'
 #' Function to sync and get the most updated and newly added data
 #' recipes through the pubic "rworkflows/ReUseDataRecipes" GitHub
-#' repository or user specified private GitHub repo.
-#' @param cachePath The cache path of the BiocFileCache object to
-#'     store the ReUseData recipes. "ReUseDataRecipe" by default.
-#' @param force Whether to clean existing recipes cache. Default is
-#'     FALSE. Only use if any old recipes that are previously cached
-#'     locally are updated. 
-#' @param repos The GitHub repository for data recipes. By default, it
-#'     reads the "rworkflows/ReUseDataRecipes" GitHub
-#'     repository. Users can also specify a GitHub repo for their
-#'     private data recipes.
+#' repository or user-specified private GitHub repo.
+#' @param cachePath A character string specifying the name for the
+#'     `BiocFileCache` object to store the ReUseData recipes. Once
+#'     specified here, must use the same for `cachePath` argument in
+#'     `recipeSearch`, and `recipeLoad`. Default is "ReUseDataRecipe".
+#' @param force Whether to remove existing and regenerate recipes
+#'     cache. Default is FALSE. Only use if any old recipes that have
+#'     been previously cached locally are updated remotely (on GitHub
+#'     `repos`).
+#' @param repos The GitHub repository where data recipes are saved. By
+#'     default, it reads the "rworkflows/ReUseDataRecipes" GitHub
+#'     repository where recipes are publicly shared for direct use and
+#'     as examples for users to build their own recipes.
 #' @importFrom tools R_user_dir
 #' @import BiocFileCache
 #' @import Rcwl
@@ -19,12 +22,13 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' rcps <- recipeUpdate()
-#' rcps
+#' recipeUpdate()
 #' }
 
-recipeUpdate <- function(cachePath = "ReUseDataRecipe", force = FALSE, repos = "rworkflow/ReUseDataRecipe"){
-    ## browser()
+recipeUpdate <- function(cachePath = "ReUseDataRecipe",
+                         force = FALSE,
+                         repos = "rworkflow/ReUseDataRecipe"){
+    
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -46,10 +50,13 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe", force = FALSE, repos = "
     ## FIXME: CREATE A private github repo for private data recipes. 
     message("Update recipes...")
     dlpath <- file.path(cachePath, "recipes.zip")
-    download.file(paste0("https://github.com/", repos, "/archive/refs/heads/master.zip"),
+    download.file(paste0("https://github.com/", repos,
+                         "/archive/refs/heads/master.zip"),
                   dlpath)
     unzip(dlpath, exdir = cachePath)
-    fpath <- list.files(file.path(cachePath, paste0(basename(repos), "-master")), full.names=TRUE)
+    fpath <- list.files(file.path(cachePath,
+                                  paste0(basename(repos), "-master")),
+                        full.names=TRUE)
     ## add any non-cached recipes to local cache
     if(length(fpath) > 0){
         rnames <- sub(".R$", "", basename(fpath))
@@ -63,6 +70,7 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe", force = FALSE, repos = "
             }            
         }
     }
+    cat("\n")
     recipeHub(bfc)
 }
 
