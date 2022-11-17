@@ -14,6 +14,14 @@ this directory.}
 
 \item{cachePath}{the cache path for recording all available
 datasets. Default is "ReUseData".}
+
+\item{outMeta}{Logical. If TRUE, a "meta_data.csv" file will be
+generated in the \code{dir}, containing information about all
+available datasets in the directory: The file path to the yaml
+files, and yaml entries including parameter values for data
+recipe, file path to datasets, notes, version (from
+\code{getData()}), tag (from \code{dataTag()}) if available and data
+generating date.}
 }
 \value{
 a \code{dataHub} object containing the information about local
@@ -23,6 +31,16 @@ data cache, e.g., data name, data path, etc.
 update the local data records by reading the yaml files in the
 specified directory recursively.
 }
+\details{
+Users can directly retrieve information for all available
+datasets by using \code{meta_data(dir=)}, which generates a data
+frame in R with same information as described above and can be
+saved out. \code{dataUpdate} does extra check for all datasets
+(check the file path in "output" column), remove invalid ones,
+e.g., empty or non-existing file path, and create a data cache
+for all valid datasets.
+}
 \examples{
+## 
 ## dataUpdate(dir = "~/workspace/SharedData")
 }

@@ -1,10 +1,10 @@
 ## TODO: 
 
+- create example codes for recipeMake, recipeSearch, recipeLoad, getdata, dataUpdate(), dataSearch(), data retrieval toList(). 
 - how to extract the file path column "fpath" from `dataHub` returned by dataSearch()??? toList().  -- done!
-- add function: dataClean() to search all available yml files, if fpath exist. If not, remove all related files (yml,cwl,md5,sh, etc. -- todo...
+- add function: dataUpdate() clean up invalid ReUseData files if $output not exist. (yml,cwl,md5,sh) -- done! Any other situation?  
 - `recipeSearch()` `dataSearch()`, if keywords is empty, then return all available recipes/data. -- done!
-
-- If data not successfully generated, should remove the empty .yml file to avoid error in `dataSearch()` -- done!
+- If data not successfully generated in `getData()`, should remove the empty .yml file to avoid error in future `dataSearch()` -- done!
 - reorganize recipes. For reference genome download/indexing, use ensembl, 1000 genomes, not gencode. (example 1, example 5)
 - `STAR_index.R` rewrite use `recipeMake` function. SPECIAL CASE: inputparam type=list(), position, output type Directory, glob $(inputs.genomeDir). 
 - add meta for gencode transcript recipe. Demo use `gencode_annotation.R`, and `ensembl_liftover.R`. -- done!

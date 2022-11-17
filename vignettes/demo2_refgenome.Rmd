@@ -6,6 +6,10 @@ rcp <- recipeLoad("reference_genome")
 ```
 
 ```{r}
+mt1 <- meta2md(rcp)
+```
+
+```{r}
 ## ensembl homo_sapiens GRCh38 primary -- tested!! 
 inputs(rcp)
 rcp$fasta <- "http://ftp.ensembl.org/pub/release-104/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.MT.fa.gz"

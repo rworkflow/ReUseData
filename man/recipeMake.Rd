@@ -5,7 +5,7 @@
 \title{recipeMake}
 \usage{
 recipeMake(
-  shscript = "",
+  shscript = character(),
   paramID = c(),
   paramType = c(),
   outputID = c(),
@@ -18,14 +18,15 @@ recipeMake(
 the user provided shell script, or directly the script content,
 that are to be converted into a data recipe.}
 
-\item{paramID}{the ID for each parameter to pass in.}
+\item{paramID}{Character vector. The user specified parameter ID
+for the recipe.}
 
-\item{paramType}{Character string specifying the type for each
-\code{paramID}. Valid values are "int" for integer, "boolean" for
+\item{paramType}{Character vector specifying the type for each
+\code{paramID}. One parameter can be of multiple types in
+list. Valid values are "int" for integer, "boolean" for
 boolean, "float" for numeric, "File" for file path, "File[]"
 for an array of files, etc. Can also take "double", "long",
-"null", "Directory". Find more details:
-"https://www.commonwl.org/v1.2/CommandLineTool.html#CWLType".}
+"null", "Directory". See details.}
 
 \item{outputID}{the ID for each output.}
 
@@ -47,16 +48,67 @@ included and generate the data locally. Find more details with
 \code{?Rcwl::cwlProcess}.
 }
 \description{
-Function to make a data recipe
+Constructor function of data recipe
 }
 \details{
-This function is a convenient function for wrapping a
-shell script into a data recipe (in \code{cwlProcess} S4
-class). Please use \code{Rcwl::cwlProcess} for more options and
-functionalities.
+For parameter types, more details can be found here:
+"https://www.commonwl.org/v1.2/CommandLineTool.html#CWLType".
+
+\code{recipeMake} is a convenient function for wrapping a shell script
+into a data recipe (in \code{cwlProcess} S4 class). Please use
+\code{Rcwl::cwlProcess} for more options and functionalities,
+especially when the recipe gets complicated, e.g., needs a
+docker image for a command-line tool, or one parameter takes
+multiple types, etc. Refer to this recipe as an example:
+https://github.com/rworkflow/ReUseDataRecipe/blob/master/reference_genome.R
 }
 \examples{
-## ref_genome <- recipeMake(shscript = "", paramID = c("fasta"), paramType=c("string"), )
 
+##############
+### example 1
+##############
+
+shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
+readLines(shfile)
+rcp <- recipeMake(shscript = shfile,
+                  paramID = c("species", "version"),
+                  paramType = c("string", "string"),
+                  outputID = "annotation", 
+                  outputGlob = "gencode.v*.annotation.gtf"
+                  )
+inputs(rcp)
+rcp$species <- "human"
+rcp$version <- "42"
+res <- getData(rcp,
+        outdir = tempdir(), 
+        prefix = "gencode_annotation_human_42",
+        notes = c("gencode", "human", "42"),
+        showLog = TRUE)
+res$output
+dir(tempdir(), pattern = "gencode_annotation_human_42")
+
+##############
+### example 2
+##############
+
+script <- '
+aa=$1
+bb=$2
+echo "Print the input: $aa" > $bb.txt
+'
+rcp <- recipeMake(shscript = script,
+                  paramID = c("aa", "bb"),
+                  paramType = c("string", "string"),
+                  outputID = "echoout",
+                  outputGlob = "*.txt")
+inputs(rcp)
+outputs(rcp)
+rcp$aa <- "Hello World!"
+rcp$bb <- "outfile"
+res <- getData(rcp, outdir = tempdir(),
+               prefix = "test",
+               notes = c("echo", "txt", "test"),
+               showLog = TRUE)
+readLines(res$out)
 
 }

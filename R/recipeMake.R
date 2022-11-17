@@ -1,16 +1,18 @@
 #' recipeMake
 #'
-#' Function to make a data recipe
+#' Constructor function of data recipe
+#' @rdname recipeMake
 #' @param shscript character string. Can take either the file path to
 #'     the user provided shell script, or directly the script content,
 #'     that are to be converted into a data recipe.
-#' @param paramID the ID for each parameter to pass in.
-#' @param paramType Character string specifying the type for each
-#'     `paramID`. Valid values are "int" for integer, "boolean" for
+#' @param paramID Character vector. The user specified parameter ID
+#'     for the recipe.
+#' @param paramType Character vector specifying the type for each
+#'     `paramID`. One parameter can be of multiple types in
+#'     list. Valid values are "int" for integer, "boolean" for
 #'     boolean, "float" for numeric, "File" for file path, "File[]"
 #'     for an array of files, etc. Can also take "double", "long",
-#'     "null", "Directory". Find more details:
-#'     "https://www.commonwl.org/v1.2/CommandLineTool.html#CWLType".
+#'     "null", "Directory". See details.
 #' @param outputID the ID for each output.
 #' @param outputGlob the glob pattern of output files. E.g., "hg19.*".
 #' @param requireTools the command-line tools to be used for data
@@ -27,28 +29,79 @@
 #'     `?Rcwl::cwlProcess`.
 #' @importFrom Rcwl InputParam OutputParam InputParamList
 #'     OutputParamList
-#' @details This function is a convenient function for wrapping a
-#'     shell script into a data recipe (in `cwlProcess` S4
-#'     class). Please use `Rcwl::cwlProcess` for more options and
-#'     functionalities.
+#' @details For parameter types, more details can be found here:
+#'     "https://www.commonwl.org/v1.2/CommandLineTool.html#CWLType".
+#'
+#' `recipeMake` is a convenient function for wrapping a shell script
+#'     into a data recipe (in `cwlProcess` S4 class). Please use
+#'     `Rcwl::cwlProcess` for more options and functionalities,
+#'     especially when the recipe gets complicated, e.g., needs a
+#'     docker image for a command-line tool, or one parameter takes
+#'     multiple types, etc. Refer to this recipe as an example:
+#'     https://github.com/rworkflow/ReUseDataRecipe/blob/master/reference_genome.R
 #' @export
 #' @examples
-#' ## ref_genome <- recipeMake(shscript = "", paramID = c("fasta"), paramType=c("string"), )
 #'
+#' ##############
+#' ### example 1
+#' ##############
 #'
-recipeMake <- function(shscript = "",  ## FIXME: support a valid URL for downloading
+#' shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
+#' readLines(shfile)
+#' rcp <- recipeMake(shscript = shfile,
+#'                   paramID = c("species", "version"),
+#'                   paramType = c("string", "string"),
+#'                   outputID = "annotation", 
+#'                   outputGlob = "gencode.v*.annotation.gtf"
+#'                   )
+#' inputs(rcp)
+#' rcp$species <- "human"
+#' rcp$version <- "42"
+#' res <- getData(rcp,
+#'         outdir = tempdir(), 
+#'         prefix = "gencode_annotation_human_42",
+#'         notes = c("gencode", "human", "42"),
+#'         showLog = TRUE)
+#' res$output
+#' dir(tempdir(), pattern = "gencode_annotation_human_42")
+#' 
+#' ##############
+#' ### example 2
+#' ##############
+#' 
+#' script <- '
+#' aa=$1
+#' bb=$2
+#' echo "Print the input: $aa" > $bb.txt
+#' '
+#' rcp <- recipeMake(shscript = script,
+#'                   paramID = c("aa", "bb"),
+#'                   paramType = c("string", "string"),
+#'                   outputID = "echoout",
+#'                   outputGlob = "*.txt")
+#' inputs(rcp)
+#' outputs(rcp)
+#' rcp$aa <- "Hello World!"
+#' rcp$bb <- "outfile"
+#' res <- getData(rcp, outdir = tempdir(),
+#'                prefix = "test",
+#'                notes = c("echo", "txt", "test"),
+#'                showLog = TRUE)
+#' readLines(res$out)
+#' 
+recipeMake <- function(shscript = character(),
                        paramID = c(),  
                        paramType = c(),
                        outputID = c(),
-                       ## outputType = c(),
+                       ## outputType = c(), ## default is "File[]" file array
                        outputGlob = character(0),
                        requireTools = character(0)) {
-    ## browser()
     if(file.exists(shscript)){
         shscript <- paste(readLines(shscript), collapse = "\n")
     }
     shscript <- gsub('\\$\\{(.*?)\\}', '"$\\1"', shscript)
-    ## This remove {} from evaluting as javascript. So abcd${test}_abcd${test} => abcd"$test"_abcd"$test"
+    ## This remove {} from evaluting as javascript. So
+    ## abcd${test}_abcd${test} => abcd"$test"_abcd"$test"
     req1 <- requireShellScript(script = shscript)
     req2 <- requireNetwork()
     req3 <- requireJS()

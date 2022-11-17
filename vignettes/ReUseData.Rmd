@@ -1,0 +1,324 @@
+---
+title: "ReUseData: An R/Bioconductor Data Management Tool for Reusable and Reproducible Biomedical Data Resources"
+author: "Qian Liu"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{ReUseData}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+`ReUseData` is a _Bioconductor_ package that manages a collection
+of commonly used bioinformatics tools and pipeline based on
+`Rcwl`. These pre-built and pre-tested tools and pipelines are highly
+modularized with easy customization to meet different bioinformatics
+data analysis needs.  
+
+`Rcwl` and `ReUseData` together forms a _Bioconductor_ toolchain
+for use and development of reproducible bioinformatics pipelines in
+Common Workflow Language (CWL). The project also aims to develop a
+community-driven platform for open source, open development, and open
+review of best-practice CWL bioinformatics pipelines.
+
+Function: 
+
+Data management: 
+- getData(), 
+- dataUpdate(), dataSearch(), dataHub class, show method, subsetting dataHub[index], combining c(dh, dh), getter funcs: dataNotes(), dataPath(), dataParams(), title(), dataTag()? toList() to use data!!!
+
+Data recipes: 
+- recipeHub class, show methods, subsetting recipeHub[index], 
+- recipeMake, recipeSearch, recipeLoad
+- recipe evaluation: getData
+
+```{r}
+recipeUpdate(force=TRUE)
+rcps <- recipeSearch(c("gencode"))
+rcp1 <- rcps[1]
+recipeNames(rcp1)
+```
+
+## private GitHub repo? example. 
+```{r}
+dataSearch()
+dd <- dataSearch("reference", "38", "1000g"))
+dataNames(dd)
+dataParams(dd)
+dataNotes(dd)
+dataTags(dd)
+toList(dd)
+toList(dd, format = "json")
+toList(dd, format = "yaml")
+```
+
+```{r}
+shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
+readLines(shfile)
+rcp <- recipeMake(shscript = shfile,
+                  paramID = c("species", "version"),
+                  paramType = c("string", "string"),
+                  outputID = "annotation", 
+                  outputGlob = "gencode.v*.annotation.gtf"
+                  )
+rcp$species <- "human"
+rcp$version <- "42"
+res <- getData(rcp,
+        outdir = tempdir(), 
+        prefix = "gencode_annotation_human_42",
+        notes = c("gencode", "human", "42"),
+        showLog = TRUE)
+res$output
+dir(tempdir(), pattern = "gencode_annotation_human_42")
+
+script <- '
+aa=$1
+bb=$2
+echo "Print the input: $aa" > $bb.txt
+'
+rcp <- recipeMake(shscript = script,
+                  paramID = c("aa", "bb"),
+                  paramType = c("string", "string"),
+                  outputID = "echoout",
+                  outputGlob = "*.txt")
+inputs(rcp)
+outputs(rcp)
+rcp$aa <- "Hello World!"
+rcp$bb <- "outfile"
+res <- getData(rcp, outdir = tempdir(),
+               prefix = "test",
+               notes = c("echo", "txt", "test"),
+               showLog = TRUE)
+```
+
+Let's take a look at the output file, which is successfully generated
+in user-specified directory and grabbed through the `outputGlob`
+argument.
+
+```{r}
+res$out
+readLines(res$out)
+```
+
+We can also take a look at the yml file when evaluting the recipe to
+generate data. It contains information about recipe input parameters,
+the file path to output file, the notes for the dataset, and
+auto-added date for data generation time. A later data search using
+`dataSearch()` will refer to this file for keywords match.
+
+```{r}
+readLines(res$yml)
+```
+
+
+
+# Installation
+1. Install the package from _Bioconductor_.
+
+```{r, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ReUseData")
+```
+The development version is also available to download from GitHub. 
+```{r getDevel, eval=FALSE}
+BiocManager::install("rworkflow/ReUseData")
+```
+
+2. Load the package into the R session.
+```{r Load, message=FALSE}
+library(ReUseData)
+```
+		
+# Project resources 
+
+The project website https://rcwl.org/ serves as a central hub for all
+related resources. It provides guidance for new users and tutorials
+for both users and developers. Specific resources are listed below. 
+
+## The _R_ recipes and cwl scripts
+
+The _R_ scripts to build the CWL tools and pipelines are now residing
+in a dedicated [GitHub
+repository](https://github.com/rworkflow/RcwlRecipes), which is
+intended to be a community effort to collect and contribute
+Bioinformatics tools and pipelines using `Rcwl` and CWL.
+
+## Tutorial book
+
+The [tutorial book](https://rcwl.org/RcwlBook/) provides detailed
+instructions for developing `Rcwl` tools/pipelines, and also includes
+examples of some commonly-used tools and pipelines that covers a wide
+range of Bioinformatics data analysis needs.
+
+
+# `ReUseData` core functions
+
+Here we show the usage of 3 core functions: `cwlUpdate`, `cwlSearch`
+and `cwlLoad` for updating, searching, and loading the needed tools
+or pipelines in _R_.
+
+## `cwlUpdate` 
+
+The `cwlUpdate` function syncs the current `Rcwl` recipes and returns
+a `cwlHub` object which contains the most updated `Rcwl` recipes. The
+`mcols()` function returns all related information about each
+available tool or pipeline. 
+
+The recipes will be locally cached, so users don't need to call
+`cwlUpdate` every time unless they want to use a tool/pipeline that is
+newly added to `RcwlPipelines`. Here we are using the recipes from
+_Bioconductor_ devel version.
+	
+```{r}
+## For vignette use only. users don't need to do this step.
+Sys.setenv(cachePath = tempdir()) 
+```
+
+```{r, message=FALSE}
+atls <- cwlUpdate(branch = "dev") ## sync the tools/pipelines.
+atls
+table(mcols(atls)$Type)
+```
+Currently, we have integrated `r sum(Type(atls)=="tool")` command
+line tools and `r sum(Type(atls)=="pipeline")` pipelines.
+
+## `cwlSearch`
+
+We can use (multiple) keywords to search for specific tools/pipelines
+of interest, which internally search the `mcols` of "rname", "rpath",
+"fpath", "Command" and "Containers". Here we show how to search the
+alignment tool `bwa mem`.
+
+```{r}
+t1 <- cwlSearch(c("bwa", "mem"))
+t1
+mcols(t1)
+```
+
+## `cwlLoad`
+
+The last core function `cwlLoad` loads the `Rcwl` tool/pipeline into
+the _R_ working environment. The code below loads the tool with a
+user-defined name `bwa` to do the read alignment. 
+
+```{r}
+bwa <- cwlLoad(title(t1)[1])  ## "tl_bwa"
+bwa <- cwlLoad(mcols(t1)$fpath[1]) ## equivalent to the above. 
+bwa
+```
+
+Now the _R_ tool of `bwa` is ready to use. 
+
+# Customize a tool or pipeline
+
+To fit users' specific needs，the existing tool or pipline can be
+easily customized. Here we use the `rnaseq_Sf` pipeline to demonstrate
+how to access and change the arguments of a specific tool inside a
+pipeline. This pipeline covers RNA-seq reads quality summary by
+`fastQC`, alignment by `STAR`, quantification by `featureCounts` and
+quality control by `RSeQC`.
+
+```{r, warning=FALSE}
+rnaseq_Sf <- cwlLoad("pl_rnaseq_Sf")
+plotCWL(rnaseq_Sf)
+```
+
+There are many default arguments defined for the tool of `STAR` inside
+the pipeline. Users might want to change some of them. For example, we
+can change the value for `--outFilterMismatchNmax` argument from 2 to
+5 for longer reads.
+
+```{r}
+arguments(rnaseq_Sf, "STAR")[5:6]
+arguments(rnaseq_Sf, "STAR")[[6]] <- 5
+arguments(rnaseq_Sf, "STAR")[5:6]
+```
+
+We can also change the docker image for a specific tool (e.g., to a
+specific version). First, we search for all available docker images
+for `STAR` in biocontainers repository. The Source server could be
+[quay](https://quay.io/) or [dockerhub](https://hub.docker.com).
+
+```{r}
+searchContainer("STAR", repo = "biocontainers", source = "quay")
+```
+
+Then, we can change the `STAR` version into 2.7.8a (tag name: 2.7.8a--0). 
+
+```{r}
+requirements(rnaseq_Sf, "STAR")[[1]]
+requirements(rnaseq_Sf, "STAR")[[1]] <- requireDocker(
+    docker = "quay.io/biocontainers/star:2.7.8a--0")
+requirements(rnaseq_Sf, "STAR")[[1]]
+```
+
+# Run a tool or pipeline
+
+Once the tool or pipeline is ready, we only need to assign values for
+each of the input parameters, and then submit using one of the
+functions: `runCWL`, `runCWLBatch` and `cwlShiny`. More detailed Usage
+and examples can be refer to the `Rcwl`
+[vignette](https://bioconductor.org/packages/devel/bioc/vignettes/Rcwl/inst/doc/Rcwl.html).
+
+To successfully run the tool or pipeline, users either need to have
+all required command line tools pre-installed locally, or using the
+docker/singularity runtime by specifying `docker = TRUE` or `docker =
+"singularity"` argument inside `runCWL` or `runCWLBatch`
+function. Since the _Bioconductor_ building machine doesn't have all the
+tools installed, nor does it support the docker runtime, here we use some
+pseudo-code to demonstrate the tool/pipeline execution.
+
+```{r, eval=FALSE}
+inputs(rnaseq_Sf)
+rnaseq_Sf$in_seqfiles <- list("sample_R1.fq.gz",
+                              "sample_R2.fq.gz")
+rnaseq_Sf$in_prefix <- "sample"
+rnaseq_Sf$in_genomeDir <- "genome_STAR_index_Dir"
+rnaseq_Sf$in_GTFfile <- "GENCODE_version.gtf"
+
+runCWL(rnaseq_Sf, outdir = "output/sample", docker = TRUE)
+```
+
+Users can also submit parallel jobs to HPC for multiple samples using
+`runCWLBatch` function. Different cluster job managers, such as
+"multicore", "sge" and "slurm", are supported using the
+`BiocParallel::BatchtoolsParam`.
+
+```{r, eval=FALSE}
+library(BioParallel)
+bpparam <- BatchtoolsParam(workers = 2, cluster = "sge",
+                           template = batchtoolsTemplate("sge"))
+
+inputList <- list(in_seqfiles = list(sample1 = list("sample1_R1.fq.gz",
+                                                    "sample1_R2.fq.gz"),
+                                     sample2 = list("sample2_R1.fq.gz",
+                                                    "sample2_R2.fq.gz")),
+                  in_prefix = list(sample1 = "sample1",
+                                   sample2 = "sample2"))
+
+paramList <- list(in_genomeDir = "genome_STAR_index_Dir",
+                  in_GTFfile = "GENCODE_version.gtf",
+                  in_runThreadN = 16)
+
+runCWLBatch(rnaseq_Sf, outdir = "output",
+            inputList, paramList,
+            BPPARAM = bpparam)
+```
+
+# SessionInfo
+```{r}
+sessionInfo()
+```
+
