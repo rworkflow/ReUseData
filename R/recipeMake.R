@@ -31,6 +31,7 @@
 #'     shell script into a data recipe (in `cwlProcess` S4
 #'     class). Please use `Rcwl::cwlProcess` for more options and
 #'     functionalities.
+#' @export
 #' @examples
 #' ## ref_genome <- recipeMake(shscript = "", paramID = c("fasta"), paramType=c("string"), )
 #'

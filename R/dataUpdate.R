@@ -6,9 +6,24 @@
 #'     this directory.
 #' @param cachePath the cache path for recording all available
 #'     datasets. Default is "ReUseData".
+#' @param outMeta Logical. If TRUE, a "meta_data.csv" file will be
+#'     generated in the `dir`, containing information about all
+#'     available datasets in the directory: The file path to the yaml
+#'     files, and yaml entries including parameter values for data
+#'     recipe, file path to datasets, notes, version (from
+#'     `getData()`), tag (from `dataTag()`) if available and data
+#'     generating date.
+#' @details Users can directly retrieve information for all available
+#'     datasets by using `meta_data(dir=)`, which generates a data
+#'     frame in R with same information as described above and can be
+#'     saved out. `dataUpdate` does extra check for all datasets
+#'     (check the file path in "output" column), remove invalid ones,
+#'     e.g., empty or non-existing file path, and create a data cache
+#'     for all valid datasets.
 #' @return a `dataHub` object containing the information about local
 #'     data cache, e.g., data name, data path, etc.
 #' @examples
+#' ## 
 #' ## dataUpdate(dir = "~/workspace/SharedData")
 #' @export
 #' 
@@ -28,7 +43,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
 
     if("tag" %in% colnames(mcols(dataHub(bfc)))){
         if(keepTags) {
-            tag_old <- tags(dataHub(bfc))
+            tag_old <- dataTags(dataHub(bfc))
         }
     }else{
         keepTags <- FALSE
@@ -75,7 +90,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
 
     dh <- dataHub(bfc)
     if(keepTags){
-        tags(dh) <- tag_old
+        dataTags(dh) <- tag_old
     }
     return(dh)
 }

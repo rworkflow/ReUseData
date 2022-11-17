@@ -1,5 +1,5 @@
 ################
-## recipeHub
+## dataHub
 ################
 
 #' dataHub
@@ -21,14 +21,24 @@ dataHub <- function(BFC){
 
 ## Methods
 ## 'mcols()' inherited from cwlHub, returns a DataFrame with all info including bfcmeta(bfc, "dataMeta"). 
-## 'title()' inherited to return the 'rname' column in mcols(cwlHub).
-## '[' inherited to return the subset of cwlHub with cwlHub["BFCid"]. 
+## 'title()' inherited to return the 'rname' column in mcols(cwlHub). Here use `dataName()`
 
 #' @rdname dataHub-class
-#' @param x A `dataHub` object
+#' @param object A `dataHub` object
 #' @importFrom S4Vectors mcols get_showHeadLines get_showTailLines
 #' @importMethodsFrom RcwlPipelines mcols
 #' @exportMethod show
+#' @examples
+#' dataSearch()
+#' dd <- dataSearch("reference", "38", "1000g"))
+#' dataNames(dd)
+#' dataParams(dd)
+#' dataNotes(dd)
+#' dataTags(dd)
+#' toList(dd)
+#' toList(dd, format = "json")
+#' toList(dd, format = "yaml")
+
 
 setMethod("show", "dataHub", function(object){
     rid <- object@rid
@@ -38,9 +48,11 @@ setMethod("show", "dataHub", function(object){
     cat("cache path: ", bfccache(object), "\n")
     ## mdate <- tail(sort(as.Date(mc$mtime)), 1)
     ## cat("# last modified date: ", as.character(mdate), "\n")
-    cat("# dataSearch() to query a specific dataset\n")
     cat("# dataUpdate() to update the local data cache\n")
-    cat("# additional mcols(): rid, rpath, params, Notes, Versoin, Date, ...\n")
+    cat("# dataSearch() to query a specific dataset\n")
+    ## cat("# additional mcols(): rid, rpath, params, notes, version, date, tag, ...\n")
+    cat("# Additional information can be retrieved using: \n")
+    cat("# dataNames(), dataParams(), dataNotes(), dataPaths(), dataTag() or mcols()\n")
     ## https://github.com/Bioconductor/AnnotationHub/blob/master/R/Hub-class.R#L602
     .some <-
         function(elt, nh, nt, fill="...", width=getOption("width") - 13L)
@@ -62,108 +74,75 @@ setMethod("show", "dataHub", function(object){
                         ## .some(mc$params, nhead, ntail),
                         .some(mc$fpath, nhead, ntail)),
                       ncol=3L,
-                      ## dimnames=list(rownames, c("", "title", "params", "Path")))
-                      dimnames=list(rownames, c("", "title", "Path")))
+                      ## dimnames=list(rownames, c("", "name", "params", "Path")))
+                      dimnames=list(rownames, c("", "name", "Path")))
         cat("\n")
         print(out, quote=FALSE, right=FALSE)
     }
 })
 
 #' @rdname dataHub-class
-#' @return dataParams: the "parameter" values for the `dataHub` object.
+#' @return dataNames: the names of datasets in `dataHub` object.
 #' @export
-title <- function(object){
+dataNames <- function(object){
     mcols(object)$rname
 }
 
 #' @rdname dataHub-class
-#' @return dataParams: the "parameter" values for the `dataHub` object.
+#' @return dataParams: the data recipe parameter values for datasets in `dataHub` object.
 #' @export
 dataParams <- function(object){
     mcols(object)$params
 }
 
 #' @rdname dataHub-class
-#' @return dataNotes: the "notes" for the `dataHub` object.
+#' @return dataNotes: the notes of datasets in `dataHub` object.
 #' @export
 dataNotes <- function(object){
     mcols(object)$notes
 }
 
 #' @rdname dataHub-class
-#' @return dataPath: the file path to the `dataHub` object.
+#' @return dataPaths: the file paths of datasets in `dataHub` object.
 #' @export
-dataPath <- function(object){
+dataPaths <- function(object){
     bfcinfo(object)$fpath
 }
-
-
-################
-## recipeHub
-################
-
-#' recipeHub
-#'
-#' `recipeHub` class, constructor, and methods. 
-#' @rdname recipeHub-class 
-#' @exportClass recipeHub
-#' 
-recipeHub <- setClass("recipeHub", contains = "cwlHub")
-
-#' @rdname recipeHub-class
-#' @param BFC A BiocFileCache object created for recipe and recipes.
-#' @return recipeHub: a `recipeHub` object.
-#' @importClassesFrom RcwlPipelines cwlHub
+ 
+#' @rdname dataHub-class
+#' @aliases dataTags
+#' @param object A `dataHub` object.
+#' @return dataTags: the tags of datasets in `dataHub` object.
 #' @export
-#' 
-recipeHub <- function(BFC){
-    cwlh <- RcwlPipelines::cwlHub(BFC)
-    new("recipeHub", cwlh)
-}
+setGeneric("dataTags", function(object)standardGeneric("dataTags"))
 
-## Methods
-## 'mcols()' inherited from cwlHub, returns a DataFrame.
-## 'title()' inherited to return the 'rname' column in mcols(cwlHub).
-## '[' inherited to return the subset of cwlHub with cwlHub["BFCid"]. 
-
-#' @rdname recipeHub-class
-#' @param x A `recipeHub` object
-#' @importFrom S4Vectors mcols get_showHeadLines get_showTailLines
-#' @importMethodsFrom RcwlPipelines mcols
-#' @exportMethod show
-
-setMethod("show", "recipeHub", function(object){
-    rid <- object@rid
-    mc <- mcols(object)
-
-    cat("recipeHub with", length(rid), "records\n")
-    cat("cache path: ", bfccache(object), "\n")
-    cat("# recipeSearch() to query specific recipes using multipe keywords\n")
-    cat("# recipeUpdate() to update the local recipe cache\n")
-    ## https://github.com/Bioconductor/AnnotationHub/blob/master/R/Hub-class.R#L602
-    .some <-
-        function(elt, nh, nt, fill="...", width=getOption("width") - 13L)
-    {
-        answer <- if (length(elt) < nh + nt + 1L)
-                      elt
-                  else
-                      c(head(elt, nh), fill, tail(elt, nt))
-        ifelse(nchar(answer) > width,
-               sprintf("%s...", substring(answer, 1L, width-3L)),
-               answer)
+#' @rdname dataHub-class
+setMethod("dataTags", "dataHub", function(object) {
+    if("tag" %in% colnames(mcols(object))){
+        mcols(object)$tag
+    }else{
+        NULL
     }
-    if (length(rid) > 0) {
-        nhead <- get_showHeadLines()
-        ntail <- get_showTailLines()
-        rownames <- paste0("  ", .some(rid, nhead, ntail))
-        out <- matrix(c(.some(rep("|", length(rid)), nhead, ntail, fill=""),
-                        .some(mc$rname, nhead, ntail)
-                        ),
-                      ncol=2L,
-                      dimnames=list(rownames, c("", "title")))
-        cat("\n")
-        print(out, quote=FALSE, right=FALSE)
+})
+
+#' @rdname dataHub-class
+#' @param value The tag values to assign to datasets in `dataHub` object.
+#' @param append Whether to append new tag or replace all tags.
+#' @export
+setGeneric("dataTags<-", function(object, append=TRUE, value)
+    standardGeneric("dataTags<-"))
+
+#' @rdname dataHub-class
+setReplaceMethod("dataTags", "dataHub", function(object, append=FALSE, value){
+    if(append){
+        value <- paste0(dataTags(object), value)
     }
+    dm <- bfcmeta(object, "dataMeta")
+    idx <- match(object@rid, dm$rid)
+    dm$tag[idx] <- value
+    bfc <- BiocFileCache(object@cache, ask = FALSE)
+    bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- dm
+    return(object)
 })
 
 #' subset dataHub
@@ -193,11 +172,16 @@ setGeneric("c")
 #' dataHub to list
 #' @rdname dataHub-class
 #' @param x A `dataHub` object.
+#' @param format can be "list", "json" or "yaml". Supports partial
+#'     match. Default is list.
 #' @param type The type of workflow input list, such as cwl.
+#' @return toList: A list of datasets in specific format.
 #' @export
-toList <- function(x, type = NULL, format = "list"){
-    tl <- title(x)
-    pth <- dataPath(x)
+#' 
+toList <- function(x, format = c("list", "json", "yaml"), type = NULL){
+    format <- match.arg(format)
+    ## tl <- dataNames(x)
+    pth <- dataPaths(x)
     if(!is.null(type) && type == "cwl"){
         dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
         dtype <- ifelse(dtype, "Directory", "File")
@@ -206,14 +190,14 @@ toList <- function(x, type = NULL, format = "list"){
             dl[[i]] <- list(class = dtype[i],
                             path = pth[i])
         }
-    }else {
-        dl <- as.list(dataPath(x))
+    } else {
+        dl <- as.list(pth)
+        names(dl) <- dataNames(x)
+        if (format == "json") {
+            dl <- jsonlite::toJSON(dl, pretty = TRUE, auto_unbox = TRUE)
+        } else if (format == "yaml") {
+            dl <- yaml::as.yaml(dl)
+        }
     }
-    names(dl) <- title(x)
-    if (format == "json") {
-        dl <- jsonlite::toJSON(dl, pretty = TRUE, auto_unbox = TRUE)
-    } else if (format == "yml") {
-        dl <- yaml::as.yaml(dl)
-    } 
     return(dl)
 }
