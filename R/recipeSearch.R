@@ -1,11 +1,13 @@
-#' search existing data recipes.
+#' recipeSearch
 #'
+#' Search existing data recipes.
 #' @param keywords character vector of keywords to be matched to the
 #'     recipe names. If not specified, function returns the full
 #'     recipe list.
-#' @param cachePath A character string for the recipe caching
-#'     path. "ReUseDataRecipe" by default.
-#' @return return a recipeHub object.
+#' @param cachePath A character string for the recipe cache. Must
+#'     match the one specified in `recipeUpdate()`. Default is
+#'     "ReUseDataRecipe".
+#' @return A `recipeHub` object.
 #' @examples
 #' recipeSearch()
 #' recipeSearch("gencode")

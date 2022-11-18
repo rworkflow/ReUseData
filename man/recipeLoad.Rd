@@ -4,33 +4,58 @@
 \alias{recipeLoad}
 \title{recipeLoad}
 \usage{
-recipeLoad(rname, cachePath = "ReUseDataRecipe", env = .GlobalEnv)
+recipeLoad(
+  rcp = c(),
+  cachePath = "ReUseDataRecipe",
+  env = .GlobalEnv,
+  return = FALSE
+)
 }
 \arguments{
-\item{rname}{The name or filepath of data recipe (\code{rname} or
-\code{fpath} column from the \code{bfc} object returned from
-\code{recipeSearch}). It can also be an url or a github repo.}
+\item{rcp}{The (vector of) character string of recipe name or
+filepath (\code{recipeNames()} or \code{mcols()$fpath} column of the
+\code{recipeHub} object returned from \code{recipeSearch}).}
 
-\item{cachePath}{The cache path of the BiocFileCache object to
-store the ReUseData recipes.}
+\item{cachePath}{A character string for the recipe cache. Must
+match the one specified in \code{recipeUpdate()}. Default is
+"ReUseDataRecipe".}
 
-\item{env}{The R enviroment to export to. The default is
-\code{.GlobalEnv}.}
+\item{env}{The R enviroment to export to. Default is \code{.GlobalEnv}.}
+
+\item{return}{Whether to use the original recipe name. Default is
+FALSE, where user need to assign a variable name to the
+recipe. e.g., \code{rcp1 <- recipeLoad()}. If TRUE, it loads the
+recipe and uses its original name, and user doesn't need to
+assign a new name. e.g., \code{recipeLoad(return=TRUE)}. If multiple
+recipes are to be loaded, \code{return=TRUE} must be used.}
 }
 \value{
-A \code{cwlProcess} object. For advanced/composite data recipes,
-the basic data recipes involved will also be loaded.
+A data recipe of \code{cwlProcess} S4 class, which is ready to
+be evaluated in \emph{R}.
 }
 \description{
-To load a data recipe into R environment.
+To load data recipe(s) into R environment.
 }
 \examples{
-\dontrun{
-rcp <- recipeSearch("gencode")
-rcp$rname
-rcp$rpath
-gtf <- recipeLoad("gencode_gtf")
-gtf <- recipeLoad(rcp$rpath[rcp$rname == "gencode_gtf"])  ## equivalent
-gtf
-}
+########################
+## Load single recipe
+########################
+
+recipeSearch("gencode")
+rcp <- recipeLoad("gencode_annotation")
+inputs(rcp)
+rm(rcp)
+
+recipeLoad("gencode_annotation", return=TRUE)
+inputs(gencode_annotation)
+rm(gencode_annotation)
+
+#########################
+## Load multiple recipes
+#########################
+
+rcphub <- recipeSearch("gencode")
+recipeNames(rcphub)
+recipeLoad(recipeNames(rcphub), return=TRUE)
+inputs(gencode_transcripts)
 }

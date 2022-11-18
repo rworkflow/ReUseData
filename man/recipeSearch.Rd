@@ -2,7 +2,7 @@
 % Please edit documentation in R/recipeSearch.R
 \name{recipeSearch}
 \alias{recipeSearch}
-\title{search existing data recipes.}
+\title{recipeSearch}
 \usage{
 recipeSearch(keywords = character(), cachePath = "ReUseDataRecipe")
 }
@@ -11,14 +11,15 @@ recipeSearch(keywords = character(), cachePath = "ReUseDataRecipe")
 recipe names. If not specified, function returns the full
 recipe list.}
 
-\item{cachePath}{A character string for the recipe caching
-path. "ReUseDataRecipe" by default.}
+\item{cachePath}{A character string for the recipe cache. Must
+match the one specified in \code{recipeUpdate()}. Default is
+"ReUseDataRecipe".}
 }
 \value{
-return a recipeHub object.
+A \code{recipeHub} object.
 }
 \description{
-search existing data recipes.
+Search existing data recipes.
 }
 \examples{
 recipeSearch()
