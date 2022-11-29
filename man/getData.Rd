@@ -2,41 +2,64 @@
 % Please edit documentation in R/getData.R
 \name{getData}
 \alias{getData}
-\title{getData: Generate the curated dataset from an provided data recipe.}
+\title{getData}
 \usage{
-getData(cwl, outdir, prefix, version = "", notes = "", docker = TRUE, ...)
+getData(
+  cwl,
+  outdir,
+  prefix,
+  version = character(),
+  notes = c(),
+  docker = TRUE,
+  ...
+)
 }
 \arguments{
-\item{cwl}{the \code{cwlProcess} object from \code{searchData()} or
-\code{loadData()}.}
+\item{cwl}{the data recipe in \code{cwlProcess} S4 class.}
 
-\item{outdir}{The directory to store the outputs. Will
-automatically create if not exist or provided.}
+\item{outdir}{Character string specifying the directory to store
+the output files. Will automatically create if not exist or
+provided.}
 
-\item{prefix}{The string that labels the data which will be added
-as prefix to the 4 output files. "gencode_human_38".}
+\item{prefix}{Character string that labels the data which will be
+added as prefix to the automatically generated annotation and
+workflow files. e.g., "gencode_human_38".}
 
-\item{version}{User specified version for the data generated for
-local data management. Takes string. Default is "". When
-provided, it will be pasted with \code{prefix} argument using "_" to
-serve as the final prefix for output files. E.g.,
+\item{version}{Character string of user specified version for the
+data generated for local data management. Default is
+empty. When provided, it will be pasted with \code{prefix} argument
+using "_" to serve as the final prefix for output files. E.g.,
 "gencode_human_38_v1.0".}
 
-\item{notes}{User assigned notes/keywords to retrieve the data by
-\code{searchData()} function.  e.g., "human", "reference genome",
-"gencode", "gtf", etc. Multiple notes will be pasted using blank space.}
+\item{notes}{User assigned notes/keywords to annotate the data and
+be used for keywords matching in \code{dataSearch(keywords = )}.}
 
-\item{docker}{Default is TRUE.}
+\item{docker}{Whether to use docker when evaluating the data recipe
+as a CWL workflow. Default is TRUE.}
 
 \item{...}{Arguments to be passed into \code{Rcwl:runCWL()}.}
 }
 \value{
 The data files and 4 meta files: \code{.cwl}: The cwl script
-that was internally run to download the data; \code{.yml}: the
-values for the \code{cwlProcess} object, and some user added notes,
-versions etc. \code{.sh}: The script for data downloading and
-curation.  \code{.md}: ... (to-be-filled)
+that was internally run to get the data; \code{.yml}: the input
+parameter values for the data recipe and user specified data
+annoation notes, versions etc; \code{.sh}: The script for data
+processing; \code{.md}: checksum file to verify the integrity of
+generated data files.
 }
 \description{
-getData: Generate the curated dataset from an provided data recipe.
+Evaluation of data recipes to generate curated dataset of interest.
+}
+\examples{
+rcp <- recipeLoad("gencode_transcripts")
+rcp$species <- "human"
+rcp$version <- "42"
+outdir <- file.path(tempdir(), "SharedData")
+res <- getData(rcp,
+        outdir = outdir, 
+        prefix = "gencode_annotation_human_42",
+        notes = c("gencode", "human", "42"),
+        showLog = TRUE)
+dir(outdir)
+
 }

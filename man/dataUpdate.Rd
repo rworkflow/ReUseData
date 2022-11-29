@@ -2,8 +2,7 @@
 % Please edit documentation in R/dataUpdate.R
 \name{dataUpdate}
 \alias{dataUpdate}
-\title{update the local data records by reading the yaml files in the
-specified directory recursively.}
+\title{dataUpdate}
 \usage{
 dataUpdate(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE)
 }
@@ -12,8 +11,10 @@ dataUpdate(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE)
 saved. Data information will be collected recursively within
 this directory.}
 
-\item{cachePath}{the cache path for recording all available
-datasets. Default is "ReUseData".}
+\item{cachePath}{A character string specifying the name for the
+\code{BiocFileCache} object to store all the curated data
+resources. Once specifiied, must match the \code{cachePath} argument
+in \code{dataSearch}. Default is "ReUseData".}
 
 \item{outMeta}{Logical. If TRUE, a "meta_data.csv" file will be
 generated in the \code{dir}, containing information about all
@@ -22,14 +23,16 @@ files, and yaml entries including parameter values for data
 recipe, file path to datasets, notes, version (from
 \code{getData()}), tag (from \code{dataTag()}) if available and data
 generating date.}
+
+\item{keepTags}{If keep the prior assigned data tags. Default is TRUE.}
 }
 \value{
 a \code{dataHub} object containing the information about local
 data cache, e.g., data name, data path, etc.
 }
 \description{
-update the local data records by reading the yaml files in the
-specified directory recursively.
+Function to update the local data records by reading the yaml files
+in the specified directory recursively.
 }
 \details{
 Users can directly retrieve information for all available
@@ -41,6 +44,22 @@ e.g., empty or non-existing file path, and create a data cache
 for all valid datasets.
 }
 \examples{
-## 
-## dataUpdate(dir = "~/workspace/SharedData")
+## Generate data 
+rcp <- recipeLoad("gencode_transcripts")
+inputs(rcp)
+rcp$species <- "human"
+rcp$version <- "42"
+outdir <- file.path(tempdir(), "SharedData")
+res <- getData(rcp,
+        outdir = outdir, 
+        prefix = "gencode_annotation_human_42",
+        notes = c("gencode", "human", "42"),
+        showLog = TRUE)
+
+## Update data cache 
+dataUpdate(dir = outdir)
+
+## newly generated data are now cached and searchable
+dataSearch(c("gencode", "42"))
+
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/dataSearch.R
 \name{dataSearch}
 \alias{dataSearch}
-\title{search recipes on GitHub repository}
+\title{dataSearch
+search data in local data caching system}
 \usage{
 dataSearch(keywords = character(), cachePath = "ReUseData")
 }
@@ -13,17 +14,21 @@ using \code{getData(notes = )}. Keywords can be a tag with the data
 in \verb{#tag} format. If not specified, function returns the full
 data list.}
 
-\item{cachePath}{ReUseData by default}
+\item{cachePath}{A character string for the data cache. Must
+match the one specified in \code{dataUpdate()}. Default is
+"ReUseData".}
 }
 \value{
 a \code{dataHub} object containing the information about local
 data cache, e.g., data name, data path, etc.
 }
 \description{
-search recipes on GitHub repository
+dataSearch
+search data in local data caching system
 }
 \examples{
-## dataSearch()
-## dataSearch(c("gencode", "human", "38"))
-## dataSearch("#samtools")
+dataSearch()
+dataSearch(c("gencode")) 
+dataSearch("#gatk")
+
 }
