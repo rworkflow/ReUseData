@@ -2,11 +2,11 @@ Package: ReUseData
 Title: Reproducible and ReUsable Data Resources
 Version: 0.0.1
 Authors@R: 
-    person(given = "Qiang",
-           family = "Hu",
+    person(given = "Qian",
+           family = "Liu",
            role = c("aut", "cre"),
-           email = "qiang.hu@roswellpark.org",
-           comment = c(ORCID = "YOUR-ORCID-ID"))	   
+           email = "qian.liu@roswellpark.org",
+           comment = c(ORCID = ""))	   
 Description: A package to produce and manage data resources by the
 	     Rcwl package. It can be used to download, modify and manage genomic
 	     reference, annotation and other resource files.
