@@ -35,12 +35,3 @@ meta_data <- function(dir = "") {
     colnames(out) <- c("yml", "params", keys)
     out
 }
-
-## generate a csv file for all available recipes on the GitHub repository.
-
-## meta_recipe <- function(cachePath = "ReUseData") {
-##     cachePath <- R_user_dir(cachePath, which = "cache")
-##     bfc <- bfcFileCache(cachePath, ask = FALSE)
-##     bfc
-## }
-

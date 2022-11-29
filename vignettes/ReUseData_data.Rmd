@@ -67,8 +67,7 @@ FIXME:
 - data recipe private repository
 - testthat
 - additional recipes... 
-- add `RcwlMeta` functions to `Rcwl`.
-
+ 
 # `ReUseData` core functions for data management 
 
 Here we introduce the core functions of `ReUseData` for data
