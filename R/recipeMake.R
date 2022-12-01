@@ -27,7 +27,7 @@
 #'     readily taken by `getData()` to evaluate the shell scripts
 #'     included and generate the data locally. Find more details with
 #'     `?Rcwl::cwlProcess`.
-#' @importFrom Rcwl InputParam OutputParam InputParamList
+#' @importFrom Rcwl InputParam OutputParam InputParamList condaPackage
 #'     OutputParamList
 #' @details For parameter types, more details can be found here:
 #'     "https://www.commonwl.org/v1.2/CommandLineTool.html#CWLType".
@@ -107,9 +107,10 @@ recipeMake <- function(shscript = character(),
     req3 <- requireJS()
     reqs <- list(req1, req2, req3)
     if (length(requireTools) > 0) {
-        dockerfile <- CondaTool(tools = requireTools)
-        req4 <- requireDocker(File = dockerfile, ImageId = paste0(gsub("=.*", "", requireTools), collapse="_"))
-        reqs[[4]] <- req4
+        ## dockerfile <- CondaTool(tools = requireTools)
+        ## req4 <- requireDocker(File = dockerfile, ImageId = paste0(gsub("=.*", "", requireTools), collapse="_"))
+        ## reqs[[4]] <- req4
+        reqs[[4]] <- requireSoftware(packages = lapply(requireTools, condaPackage))
     }
     
     input_param_list <- list()
