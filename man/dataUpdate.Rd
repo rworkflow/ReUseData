@@ -13,7 +13,7 @@ this directory.}
 
 \item{cachePath}{A character string specifying the name for the
 \code{BiocFileCache} object to store all the curated data
-resources. Once specifiied, must match the \code{cachePath} argument
+resources. Once specified, must match the \code{cachePath} argument
 in \code{dataSearch}. Default is "ReUseData".}
 
 \item{outMeta}{Logical. If TRUE, a "meta_data.csv" file will be

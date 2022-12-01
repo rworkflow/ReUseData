@@ -12,6 +12,7 @@
 #'     "ReUseData".
 #' @return a `dataHub` object containing the information about local
 #'     data cache, e.g., data name, data path, etc.
+#' @import BiocFileCache 
 #' @export
 #' @examples
 #' dataSearch()

@@ -5,7 +5,9 @@
             ifelse(return, paste0("'", value, "' "), ""),
             "loaded!\n",
             "Use inputs(", ifelse(return, value, ""),
-            ") to check required input parameters before evaluation.\n"
+            ") to check required input parameters before evaluation.",
+            "\nCheck here: https://rcwl.org/dataRecipes/rcp_", value, ".html",
+            "\nfor recipe instructions (e.g., eligible input values, data source, etc.)\n"
             )
 }
 .load_rcp <- function(rscript, env = .GlobalEnv, return = FALSE){

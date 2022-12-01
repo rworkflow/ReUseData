@@ -61,14 +61,20 @@ library(Rcwl)
 
 ## `ReUseData` recipe landing pages
 
-The project website https://rcwl.org/ serves as a central hub for _R_
-workflow related resources. Some pre-built data recipes for public
-data downloading and curation are available for direct use with
-convenient webpage searching. Each data recipe has a landing page
-including recipe description (inputs, outputs, etc.) and user
-instructions. These pre-built data recipes demonstrate the use of
+The project website https://rcwl.org/dataRecipes/ contains all
+pre-built data recipes for public data downloading and curation. They
+are available for direct use with convenient webpage searching. Each
+data recipe has a landing page including recipe description (inputs,
+outputs, etc.) and user instructions. **Make sure to check the
+instructions of eligible input parameter values before recipe
+evaluation.** These pre-built data recipes demonstrate the use of
 software and can be taken as templates for users to create their own
 recipes for protected datasets.
+
+There are many other _R_ resources available on this main website
+https://rcwl.org/, including package vignettes for `Rcwl`
+and`RcwlPipelines`, `Rcwl` tutorial e-book, case studies of using
+`RcwlPipelines` in preprocessing single-cell RNA-seq data, etc. 
 
 # `ReUseData` recipe scripts
 
@@ -85,16 +91,17 @@ a specific file can be written as a data recipe without any input
 parameter. For example, the data recipe
 `gcp_broad_gatk_hg38_1000G_omni2.5`) downloads the
 `1000G_omni2.5.hg38.vcf.gz` and the `tbi` index files from Google
-Cloud Platform bucket for Broad reference data GATK hg38. If the data
-curation gets more complicated, say, multiple command-line tools are
-to be involved, and docker images are to be used, or some secondary
-files are to be generated and collected, the raw way of building a
-`ReUseData` recipe using `Rcwl` functions is recommended, which gives
-more flexibility and power to accommodate different situations. An
-example recipe is the `reference_genome` which downloads, formats, and
-index reference genome data using tools of `samtools`, `picard` and
-`bwa`, and manages multiple secondary files besides the main fasta
-file for later reuse.
+Cloud Platform bucket for Broad reference data GATK hg38. 
+
+If the data curation gets more complicated, say, multiple command-line
+tools are to be involved, and docker images are to be used, or some
+secondary files are to be generated and collected, the raw way of
+building a `ReUseData` recipe using `Rcwl` functions is recommended,
+which gives more flexibility and power to accommodate different
+situations. An example recipe is the `reference_genome` which
+downloads, formats, and index reference genome data using tools of
+`samtools`, `picard` and `bwa`, and manages multiple secondary files
+besides the main fasta file for later reuse.
 	
 # `ReUseData` core functions 
 
@@ -228,7 +235,9 @@ recipeSearch(c("STAR", "index"))
 ```
 
 Recipes can be directly loaded into _R_ using `recipeLoad` function
-with user assigned name or the original recipe name. 
+with user assigned name or the original recipe name. Once the recipe
+is successfully loaded, a message will be returned with recipe
+instructions.
 
 ```{r}
 rcphub <- recipeSearch("gencode")
