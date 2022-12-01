@@ -15,7 +15,7 @@ dataHub <- setClass("dataHub", contains = "cwlHub")
 #' @importClassesFrom RcwlPipelines cwlHub
 #' @export
 dataHub <- function(BFC){
-    cwlh <- RcwlPipelines:::cwlHub(BFC)
+    cwlh <- RcwlPipelines::cwlHub(BFC)
     new("dataHub", cwlh)
 }
 
@@ -30,7 +30,7 @@ dataHub <- function(BFC){
 #' @exportMethod show
 #' @examples
 #' dataSearch()
-#' dd <- dataSearch("reference", "38", "1000g"))
+#' dd <- dataSearch(c("reference", "38", "1000g"))
 #' dataNames(dd)
 #' dataParams(dd)
 #' dataNotes(dd)
@@ -176,6 +176,8 @@ setGeneric("c")
 #'     match. Default is list.
 #' @param type The type of workflow input list, such as cwl.
 #' @return toList: A list of datasets in specific format.
+#' @importFrom jsonlite toJSON
+#' @importFrom yaml as.yaml
 #' @export
 #' 
 toList <- function(x, format = c("list", "json", "yaml"), type = NULL){

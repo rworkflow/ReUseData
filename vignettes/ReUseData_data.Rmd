@@ -3,7 +3,7 @@ title: "ReUseData: ReUsable and Reproducible Data Management"
 author: "Qian Liu"
 date: "`r Sys.Date()`"
 output:
-  BiocStyle::html_document:
+  rmarkdown::html_document:
     toc: true
     toc_float: true
 vignette: >
@@ -49,7 +49,6 @@ BiocManager::install("rworkflow/ReUseData")
 ```{r Load, message=FALSE}
 library(ReUseData)
 library(Rcwl)
-library(RcwlMeta)
 ```
 		
 # Data resources 
@@ -86,8 +85,8 @@ and indexing) are available for direct use through `recipeSearch` and
 parameters and evaluate the recipe to generate data of interest.
 
 ```{r}
-recipeSearch(c("gencode", "transcript"))
-rcp <- recipeLoad("gencode_transcripts")
+recipeSearch("liftover")
+rcp <- recipeLoad("ensembl_liftover")
 inputs(rcp)
 ```
 
@@ -100,12 +99,13 @@ be used for keywords matching for later data search.
 
 ```{r}
 rcp$species <- "human"
-rcp$version <- "42"
+rcp$from <- "GRCh37"
+rcp$to <- "GRCh38"
 outdir <- file.path(tempdir(), "SharedData")
 res <- getData(rcp,
         outdir = outdir, 
-        prefix = "gencode_annotation_human_42",
-        notes = c("gencode", "human", "42"),
+        prefix = "ensembl_liftover_GRCh37_to_GRCh38",
+        notes = c("gencode", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
 ```
 
@@ -126,7 +126,7 @@ of CWL workflow evalution, which also record data annotations, and
 file.
 
 ```{r}
-dir(outdir, pattern = "gencode_annotation_human_42")
+dir(outdir, pattern = "ensembl_liftover_GRCh37_to_GRCh38")
 ```
 
 The `*.yml` file contains information about recipe input parameters,
@@ -160,7 +160,7 @@ dataUpdate(dir = outdir)
 all available or matching datasets. 
 
 ```{r}
-dd <- dataSearch(c("gencode", "42"))
+dd <- dataSearch(c("liftover", "GRCh38"))
 dd
 ```
 
@@ -191,7 +191,7 @@ Data can also be aggregated from different resources by tagging with
 specific software tools (dataTag). 
 
 ```{r}
-DataSearch()
+dataSearch()
 dataTags(dd) <- "#gatk"
 dataSearch("#gatk")
 ```

@@ -84,7 +84,7 @@ toList: A list of datasets in specific format.
 }
 \examples{
 dataSearch()
-dd <- dataSearch("reference", "38", "1000g"))
+dd <- dataSearch(c("reference", "38", "1000g"))
 dataNames(dd)
 dataParams(dd)
 dataNotes(dd)

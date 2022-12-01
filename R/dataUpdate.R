@@ -8,7 +8,7 @@
 #'     this directory.
 #' @param cachePath A character string specifying the name for the
 #'     `BiocFileCache` object to store all the curated data
-#'     resources. Once specifiied, must match the `cachePath` argument
+#'     resources. Once specified, must match the `cachePath` argument
 #'     in `dataSearch`. Default is "ReUseData".
 #' @param outMeta Logical. If TRUE, a "meta_data.csv" file will be
 #'     generated in the `dir`, containing information about all
