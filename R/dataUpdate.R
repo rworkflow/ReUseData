@@ -17,7 +17,14 @@
 #'     recipe, file path to datasets, notes, version (from
 #'     `getData()`), tag (from `dataTag()`) if available and data
 #'     generating date.
-#' @param keepTags If keep the prior assigned data tags. Default is TRUE. 
+#' @param keepTags If keep the prior assigned data tags. Default is
+#'     TRUE.
+#' @param removeOld If remove the older intermediate files for same
+#'     dataset. Default is TRUE. In cases one data recipe (with same
+#'     parameter values) was evaluated multiple times, the same data
+#'     file(s) will match to multiple intermeidate files (e.g.,
+#'     .yml). `removeOld` will remove older intermediate files, and
+#'     only keep the most recent ones that matches the data file.
 #' @details Users can directly retrieve information for all available
 #'     datasets by using `meta_data(dir=)`, which generates a data
 #'     frame in R with same information as described above and can be
@@ -30,14 +37,13 @@
 #' @export
 #' @examples
 #' ## Generate data 
-#' rcp <- recipeLoad("gencode_transcripts")
-#' inputs(rcp)
-#' rcp$species <- "human"
-#' rcp$version <- "42"
+#' recipeLoad("gencode_transcripts", return=TRUE)
+#' inputs(gencode_transcripts)
+#' gencode_transcripts$species <- "human"
+#' gencode_transcripts$version <- "42"
 #' outdir <- file.path(tempdir(), "SharedData")
-#' res <- getData(rcp,
+#' res <- getData(gencode_transcripts,
 #'         outdir = outdir, 
-#'         prefix = "gencode_annotation_human_42",
 #'         notes = c("gencode", "human", "42"),
 #'         showLog = TRUE)
 #'
@@ -47,7 +53,7 @@
 #' ## newly generated data are now cached and searchable
 #' dataSearch(c("gencode", "42"))
 #' 
-dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE) {
+dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, removeOld = TRUE) {
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -70,19 +76,43 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
     
     bfcremove(bfc, bfcinfo(bfc)$rid)
     
-    meta <- meta_data(dir = dir)
-    if (outMeta) {
-        write.csv(meta, file = file.path(dir, "meta_data.csv"))
-        message("\nMeta file for all available datasets generated: ", file.path(dir, "meta_data.csv"))
-    }
-
+    meta <- meta_data(dir = dir)  ## append cloud data
+    ## if 1 output matches to multiple yml files, then delete older ones??
+    
     ## if any data not exist (meta$output), then delete that record. 
     ind <- meta$output == "" | !file.exists(meta$output)
     if (any(ind)) {
         message("\nCleaning up invalid data records...")
         meta <- meta[!ind, ]
     }
+
+    ## if any duplicated (1 data matches multiple yml files), only keep the most recent ones.
+    dup <- duplicated(meta$output)
+    if (any(dup)) {
+        yml_keep <- c()
+        uniqd <- unique(meta$output)
+        for (i in seq_along(uniqd)) {
+            yml <- meta$yml[meta$output == uniqd[i]]
+            ymld <- gsub("[[:alpha:]]|_", "", gsub(".yml$", "", basename(yml)))
+            keep <- which(ymld == max(ymld))
+            yml_keep <- c(yml_keep, yml[keep])
+        }
+        idx <- meta$yml %in% yml_keep
+        ymls_rm <- meta$yml[!idx]
+        ## remove older intermediate files
+        if (removeOld) {
+            dfrm <- data.frame(dir = dirname(ymls_rm), ptn = gsub(".yml", "", basename(ymls_rm)))
+            apply(dfrm, 1, function(x) {file.remove(list.files(x[1], x[2], full.names = TRUE))})
+            message("\nOlder intermediate files are removed! Turn removeOld = FALSE to disable!")
+        }
+        meta  <- meta[meta$yml %in% yml_keep, ]
+    }
     
+    if (outMeta) {
+        write.csv(meta, file = file.path(dir, "meta_data.csv"))
+        message("\nMeta file for all available datasets generated: ", file.path(dir, "meta_data.csv"))
+    }
+
     message("\nUpdating data record...")
     fpath <- meta$output
     
@@ -105,3 +135,5 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
     }
     return(dh)
 }
+
+## todo: add yml path in mcols(dataSearch())!!! 

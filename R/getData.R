@@ -21,14 +21,6 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #' @param outdir Character string specifying the directory to store
 #'     the output files. Will automatically create if not exist or
 #'     provided.
-#' @param prefix Character string that labels the data which will be
-#'     added as prefix to the automatically generated annotation and
-#'     workflow files. e.g., "gencode_human_38".
-#' @param version Character string of user specified version for the
-#'     data generated for local data management. Default is
-#'     empty. When provided, it will be pasted with `prefix` argument
-#'     using "_" to serve as the final prefix for output files. E.g.,
-#'     "gencode_human_38_v1.0".
 #' @param notes User assigned notes/keywords to annotate the data and
 #'     be used for keywords matching in `dataSearch(keywords = )`.
 #' @param docker Whether to use docker when evaluating the data recipe
@@ -44,11 +36,12 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #' @importFrom tools md5sum
 #' @export 
 #' @examples
-#' rcp <- recipeLoad("gencode_transcripts")
-#' rcp$species <- "human"
-#' rcp$version <- "42"
+#' recipeLoad("gencode_transcripts", return = TRUE)
+#' inputs(gencode_transcripts)
+#' gencode_transcripts$species <- "human"
+#' gencode_transcripts$version <- "42"
 #' outdir <- file.path(tempdir(), "SharedData")
-#' res <- getData(rcp,
+#' res <- getData(gencode_transcripts,
 #'         outdir = outdir, 
 #'         prefix = "gencode_annotation_human_42",
 #'         notes = c("gencode", "human", "42"),
@@ -56,8 +49,7 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #' dir(outdir)
 #' 
 
-getData <- function(cwl, outdir, prefix, version = character(), notes = c(),
-                    docker = TRUE, ...){
+getData <- function(cwl, outdir, notes = c(), docker = TRUE, ...){
     if(docker == "singularity"){
         reqclass <- unlist(lapply(requirements(cwl), function(x)x$class))
         idx <- match("DockerRequirement", reqclass)
@@ -66,7 +58,7 @@ getData <- function(cwl, outdir, prefix, version = character(), notes = c(),
             requirements(cwl)[[idx]] <- requireDocker(iid)
         }
     }
-    prefix <- sub("_$", "", paste0(prefix, "_", version))
+    prefix <- paste(deparse(substitute(cwl)), round(as.numeric(Sys.time())), sep="_")  ## "rcp_time.xx"
     res <- runCWL(cwl = cwl, outdir = outdir,
                   yml_prefix = prefix,
                   yml_outdir = outdir,
@@ -82,7 +74,6 @@ getData <- function(cwl, outdir, prefix, version = character(), notes = c(),
     notes <- paste(notes, collapse = " ")
     apd <- c(paste("# output:", res$output),
              paste("# notes:", notes),
-             paste("# version:", version),
              paste("# date:", Sys.Date()))
     write(apd, yfile, append = TRUE)
     lapply(requirements(cwl), function(x){

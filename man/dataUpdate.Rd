@@ -4,7 +4,13 @@
 \alias{dataUpdate}
 \title{dataUpdate}
 \usage{
-dataUpdate(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE)
+dataUpdate(
+  dir,
+  cachePath = "ReUseData",
+  outMeta = FALSE,
+  keepTags = TRUE,
+  removeOld = TRUE
+)
 }
 \arguments{
 \item{dir}{a character string for the directory where all data are
@@ -24,7 +30,15 @@ recipe, file path to datasets, notes, version (from
 \code{getData()}), tag (from \code{dataTag()}) if available and data
 generating date.}
 
-\item{keepTags}{If keep the prior assigned data tags. Default is TRUE.}
+\item{keepTags}{If keep the prior assigned data tags. Default is
+TRUE.}
+
+\item{removeOld}{If remove the older intermediate files for same
+dataset. Default is TRUE. In cases one data recipe (with same
+parameter values) was evaluated multiple times, the same data
+file(s) will match to multiple intermeidate files (e.g.,
+.yml). \code{removeOld} will remove older intermediate files, and
+only keep the most recent ones that matches the data file.}
 }
 \value{
 a \code{dataHub} object containing the information about local
@@ -45,14 +59,13 @@ for all valid datasets.
 }
 \examples{
 ## Generate data 
-rcp <- recipeLoad("gencode_transcripts")
-inputs(rcp)
-rcp$species <- "human"
-rcp$version <- "42"
+recipeLoad("gencode_transcripts", return=TRUE)
+inputs(gencode_transcripts)
+gencode_transcripts$species <- "human"
+gencode_transcripts$version <- "42"
 outdir <- file.path(tempdir(), "SharedData")
-res <- getData(rcp,
+res <- getData(gencode_transcripts,
         outdir = outdir, 
-        prefix = "gencode_annotation_human_42",
         notes = c("gencode", "human", "42"),
         showLog = TRUE)
 

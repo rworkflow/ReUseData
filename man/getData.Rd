@@ -4,15 +4,7 @@
 \alias{getData}
 \title{getData}
 \usage{
-getData(
-  cwl,
-  outdir,
-  prefix,
-  version = character(),
-  notes = c(),
-  docker = TRUE,
-  ...
-)
+getData(cwl, outdir, notes = c(), docker = TRUE, ...)
 }
 \arguments{
 \item{cwl}{the data recipe in \code{cwlProcess} S4 class.}
@@ -20,16 +12,6 @@ getData(
 \item{outdir}{Character string specifying the directory to store
 the output files. Will automatically create if not exist or
 provided.}
-
-\item{prefix}{Character string that labels the data which will be
-added as prefix to the automatically generated annotation and
-workflow files. e.g., "gencode_human_38".}
-
-\item{version}{Character string of user specified version for the
-data generated for local data management. Default is
-empty. When provided, it will be pasted with \code{prefix} argument
-using "_" to serve as the final prefix for output files. E.g.,
-"gencode_human_38_v1.0".}
 
 \item{notes}{User assigned notes/keywords to annotate the data and
 be used for keywords matching in \code{dataSearch(keywords = )}.}
@@ -51,11 +33,12 @@ generated data files.
 Evaluation of data recipes to generate curated dataset of interest.
 }
 \examples{
-rcp <- recipeLoad("gencode_transcripts")
-rcp$species <- "human"
-rcp$version <- "42"
+recipeLoad("gencode_transcripts", return = TRUE)
+inputs(gencode_transcripts)
+gencode_transcripts$species <- "human"
+gencode_transcripts$version <- "42"
 outdir <- file.path(tempdir(), "SharedData")
-res <- getData(rcp,
+res <- getData(gencode_transcripts,
         outdir = outdir, 
         prefix = "gencode_annotation_human_42",
         notes = c("gencode", "human", "42"),
