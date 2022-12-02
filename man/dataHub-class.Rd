@@ -7,6 +7,7 @@
 \alias{dataParams}
 \alias{dataNotes}
 \alias{dataPaths}
+\alias{dataYml}
 \alias{dataTags}
 \alias{dataTags,dataHub-method}
 \alias{dataTags<-}
@@ -29,6 +30,8 @@ dataParams(object)
 dataNotes(object)
 
 dataPaths(object)
+
+dataYml(object)
 
 dataTags(object)
 
@@ -75,6 +78,8 @@ dataNotes: the notes of datasets in \code{dataHub} object.
 
 dataPaths: the file paths of datasets in \code{dataHub} object.
 
+dataYml: the yaml file paths of datasets in \code{dataHub} object.
+
 dataTags: the tags of datasets in \code{dataHub} object.
 
 toList: A list of datasets in specific format.
@@ -89,6 +94,7 @@ dataNames(dd)
 dataParams(dd)
 dataNotes(dd)
 dataTags(dd)
+dataYml(dd)
 toList(dd)
 toList(dd, format = "json")
 toList(dd, format = "yaml")

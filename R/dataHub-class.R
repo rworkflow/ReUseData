@@ -35,6 +35,7 @@ dataHub <- function(BFC){
 #' dataParams(dd)
 #' dataNotes(dd)
 #' dataTags(dd)
+#' dataYml(dd)
 #' toList(dd)
 #' toList(dd, format = "json")
 #' toList(dd, format = "yaml")
@@ -106,9 +107,16 @@ dataNotes <- function(object){
 #' @return dataPaths: the file paths of datasets in `dataHub` object.
 #' @export
 dataPaths <- function(object){
-    bfcinfo(object)$fpath
+    mcols(object)$fpath
 }
  
+#' @rdname dataHub-class
+#' @return dataYml: the yaml file paths of datasets in `dataHub` object.
+#' @export
+dataYml <- function(object){
+    mcols(object)$yml
+}
+
 #' @rdname dataHub-class
 #' @aliases dataTags
 #' @param object A `dataHub` object.

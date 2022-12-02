@@ -125,7 +125,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
             message(basename(add1), " added")
         }
         bm <- data.frame(rid = bfcrid(bfc),
-                         meta[, c("params", "notes", "version", "date", "tag")])
+                         meta[, c("params", "notes", "version", "date", "tag", "yml")])
         bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- bm
     }
 
