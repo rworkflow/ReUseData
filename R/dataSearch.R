@@ -35,7 +35,7 @@ dataSearch <- function(keywords=character(), cachePath = "ReUseData") {
     if (missing(keywords))
         keywords <- ""
     res <- bfcquery(bfc, query = keywords,
-                    field = c("rname", "fpath", "params", "notes", "version", "date", "tag"),
+                    field = c("rname", "fpath", "params", "notes", "date", "tag"),
                     ignore.case = TRUE)
     if(any(grepl("#", keywords))){
         res <- bfcquery(bfc, query = keywords, field = c("tag"), ignore.case = TRUE)

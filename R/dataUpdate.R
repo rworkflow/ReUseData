@@ -25,6 +25,8 @@
 #'     file(s) will match to multiple intermeidate files (e.g.,
 #'     .yml). `removeOld` will remove older intermediate files, and
 #'     only keep the most recent ones that matches the data file.
+#' @param cloud Whether to return the pre-generated data from Google
+#'     Cloud bucket of ReUseData. Default is FALSE. 
 #' @details Users can directly retrieve information for all available
 #'     datasets by using `meta_data(dir=)`, which generates a data
 #'     frame in R with same information as described above and can be
@@ -49,11 +51,12 @@
 #'
 #' ## Update data cache 
 #' dataUpdate(dir = outdir)
+#' dataUpdate(dir = outdir, cloud = TRUE)
 #'
 #' ## newly generated data are now cached and searchable
 #' dataSearch(c("gencode", "42"))
 #' 
-dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, removeOld = TRUE) {
+dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, removeOld = TRUE, cloud = FALSE) {
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -68,7 +71,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
 
     if("tag" %in% colnames(mcols(dataHub(bfc)))){
         if(keepTags) {
-            tag_old <- dataTags(dataHub(bfc))
+            tag_old <- dataTags(dataHub(bfc))  ## FIXME: will lose when updating. keepTags add back the old ones. 
         }
     }else{
         keepTags <- FALSE
@@ -76,40 +79,48 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
     
     bfcremove(bfc, bfcinfo(bfc)$rid)
     
-    meta <- meta_data(dir = dir)  ## append cloud data
-    ## if 1 output matches to multiple yml files, then delete older ones??
-    
-    ## if any data not exist (meta$output), then delete that record. 
-    ind <- meta$output == "" | !file.exists(meta$output)
-    if (any(ind)) {
-        message("\nCleaning up invalid data records...")
-        meta <- meta[!ind, ]
-    }
+    meta <- meta_data(dir = dir)
 
-    ## if any duplicated (1 data matches multiple yml files), only keep the most recent ones.
-    dup <- duplicated(meta$output)
-    if (any(dup)) {
-        yml_keep <- c()
-        uniqd <- unique(meta$output)
-        for (i in seq_along(uniqd)) {
-            yml <- meta$yml[meta$output == uniqd[i]]
-            ymld <- gsub("[[:alpha:]]|_", "", gsub(".yml$", "", basename(yml)))
-            keep <- which(ymld == max(ymld))
-            yml_keep <- c(yml_keep, yml[keep])
+    if (nrow(meta)) {
+        ## if any data not exist (meta$output), then delete that record. 
+        ind <- meta$output == "" | !file.exists(meta$output)
+        if (any(ind)) {
+            message("\nCleaning up invalid data records...")
+            meta <- meta[!ind, ]
         }
-        idx <- meta$yml %in% yml_keep
-        ymls_rm <- meta$yml[!idx]
-        ## remove older intermediate files
-        if (removeOld) {
-            dfrm <- data.frame(dir = dirname(ymls_rm), ptn = gsub(".yml", "", basename(ymls_rm)))
-            apply(dfrm, 1, function(x) {file.remove(list.files(x[1], x[2], full.names = TRUE))})
-            message("\nOlder intermediate files are removed! Turn removeOld = FALSE to disable!")
+        
+        ## if any duplicated (1 data matches multiple yml files), only keep the most recent ones.
+        dup <- duplicated(meta$output)
+        if (any(dup)) {
+            yml_keep <- c()
+            uniqd <- unique(meta$output)
+            for (i in seq_along(uniqd)) {
+                yml <- meta$yml[meta$output == uniqd[i]]
+                ymld <- gsub("[[:alpha:]]|_", "", gsub(".yml$", "", basename(yml)))
+                keep <- which(ymld == max(ymld))
+                yml_keep <- c(yml_keep, yml[keep])
+            }
+            idx <- meta$yml %in% yml_keep
+            ymls_rm <- meta$yml[!idx]
+            ## remove older intermediate files
+            if (removeOld) {
+                dfrm <- data.frame(dir = dirname(ymls_rm), ptn = gsub(".yml", "", basename(ymls_rm)))
+                apply(dfrm, 1, function(x) {file.remove(list.files(x[1], x[2], full.names = TRUE))})
+                message("\nOlder intermediate files are removed! Turn removeOld = FALSE to disable!")
+            }
+            meta  <- meta[meta$yml %in% yml_keep, ]
         }
-        meta  <- meta[meta$yml %in% yml_keep, ]
+    }
+    ## append pre-generated cloud data
+    if (cloud) {
+        download.file("https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
+                      file.path(tempdir(), "meta_gcp.csv"))
+        meta_gcp <- read.csv(file.path(tempdir(), "meta_gcp.csv"))
+        meta <- rbind(meta, meta_gcp)
     }
     
     if (outMeta) {
-        write.csv(meta, file = file.path(dir, "meta_data.csv"))
+        write.csv(meta, file = file.path(dir, "meta_data.csv"), quote=FALSE, row.names=FALSE)
         message("\nMeta file for all available datasets generated: ", file.path(dir, "meta_data.csv"))
     }
 
@@ -121,19 +132,19 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
         rnames <- basename(fpath)
         for(i in seq_along(fpath)){
             add1 <- bfcadd(bfc, rnames[i], fpath = fpath[i],
-                           rtype = "local", action = "asis")
+                           rtype = "auto", action = "asis", download=FALSE)
             message(basename(add1), " added")
         }
         bm <- data.frame(rid = bfcrid(bfc),
-                         meta[, c("params", "notes", "version", "date", "tag", "yml")])
+                         meta[, c("params", "notes", "date", "tag", "yml")])
         bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- bm
     }
 
     dh <- dataHub(bfc)
-    if(keepTags){
-        dataTags(dh) <- tag_old
-    }
+    ## if(keepTags){
+    ##     dataTags(dh) <- tag_old
+    ## }
     return(dh)
 }
 
-## todo: add yml path in mcols(dataSearch())!!! 
+## todo: keepTags!!!! 

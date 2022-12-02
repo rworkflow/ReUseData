@@ -11,8 +11,8 @@ meta_data(dir = "")
 }
 \value{
 a \code{data.frame} with yml file name, parameter values, data
-file paths, date, and user-specified notes, version when
-generating the data with \code{getData()}.
+file paths, date, and user-specified notes when generating the
+data with \code{getData()}.
 }
 \description{
 Functions to generate the meta csv file for local cached dataset.

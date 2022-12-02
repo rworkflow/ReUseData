@@ -9,7 +9,8 @@ dataUpdate(
   cachePath = "ReUseData",
   outMeta = FALSE,
   keepTags = TRUE,
-  removeOld = TRUE
+  removeOld = TRUE,
+  cloud = FALSE
 )
 }
 \arguments{
@@ -39,6 +40,9 @@ parameter values) was evaluated multiple times, the same data
 file(s) will match to multiple intermeidate files (e.g.,
 .yml). \code{removeOld} will remove older intermediate files, and
 only keep the most recent ones that matches the data file.}
+
+\item{cloud}{Whether to return the pre-generated data from Google
+Cloud bucket of ReUseData. Default is FALSE.}
 }
 \value{
 a \code{dataHub} object containing the information about local
@@ -71,6 +75,7 @@ res <- getData(gencode_transcripts,
 
 ## Update data cache 
 dataUpdate(dir = outdir)
+dataUpdate(dir = outdir, cloud = TRUE)
 
 ## newly generated data are now cached and searchable
 dataSearch(c("gencode", "42"))

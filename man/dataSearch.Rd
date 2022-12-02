@@ -5,7 +5,7 @@
 \title{dataSearch
 search data in local data caching system}
 \usage{
-dataSearch(keywords = character(), cachePath = "ReUseData")
+dataSearch(keywords = character(), cachePath = "ReUseData", RUDcloud = TRUE)
 }
 \arguments{
 \item{keywords}{character vector of keywords to be matched to the
