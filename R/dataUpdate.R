@@ -19,12 +19,14 @@
 #'     generating date.
 #' @param keepTags If keep the prior assigned data tags. Default is
 #'     TRUE.
-#' @param removeOld If remove the older intermediate files for same
-#'     dataset. Default is TRUE. In cases one data recipe (with same
-#'     parameter values) was evaluated multiple times, the same data
-#'     file(s) will match to multiple intermeidate files (e.g.,
-#'     .yml). `removeOld` will remove older intermediate files, and
-#'     only keep the most recent ones that matches the data file.
+#' @param cleanup If remove any invalid intermediate files. Default is
+#'     FALSE. In cases one data recipe (with same parameter values)
+#'     was evaluated multiple times, the same data file(s) will match
+#'     to multiple intermeidate files (e.g., .yml). `cleanup` will
+#'     remove older intermediate files, and only keep the most recent
+#'     ones that matches the data file. When there are any
+#'     intermediate files that don't match to any data file, `cleanup`
+#'     will also remove those.
 #' @param cloud Whether to return the pre-generated data from Google
 #'     Cloud bucket of ReUseData. Default is FALSE. 
 #' @details Users can directly retrieve information for all available
@@ -49,14 +51,14 @@
 #'         notes = c("gencode", "human", "42"),
 #'         showLog = TRUE)
 #'
-#' ## Update data cache 
+#' ## Update data cache (with or without pre-built data sets from ReUseData cloud bucket
 #' dataUpdate(dir = outdir)
 #' dataUpdate(dir = outdir, cloud = TRUE)
 #'
 #' ## newly generated data are now cached and searchable
 #' dataSearch(c("gencode", "42"))
 #' 
-dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, removeOld = TRUE, cloud = FALSE) {
+dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, cleanup = TRUE, cloud = FALSE) {
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -79,38 +81,8 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
     
     bfcremove(bfc, bfcinfo(bfc)$rid)
     
-    meta <- meta_data(dir = dir)
+    meta <- meta_data(dir = dir, cleanup = cleanup)
 
-    if (nrow(meta)) {
-        ## if any data not exist (meta$output), then delete that record. 
-        ind <- meta$output == "" | !file.exists(meta$output)
-        if (any(ind)) {
-            message("\nCleaning up invalid data records...")
-            meta <- meta[!ind, ]
-        }
-        
-        ## if any duplicated (1 data matches multiple yml files), only keep the most recent ones.
-        dup <- duplicated(meta$output)
-        if (any(dup)) {
-            yml_keep <- c()
-            uniqd <- unique(meta$output)
-            for (i in seq_along(uniqd)) {
-                yml <- meta$yml[meta$output == uniqd[i]]
-                ymld <- gsub("[[:alpha:]]|_", "", gsub(".yml$", "", basename(yml)))
-                keep <- which(ymld == max(ymld))
-                yml_keep <- c(yml_keep, yml[keep])
-            }
-            idx <- meta$yml %in% yml_keep
-            ymls_rm <- meta$yml[!idx]
-            ## remove older intermediate files
-            if (removeOld) {
-                dfrm <- data.frame(dir = dirname(ymls_rm), ptn = gsub(".yml", "", basename(ymls_rm)))
-                apply(dfrm, 1, function(x) {file.remove(list.files(x[1], x[2], full.names = TRUE))})
-                message("\nOlder intermediate files are removed! Turn removeOld = FALSE to disable!")
-            }
-            meta  <- meta[meta$yml %in% yml_keep, ]
-        }
-    }
     ## append pre-generated cloud data
     if (cloud) {
         download.file("https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
@@ -148,3 +120,4 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
 }
 
 ## todo: keepTags!!!! 
+

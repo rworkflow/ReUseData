@@ -9,7 +9,7 @@ dataUpdate(
   cachePath = "ReUseData",
   outMeta = FALSE,
   keepTags = TRUE,
-  removeOld = TRUE,
+  cleanup = TRUE,
   cloud = FALSE
 )
 }
@@ -34,12 +34,14 @@ generating date.}
 \item{keepTags}{If keep the prior assigned data tags. Default is
 TRUE.}
 
-\item{removeOld}{If remove the older intermediate files for same
-dataset. Default is TRUE. In cases one data recipe (with same
-parameter values) was evaluated multiple times, the same data
-file(s) will match to multiple intermeidate files (e.g.,
-.yml). \code{removeOld} will remove older intermediate files, and
-only keep the most recent ones that matches the data file.}
+\item{cleanup}{If remove any invalid intermediate files. Default is
+FALSE. In cases one data recipe (with same parameter values)
+was evaluated multiple times, the same data file(s) will match
+to multiple intermeidate files (e.g., .yml). \code{cleanup} will
+remove older intermediate files, and only keep the most recent
+ones that matches the data file. When there are any
+intermediate files that don't match to any data file, \code{cleanup}
+will also remove those.}
 
 \item{cloud}{Whether to return the pre-generated data from Google
 Cloud bucket of ReUseData. Default is FALSE.}
@@ -73,7 +75,7 @@ res <- getData(gencode_transcripts,
         notes = c("gencode", "human", "42"),
         showLog = TRUE)
 
-## Update data cache 
+## Update data cache (with or without pre-built data sets from ReUseData cloud bucket
 dataUpdate(dir = outdir)
 dataUpdate(dir = outdir, cloud = TRUE)
 
