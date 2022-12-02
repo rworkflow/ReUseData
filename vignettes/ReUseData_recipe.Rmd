@@ -137,7 +137,6 @@ rcp$bb <- "outfile"
 outdir <- file.path(tempdir(), "SharedData")
 res <- getData(rcp,
                outdir = outdir,
-               prefix = "test",
                notes = c("echo", "txt", "test"),
                showLog = TRUE)
 ```
@@ -174,8 +173,7 @@ recipe (`getData`) to generate data of interest.
 rcp$species <- "human"
 rcp$version <- "42"
 res <- getData(rcp,
-        outdir = tempdir(), 
-        prefix = "gencode_annotation_human_42",
+        outdir = outdir,
         notes = c("gencode", "human", "42"),
         showLog = TRUE)
 ```

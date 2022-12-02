@@ -51,17 +51,7 @@ library(ReUseData)
 library(Rcwl)
 ```
 		
-# Data resources 
-
-Some curated data resources from public database are available on
-cloud space with user-friendly discovery and access through the
-`ReUseData` portal, where detailed instructions are provided for
-straight-forward incorporation into data analysis pipelines run on
-local computing nodes, web resources, and cloud computing platforms
-(e.g., Terra, CGC).
-
 FIXME: 
-- cloud bucket of data
 - data portal instructions
 - data recipe private repository
 - testthat
@@ -92,10 +82,10 @@ inputs(rcp)
 
 Users can then assign values to the input parameters, and evaluate the
 recipe (`getData`) to generate data of interest. Users need to specify
-an output directory for all files and a file prefix for the
-concomitant files that are internally generated as workflow scripts or
-annotation files. Detailed notes for the data is encouraged which will
-be used for keywords matching for later data search.
+an output directory for all files (desired data file, intermediate
+files that are internally generated as workflow scripts or annotation
+files). Detailed notes for the data is encouraged which will be used
+for keywords matching for later data search.
 
 ```{r}
 rcp$species <- "human"
@@ -104,7 +94,6 @@ rcp$to <- "GRCh38"
 outdir <- file.path(tempdir(), "SharedData")
 res <- getData(rcp,
         outdir = outdir, 
-        prefix = "ensembl_liftover_GRCh37_to_GRCh38",
         notes = c("gencode", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
 ```
@@ -138,16 +127,16 @@ auto-added date for data generation time. A later data search using
 readLines(res$yml)
 ```
 
-## Data caching and updating 
+## Data caching, updating and searching
 
 `dataUpdate()` creates (if first itme use), syncs and update the local
 cache for curated datasets. It finds and reads all the `.yml` files
 recursivelly in the provided data folder, creates a cache record for
 each dataset that is associated (including newly generated ones with
 `getData()`, and update the local cache for later data searching and
-reuse.
+reuse. 
 
-**NOTE:** It is recommended that users create a specified folder for
+**IMPORTANT:** It is recommended that users create a specified folder for
 data archival (e.g., `file/path/to/SharedData`) that other group
 members have access to, and use sub-folders for different kinds of
 datasets.
@@ -166,7 +155,8 @@ dd
 
 One can subset the list with `[` and use getter functions to retrieve
 the annotation information about the data, e.g., data names,
-parameters values to the recipe, notes and tags.
+parameters values to the recipe, notes, tags, and the corresponding
+yaml file.
 
 ```{r}
 dd[1]
@@ -174,6 +164,17 @@ dataNames(dd)
 dataParams(dd)
 dataNotes(dd)
 dataTags(dd)
+dataYml(dd)
+```
+
+**NOTE:** if the argument `cloud=TRUE` is enabled, `dataUpdate()` will
+also cache the pre-generated data sets (from evaluation of public
+ReUseData recipes) that are available on ReUseData google bucket and
+return in the `dataHub` object that are fully searchable.
+
+```{r}
+dataUpdate(dir = outdir, cloud = TRUE)
+dataSearch(c("gencode", "GRCh38"))
 ```
 
 `ReUseData`, as the name suggests, commits to promoting the data reuse.
@@ -195,6 +196,33 @@ dataSearch()
 dataTags(dd) <- "#gatk"
 dataSearch("#gatk")
 ```
+
+# Know your data
+
+Here we provide a function `meta_data()` to create a data frame that
+contains all information about the data sets in the specified file
+path (recursively), including the annotation file (`$yml` column),
+parameter values for the recipe (`$params` column), data file path
+(`$output` column), keywords for data file (`notes` columns), date of
+data generation (`date` column), and any tag if available (`tag`
+column).
+
+Use `cleanup = TRUE` to cleanup any invalid or expired/older
+intermediate files.
+
+```{r}
+meta_data(outdir)
+```
+
+# Data resources 
+
+Some curated data resources from public database are available on
+cloud space with user-friendly discovery and access through the
+`ReUseData` portal, where detailed instructions are provided for
+straight-forward incorporation into data analysis pipelines run on
+local computing nodes, web resources, and cloud computing platforms
+(e.g., Terra, CGC).
+
 
 # SessionInfo
 ```{r}
