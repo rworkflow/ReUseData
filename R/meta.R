@@ -14,6 +14,7 @@
 #'     file paths, date, and user-specified notes when generating the
 #'     data with `getData()`.
 #' @export
+#' @importFrom stats setNames
 #' @examples
 #' ## meta_data("../SharedData")
 
