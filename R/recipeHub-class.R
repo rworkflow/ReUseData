@@ -37,7 +37,6 @@ recipeHub <- function(BFC){
 #' rcp1 <- rcps[1]
 #' recipeNames(rcp1)
 
-
 setMethod("show", "recipeHub", function(object){
     rid <- object@rid
     mc <- mcols(object)

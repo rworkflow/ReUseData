@@ -45,7 +45,8 @@
 #' ##############
 #' ### example 1
 #' ##############
-#'
+#' library(Rcwl)
+#' 
 #' shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
 #' readLines(shfile)
 #' rcp <- recipeMake(shscript = shfile,
@@ -54,16 +55,17 @@
 #'                   outputID = "annotation", 
 #'                   outputGlob = "gencode.v*.annotation.gtf"
 #'                   )
-#' inputs(rcp)
+#' Rcwl::inputs(rcp)
 #' rcp$species <- "human"
 #' rcp$version <- "42"
+#' \dontrun{
 #' res <- getData(rcp,
 #'         outdir = tempdir(), 
-#'         prefix = "gencode_annotation_human_42",
 #'         notes = c("gencode", "human", "42"),
 #'         showLog = TRUE)
 #' res$output
-#' dir(tempdir(), pattern = "gencode_annotation_human_42")
+#' dir(tempdir())
+#' }
 #' 
 #' ##############
 #' ### example 2
@@ -84,7 +86,6 @@
 #' rcp$aa <- "Hello World!"
 #' rcp$bb <- "outfile"
 #' res <- getData(rcp, outdir = tempdir(),
-#'                prefix = "test",
 #'                notes = c("echo", "txt", "test"),
 #'                showLog = TRUE)
 #' readLines(res$out)

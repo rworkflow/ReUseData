@@ -69,10 +69,11 @@ multi-keywords searching of dataset of interest.
 
 First, we can construct data recipes by transforming shell or other ad
 hoc data preprocessing scripts into workflow-based data recipes. Some
-pre-built data recipes for public data resources (e.g., downloading
-and indexing) are available for direct use through `recipeSearch` and
-`recipeLoad` functions. Then we will assign values to the input
-parameters and evaluate the recipe to generate data of interest.
+pre-built data recipes for public data resources (e.g., downloading,
+unzipping and indexing) are available for direct use through
+`recipeSearch` and `recipeLoad` functions. Then we will assign values
+to the input parameters and evaluate the recipe to generate data of
+interest.
 
 ```{r}
 recipeSearch("liftover")
@@ -115,7 +116,7 @@ of CWL workflow evalution, which also record data annotations, and
 file.
 
 ```{r}
-dir(outdir, pattern = "ensembl_liftover_GRCh37_to_GRCh38")
+dir(outdir)
 ```
 
 The `*.yml` file contains information about recipe input parameters,
@@ -167,16 +168,6 @@ dataTags(dd)
 dataYml(dd)
 ```
 
-**NOTE:** if the argument `cloud=TRUE` is enabled, `dataUpdate()` will
-also cache the pre-generated data sets (from evaluation of public
-ReUseData recipes) that are available on ReUseData google bucket and
-return in the `dataHub` object that are fully searchable.
-
-```{r}
-dataUpdate(dir = outdir, cloud = TRUE)
-dataSearch(c("gencode", "GRCh38"))
-```
-
 `ReUseData`, as the name suggests, commits to promoting the data reuse.
 Data can be prepared in standard input formats (`toList`), e.g.,
 YAML and JSON, to be easily integrated in workflow methods that are
@@ -197,6 +188,51 @@ dataTags(dd) <- "#gatk"
 dataSearch("#gatk")
 ```
 
+**NOTE:** if the argument `cloud=TRUE` is enabled, `dataUpdate()` will
+also cache the pre-generated data sets (from evaluation of public
+ReUseData recipes) that are available on ReUseData google bucket and
+return in the `dataHub` object that are fully searchable.
+
+```{r}
+dataUpdate(dir = outdir, cloud = TRUE)
+dataSearch(c("gencode"))
+```
+
+# Cloud data resources 
+
+With the pre-built data recipes for curation (e.g., downloading,
+unzipping, indexing) of commonly used public data resources (recipes
+can be restrieved using `recipeSearch` and `recipeLoad`, see the other
+vignette for data recipe), we have pre-generated some data sets and
+put them on the cloud space for direct use.
+
+Before searching, one need to use `dataUpdate(cloud=TRUE)` to sync the
+existing data sets on cloud, then `dataSearch()` can be used to search
+any available data set either in local cache and on the cloud. 
+
+```{r}
+gcpdir <- file.path(tempdir(), "gcpData")
+dataUpdate(gcpdir, cloud=TRUE)
+dh <- dataSearch(c("ensembl", "GRCh38"))
+```
+
+If the data of interest already exist on the cloud, then
+`getCloudData` will directly download the data to your computer. Add
+it to the local caching system using `dataUpdate()` for later use.
+
+```{r}
+getCloudData(dh[1], outdir = gcpdir)
+dataUpdate(gcpdir)  ## Update local data cache (without cloud data)
+dataSearch()  ## data is available locally!!!
+```
+
+The data supports user-friendly discovery and access through the
+`ReUseData` portal, where detailed instructions are provided for
+straight-forward incorporation into data analysis pipelines run on
+local computing nodes, web resources, and cloud computing platforms
+(e.g., Terra, CGC).
+
+
 # Know your data
 
 Here we provide a function `meta_data()` to create a data frame that
@@ -214,37 +250,6 @@ intermediate files.
 mt <- meta_data(outdir)
 head(mt)
 ```
-
-# Data resources 
-
-With the pre-built data recipes for curation (e.g., downloading,
-unzipping, indexing) of commonly used public data resources (recipes
-can be restrieved using `recipeSearch` and `recipeLoad`, see the other
-vignette for data recipe), we have pre-generated some data sets and
-put them on the cloud space for direct use.
-
-Before searching, one need to use `dataUpdate(cloud=TRUE)` to sync the
-existing data sets on cloud, then `dataSearch()` can be used to search
-any available data set either in local cache and on the cloud. If the
-data of interest already exist on the cloud, then `getCloudData` will
-directly download the data to your computer. Add it to the local
-caching system using `dataUpdate()` for later use.
-
-The data supports user-friendly discovery and access through the
-`ReUseData` portal, where detailed instructions are provided for
-straight-forward incorporation into data analysis pipelines run on
-local computing nodes, web resources, and cloud computing platforms
-(e.g., Terra, CGC).
-
-```{r}
-outdir <- file.path(tempdir(), "gcpData")
-dataUpdate(outdir, cloud=TRUE)
-dh <- dataSearch(c("ensembl", "GRCh38"))
-getCloudData(dh[1], outdir = outdir)
-dataUpdate(outdir)  ## no cloud here. 
-dataSearch()  ## data is available locally!!!
-```
-
 
 # SessionInfo
 ```{r}

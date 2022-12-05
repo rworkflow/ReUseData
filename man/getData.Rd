@@ -33,8 +33,9 @@ generated data files.
 Evaluation of data recipes to generate curated dataset of interest.
 }
 \examples{
+library(Rcwl)
 recipeLoad("ensembl_liftover", return = TRUE)
-inputs(ensembl_liftover)
+Rcwl::inputs(ensembl_liftover)
 ensembl_liftover$species <- "human"
 ensembl_liftover$from <- "GRCh37"
 ensembl_liftover$to <- "GRCh38"

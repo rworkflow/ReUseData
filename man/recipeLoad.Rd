@@ -41,9 +41,10 @@ To load data recipe(s) into R environment.
 ## Load single recipe
 ########################
 
+library(Rcwl)
 recipeSearch("liftover")
 rcp <- recipeLoad("ensembl_liftover")
-inputs(rcp)
+Rcwl::inputs(rcp)
 rm(rcp)
 
 recipeLoad("gencode_annotation", return=TRUE)

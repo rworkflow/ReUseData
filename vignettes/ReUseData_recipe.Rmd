@@ -169,13 +169,12 @@ rcp
 Users can then assign values to the input parameters, and evaluate the
 recipe (`getData`) to generate data of interest.
 
-```{r}
+```{r, eval=FALSE}
 rcp$species <- "human"
 rcp$version <- "42"
 res <- getData(rcp,
         outdir = outdir,
-        notes = c("gencode", "human", "42"),
-        showLog = TRUE)
+        notes = c("gencode", "human", "42"))
 ```
 
 The file path to newly generated dataset can be easily retrieved. 
@@ -257,7 +256,6 @@ assign values before evaluting a recipe to generate data of interest.
 inputs(rcp)
 inputs(gencode_transcripts)
 ```
-
 
 # SessionInfo
 ```{r}

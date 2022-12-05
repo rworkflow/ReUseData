@@ -65,8 +65,9 @@ for all valid datasets.
 }
 \examples{
 ## Generate data 
+library(Rcwl)
 recipeLoad("ensembl_liftover", return = TRUE)
-inputs(ensembl_liftover)
+Rcwl::inputs(ensembl_liftover)
 ensembl_liftover$species <- "human"
 ensembl_liftover$from <- "GRCh37"
 ensembl_liftover$to <- "GRCh38"
@@ -81,6 +82,6 @@ dataUpdate(dir = outdir)
 dataUpdate(dir = outdir, cloud = TRUE)
 
 ## newly generated data are now cached and searchable
-dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data are available.
+dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data! 
 
 }
