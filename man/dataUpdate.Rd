@@ -9,7 +9,7 @@ dataUpdate(
   cachePath = "ReUseData",
   outMeta = FALSE,
   keepTags = TRUE,
-  cleanup = TRUE,
+  cleanup = FALSE,
   cloud = FALSE
 )
 }

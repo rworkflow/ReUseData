@@ -13,6 +13,7 @@
 #' @return a `data.frame` with yml file name, parameter values, data
 #'     file paths, date, and user-specified notes when generating the
 #'     data with `getData()`.
+#' @export
 #' @examples
 #' ## meta_data("../SharedData")
 

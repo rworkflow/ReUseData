@@ -58,7 +58,7 @@
 #' ## newly generated data are now cached and searchable
 #' dataSearch(c("gencode", "42"))
 #' 
-dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, cleanup = TRUE, cloud = FALSE) {
+dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, cleanup = FALSE, cloud = FALSE) {
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
