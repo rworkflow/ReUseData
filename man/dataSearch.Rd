@@ -27,8 +27,9 @@ dataSearch
 search data in local data caching system
 }
 \examples{
+\dontrun{
 dataSearch()
 dataSearch(c("gencode")) 
 dataSearch("#gatk")
-
+}
 }

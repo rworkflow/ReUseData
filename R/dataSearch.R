@@ -15,10 +15,11 @@
 #' @import BiocFileCache 
 #' @export
 #' @examples
+#' \dontrun{
 #' dataSearch()
 #' dataSearch(c("gencode")) 
 #' dataSearch("#gatk")
-#' 
+#' }
 
 dataSearch <- function(keywords=character(), cachePath = "ReUseData") {
     ## find/create the cache path, and create a BFC object.

@@ -54,8 +54,8 @@
 #' ## Load single recipe
 #' ########################
 #'
-#' recipeSearch("gencode")
-#' rcp <- recipeLoad("gencode_annotation")
+#' recipeSearch("liftover")
+#' rcp <- recipeLoad("ensembl_liftover")
 #' inputs(rcp)
 #' rm(rcp)
 #'

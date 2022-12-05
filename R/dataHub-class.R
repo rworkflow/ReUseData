@@ -29,8 +29,9 @@ dataHub <- function(BFC){
 #' @importMethodsFrom RcwlPipelines mcols
 #' @exportMethod show
 #' @examples
-#' dataSearch()
-#' dd <- dataSearch(c("reference", "38", "1000g"))
+#' outdir <- file.path(tempdir(), "SharedData")
+#' dataUpdate(outdir, cloud = TRUE)
+#' dd <- dataSearch(c("liftover", "GRCh38"))
 #' dataNames(dd)
 #' dataParams(dd)
 #' dataNotes(dd)
@@ -51,7 +52,6 @@ setMethod("show", "dataHub", function(object){
     ## cat("# last modified date: ", as.character(mdate), "\n")
     cat("# dataUpdate() to update the local data cache\n")
     cat("# dataSearch() to query a specific dataset\n")
-    ## cat("# additional mcols(): rid, rpath, params, notes, version, date, tag, ...\n")
     cat("# Additional information can be retrieved using: \n")
     cat("# dataNames(), dataParams(), dataNotes(), dataPaths(), dataTag() or mcols()\n")
     ## https://github.com/Bioconductor/AnnotationHub/blob/master/R/Hub-class.R#L602

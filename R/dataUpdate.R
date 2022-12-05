@@ -41,22 +41,23 @@
 #' @export
 #' @examples
 #' ## Generate data 
-#' recipeLoad("gencode_transcripts", return=TRUE)
-#' inputs(gencode_transcripts)
-#' gencode_transcripts$species <- "human"
-#' gencode_transcripts$version <- "42"
+#' recipeLoad("ensembl_liftover", return = TRUE)
+#' inputs(ensembl_liftover)
+#' ensembl_liftover$species <- "human"
+#' ensembl_liftover$from <- "GRCh37"
+#' ensembl_liftover$to <- "GRCh38"
 #' outdir <- file.path(tempdir(), "SharedData")
-#' res <- getData(gencode_transcripts,
+#' res <- getData(ensembl_liftover,
 #'         outdir = outdir, 
-#'         notes = c("gencode", "human", "42"),
+#'         notes = c("ensembl", "liftover", "human", "GRCh37", "GRCh38"),
 #'         showLog = TRUE)
 #'
-#' ## Update data cache (with or without pre-built data sets from ReUseData cloud bucket
+#' ## Update data cache (with or without pre-built data sets from ReUseData cloud bucket)
 #' dataUpdate(dir = outdir)
 #' dataUpdate(dir = outdir, cloud = TRUE)
 #'
 #' ## newly generated data are now cached and searchable
-#' dataSearch(c("gencode", "42"))
+#' dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data are available.
 #' 
 dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, cleanup = FALSE, cloud = FALSE) {
     ## find/create the cache path, and create a BFC object.

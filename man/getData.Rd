@@ -33,15 +33,15 @@ generated data files.
 Evaluation of data recipes to generate curated dataset of interest.
 }
 \examples{
-recipeLoad("gencode_transcripts", return = TRUE)
-inputs(gencode_transcripts)
-gencode_transcripts$species <- "human"
-gencode_transcripts$version <- "42"
+recipeLoad("ensembl_liftover", return = TRUE)
+inputs(ensembl_liftover)
+ensembl_liftover$species <- "human"
+ensembl_liftover$from <- "GRCh37"
+ensembl_liftover$to <- "GRCh38"
 outdir <- file.path(tempdir(), "SharedData")
-res <- getData(gencode_transcripts,
+res <- getData(ensembl_liftover,
         outdir = outdir, 
-        prefix = "gencode_annotation_human_42",
-        notes = c("gencode", "human", "42"),
+        notes = c("ensembl", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
 dir(outdir)
 

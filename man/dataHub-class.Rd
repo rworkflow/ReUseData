@@ -88,8 +88,9 @@ toList: A list of datasets in specific format.
 \code{dataHub} class, constructor, and methods.
 }
 \examples{
-dataSearch()
-dd <- dataSearch(c("reference", "38", "1000g"))
+outdir <- file.path(tempdir(), "SharedData")
+dataUpdate(outdir, cloud = TRUE)
+dd <- dataSearch(c("liftover", "GRCh38"))
 dataNames(dd)
 dataParams(dd)
 dataNotes(dd)
