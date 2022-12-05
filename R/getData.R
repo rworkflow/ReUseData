@@ -1,23 +1,8 @@
-getDataBatch <- function(cwl, outdir, prefix, version = "",
-                            notes = "", docker = TRUE,
-                            BPPARAM = SerialParam(), ...){
-    res <- bplapply(1, runBatch, libs = c("Rcwl", "tools"),
-                    fun = getData,
-                    cwl = cwl,
-                    outdir = outdir,
-                    prefix = prefix,
-                    version = version,
-                    notes = notes,
-                    docker = docker,
-                    BPPARAM = BPPARAM, ...)
-    return(res[[1]])
-} 
-
 #' getData
 #'
 #' Evaluation of data recipes to generate curated dataset of interest. 
 #' 
-#' @param cwl the data recipe in `cwlProcess` S4 class.
+#' @param rcp the data recipe in `cwlProcess` S4 class.
 #' @param outdir Character string specifying the directory to store
 #'     the output files. Will automatically create if not exist or
 #'     provided.
@@ -49,17 +34,17 @@ getDataBatch <- function(cwl, outdir, prefix, version = "",
 #' dir(outdir)
 #' 
 
-getData <- function(cwl, outdir, notes = c(), docker = TRUE, ...){
+getData <- function(rcp, outdir, notes = c(), docker = TRUE, ...){
     if(docker == "singularity"){
-        reqclass <- unlist(lapply(requirements(cwl), function(x)x$class))
+        reqclass <- unlist(lapply(requirements(rcp), function(x)x$class))
         idx <- match("DockerRequirement", reqclass)
-        iid <- requirements(cwl)[[idx]]$dockerImageId
+        iid <- requirements(rcp)[[idx]]$dockerImageId
         if(!is.null(iid)){
-            requirements(cwl)[[idx]] <- requireDocker(iid)
+            requirements(rcp)[[idx]] <- requireDocker(iid)
         }
     }
-    prefix <- paste(deparse(substitute(cwl)), round(as.numeric(Sys.time())), sep="_")  ## "rcp_time.xx"
-    res <- runCWL(cwl = cwl, outdir = outdir,
+    prefix <- paste(deparse(substitute(rcp)), round(as.numeric(Sys.time())), sep="_")  ## "rcp_time.xx"
+    res <- runCWL(cwl = rcp, outdir = outdir,
                   yml_prefix = prefix,
                   yml_outdir = outdir,
                   docker = docker, ...)
@@ -76,7 +61,7 @@ getData <- function(cwl, outdir, notes = c(), docker = TRUE, ...){
              paste("# notes:", notes),
              paste("# date:", Sys.Date()))
     write(apd, yfile, append = TRUE)
-    lapply(requirements(cwl), function(x){
+    lapply(requirements(rcp), function(x){
         if(x$class == "InitialWorkDirRequirement" &&
            x$listing[[1]]$entryname == "script.sh"){
             write(x$listing[[1]]$entry, file.path(outdir, paste0(prefix, ".sh")))

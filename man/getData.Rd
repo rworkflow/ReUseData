@@ -4,10 +4,10 @@
 \alias{getData}
 \title{getData}
 \usage{
-getData(cwl, outdir, notes = c(), docker = TRUE, ...)
+getData(rcp, outdir, notes = c(), docker = TRUE, ...)
 }
 \arguments{
-\item{cwl}{the data recipe in \code{cwlProcess} S4 class.}
+\item{rcp}{the data recipe in \code{cwlProcess} S4 class.}
 
 \item{outdir}{Character string specifying the directory to store
 the output files. Will automatically create if not exist or
