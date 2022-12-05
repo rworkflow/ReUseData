@@ -1,15 +1,24 @@
 Package: ReUseData
 Title: Reproducible and ReUsable Data Resources
-Version: 0.0.1
+Version: 0.99.0
 Authors@R: 
     person(given = "Qian",
            family = "Liu",
            role = c("aut", "cre"),
            email = "qian.liu@roswellpark.org",
-           comment = c(ORCID = ""))	   
-Description: A package to produce and manage data resources by the
-	     Rcwl package. It can be used to download, modify and manage genomic
-	     reference, annotation and other resource files.
+           comment = c(ORCID = "0000-0003-1456-5099"))
+Description: ReUseData is an _R/Bioconductor_ software tool to provide
+    a systematic and versatile approach for standardized and
+    reproducible data management. ReUseData facilitates transformation
+    of shell or other ad hoc scripts for data preprocessing into
+    workflow-based data recipes. Evaluation of data recipes generate
+    curated data files in their generic formats (e.g., VCF, bed). Both
+    recipes and data are cached using database infrastructure for easy
+    data management and reuse. Pre-built data recipes are available
+    through ReUseData portal ("https://rcwl.org/dataRecipes/") with
+    full annotation and user instructions. Pre-generated data are
+    available through ReUseData cloud bucket that is directly
+    downloadable through "getCloudData()".
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -23,3 +32,4 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+biocViews: Infrastructure, DataImport, BasicWorkflow, ImmunoOncology
