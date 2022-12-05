@@ -27,5 +27,6 @@ data with \code{getData()}.
 Functions to generate the meta csv file for local cached dataset.
 }
 \examples{
-## meta_data("../SharedData")
+outdir <- file.path(tempdir(), "SharedData")
+meta_data(outdir)
 }

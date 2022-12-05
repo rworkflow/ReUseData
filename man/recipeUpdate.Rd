@@ -26,13 +26,14 @@ default, it reads the "rworkflows/ReUseDataRecipes" GitHub
 repository where recipes are publicly shared for direct use and
 as examples for users to build their own recipes.}
 }
+\value{
+a \code{recipeHub} object.
+}
 \description{
 Function to sync and get the most updated and newly added data
 recipes through the pubic "rworkflows/ReUseDataRecipes" GitHub
 repository or user-specified private GitHub repo.
 }
 \examples{
-\dontrun{
 recipeUpdate()
-}
 }

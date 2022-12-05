@@ -15,15 +15,14 @@
 #'     default, it reads the "rworkflows/ReUseDataRecipes" GitHub
 #'     repository where recipes are publicly shared for direct use and
 #'     as examples for users to build their own recipes.
+#' @return a `recipeHub` object. 
 #' @importFrom tools R_user_dir
 #' @import BiocFileCache
 #' @import Rcwl
 #' @import utils
 #' @export
 #' @examples
-#' \dontrun{
 #' recipeUpdate()
-#' }
 
 recipeUpdate <- function(cachePath = "ReUseDataRecipe",
                          force = FALSE,

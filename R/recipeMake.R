@@ -58,7 +58,7 @@
 #' Rcwl::inputs(rcp)
 #' rcp$species <- "human"
 #' rcp$version <- "42"
-#' \dontrun{
+#' \donttest{
 #' res <- getData(rcp,
 #'         outdir = tempdir(), 
 #'         notes = c("gencode", "human", "42"),

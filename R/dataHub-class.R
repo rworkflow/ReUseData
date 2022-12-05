@@ -196,7 +196,7 @@ toList <- function(x, format = c("list", "json", "yaml"), type = NULL){
         dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
         dtype <- ifelse(dtype, "Directory", "File")
         dl <- vector("list", length(pth))
-        for(i in 1:length(pth)){
+        for(i in seq_len(length(pth))){
             dl[[i]] <- list(class = dtype[i],
                             path = pth[i])
         }

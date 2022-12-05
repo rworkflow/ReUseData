@@ -16,7 +16,8 @@
 #' @export
 #' @importFrom stats setNames
 #' @examples
-#' ## meta_data("../SharedData")
+#' outdir <- file.path(tempdir(), "SharedData")
+#' meta_data(outdir)
 
 meta_data <- function(dir = "", cleanup = FALSE) {
     ymls <- normalizePath(list.files(dir, pattern = ".yml", full.names = TRUE, recursive = TRUE))
