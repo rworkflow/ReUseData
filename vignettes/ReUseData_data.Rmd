@@ -50,10 +50,6 @@ BiocManager::install("rworkflow/ReUseData")
 library(ReUseData)
 library(Rcwl)
 ```
-		
-FIXME: 
-- data portal instructions
-- additional recipes... 
  
 # `ReUseData` core functions for data management 
 
