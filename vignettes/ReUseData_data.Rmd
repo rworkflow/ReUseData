@@ -53,8 +53,6 @@ library(Rcwl)
 		
 FIXME: 
 - data portal instructions
-- data recipe private repository
-- testthat
 - additional recipes... 
  
 # `ReUseData` core functions for data management 

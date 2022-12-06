@@ -197,6 +197,10 @@ _R_.
 `recipeLoad` and `recipeSearch` functions.
 - use `force=TRUE` when any old recipes that are previously cached are
 updated.
+- The recipes can be synced with private GitHub repositories. By
+  default, it syncs `ReUseDataRecipe` GitHub
+  repository](https://github.com/rworkflow/ReUseDataRecipe) for
+  pre-built data recipes.
 
 ```{r}
 ## First time use
