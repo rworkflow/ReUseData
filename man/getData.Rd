@@ -4,7 +4,7 @@
 \alias{getData}
 \title{getData}
 \usage{
-getData(rcp, outdir, notes = c(), docker = TRUE, ...)
+getData(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...)
 }
 \arguments{
 \item{rcp}{the data recipe in \code{cwlProcess} S4 class.}
@@ -13,11 +13,14 @@ getData(rcp, outdir, notes = c(), docker = TRUE, ...)
 the output files. Will automatically create if not exist or
 provided.}
 
+\item{prefix}{Character string specifying the file name of the
+annotation files (.yml, .cwl, .sh, .md5).}
+
 \item{notes}{User assigned notes/keywords to annotate the data and
 be used for keywords matching in \code{dataSearch(keywords = )}.}
 
-\item{docker}{Whether to use docker when evaluating the data recipe
-as a CWL workflow. Default is TRUE.}
+\item{conda}{Whether to use conda to install required software when
+evaluating the data recipe as a CWL workflow. Default is FALSE.}
 
 \item{...}{Arguments to be passed into \code{Rcwl:runCWL()}.}
 }

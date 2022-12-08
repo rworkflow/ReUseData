@@ -70,6 +70,7 @@ to the input parameters and evaluate the recipe to generate data of
 interest.
 
 ```{r}
+recipeUpdate()
 recipeSearch("liftover")
 rcp <- recipeLoad("ensembl_liftover")
 inputs(rcp)

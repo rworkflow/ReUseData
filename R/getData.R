@@ -6,10 +6,12 @@
 #' @param outdir Character string specifying the directory to store
 #'     the output files. Will automatically create if not exist or
 #'     provided.
+#' @param prefix Character string specifying the file name of the
+#'     annotation files (.yml, .cwl, .sh, .md5).
 #' @param notes User assigned notes/keywords to annotate the data and
 #'     be used for keywords matching in `dataSearch(keywords = )`.
-#' @param docker Whether to use docker when evaluating the data recipe
-#'     as a CWL workflow. Default is TRUE.
+#' @param conda Whether to use conda to install required software when
+#'     evaluating the data recipe as a CWL workflow. Default is FALSE.
 #' @param ... Arguments to be passed into `Rcwl:runCWL()`.
 #' @return The data files and 4 meta files: `.cwl`: The cwl script
 #'     that was internally run to get the data; `.yml`: the input
@@ -19,7 +21,7 @@
 #'     generated data files.
 #' @importFrom Rcwl runCWL
 #' @importFrom tools md5sum
-#' @export 
+#' @export
 #' @examples
 #' library(Rcwl)
 #' recipeLoad("ensembl_liftover", return = TRUE)
@@ -35,20 +37,15 @@
 #' dir(outdir)
 #' 
 
-getData <- function(rcp, outdir, notes = c(), docker = TRUE, ...){
-    if(docker == "singularity"){
-        reqclass <- unlist(lapply(requirements(rcp), function(x)x$class))
-        idx <- match("DockerRequirement", reqclass)
-        iid <- requirements(rcp)[[idx]]$dockerImageId
-        if(!is.null(iid)){
-            requirements(rcp)[[idx]] <- requireDocker(iid)
-        }
+getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...){
+    if(is.null(prefix)){
+        prefix <- paste(deparse(substitute(rcp)),
+                        round(as.numeric(Sys.time())), sep="_")  ## "rcp_time.xx"
     }
-    prefix <- paste(deparse(substitute(rcp)), round(as.numeric(Sys.time())), sep="_")  ## "rcp_time.xx"
     res <- runCWL(cwl = rcp, outdir = outdir,
                   yml_prefix = prefix,
                   yml_outdir = outdir,
-                  docker = docker, ...)
+                  ...)
     ## if no output generated: 
     if (is.null(res$output)) {
         ## file.remove(file.path(outdir, paste0(prefix, ".yml")))
@@ -76,19 +73,19 @@ getData <- function(rcp, outdir, notes = c(), docker = TRUE, ...){
     return(res)
 }
 
-docker2sif <- function(Dockerfile, sif, buildArgs = ""){
-    if(!file.exists(Dockerfile) & grepl("FROM", Dockerfile)){
-        df <- tempfile()
-        write(Dockerfile, df)
-        Dockerfile <- df
-    }
-    cmd1 <- paste("spython recipe --parser docker", Dockerfile, paste0(Dockerfile, ".snowflake"))
-    message(cmd1)
-    system(cmd1)
-    cmd2 <- paste("singularity build", buildArgs, sif, paste0(Dockerfile, ".snowflake"))
-    message(cmd2)
-    system(cmd2)
-}
+## docker2sif <- function(Dockerfile, sif, buildArgs = ""){
+##     if(!file.exists(Dockerfile) & grepl("FROM", Dockerfile)){
+##         df <- tempfile()
+##         write(Dockerfile, df)
+##         Dockerfile <- df
+##     }
+##     cmd1 <- paste("spython recipe --parser docker", Dockerfile, paste0(Dockerfile, ".snowflake"))
+##     message(cmd1)
+##     system(cmd1)
+##     cmd2 <- paste("singularity build", buildArgs, sif, paste0(Dockerfile, ".snowflake"))
+##     message(cmd2)
+##     system(cmd2)
+## }
 
 runBatch <- function(idx, libs, fun, ...){
     lapply(libs, library, character.only = TRUE)

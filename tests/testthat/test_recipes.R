@@ -36,7 +36,7 @@ test_that("recipe evaluation works", {
     expect_match(outyml[3], "output:")
     expect_match(outyml[3], res$output)
     expect_equal(outyml[4], "# notes: echo txt test")
-    expect_equal(outyml[5], paste0("# date: ", Sys.Date())
+    expect_equal(outyml[5], paste0("# date: ", Sys.Date()))
 })
 
 test_that("recipe updating works", {
@@ -47,7 +47,7 @@ test_that("recipe updating works", {
     expect_vector(recipeNames(rcphub))
     expect_s4_class(rcphub[1], "recipeHub")
     expect_length(rcphub[1], 1)
-}
+})
 
 test_that("recipe searching works", {
     rcp <- recipeSearch(c("ensembl", "liftover"))
@@ -55,7 +55,7 @@ test_that("recipe searching works", {
     expect_equal(recipeNames(rcp), "ensembl_liftover")
 })
 
-test_that("recipe loading works") {
+test_that("recipe loading works", {
     recipeLoad("ensembl_liftover", return=TRUE)
     expect_s4_class(ensembl_liftover, "cwlProcess")
 })

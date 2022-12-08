@@ -94,14 +94,14 @@ parameter. For example, the data recipe
 Cloud Platform bucket for Broad reference data GATK hg38. 
 
 If the data curation gets more complicated, say, multiple command-line
-tools are to be involved, and docker images are to be used, or some
-secondary files are to be generated and collected, the raw way of
-building a `ReUseData` recipe using `Rcwl` functions is recommended,
-which gives more flexibility and power to accommodate different
-situations. An example recipe is the `reference_genome` which
-downloads, formats, and index reference genome data using tools of
-`samtools`, `picard` and `bwa`, and manages multiple secondary files
-besides the main fasta file for later reuse.
+tools are to be involved, and `conda` can be used to install required
+packages, or some secondary files are to be generated and collected,
+the raw way of building a `ReUseData` recipe using `Rcwl` functions is
+recommended, which gives more flexibility and power to accommodate
+different situations. An example recipe is the `reference_genome`
+which downloads, formats, and index reference genome data using tools
+of `samtools`, `picard` and `bwa`, and manages multiple secondary
+files besides the main fasta file for later reuse.
 	
 # `ReUseData` core functions 
 
