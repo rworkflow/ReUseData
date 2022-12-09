@@ -40,7 +40,7 @@
 getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...){
     if(is.null(prefix)){
         if(length(rcp@label) > 0){
-            rcp_name <- rcp@label
+            rcp_name <- gsub(" ", "_", rcp@label)
         }else{
             rcp_name <- deparse(substitute(rcp))
         }
@@ -48,7 +48,7 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...)
             if(grepl("http|ftp", x@value)){
                 basename(x@value)
             }else{
-                x@value
+                gsub(" ", "_", x@value)
             }
         })
         xn <- do.call(paste, list(xn, collapse="_"))
