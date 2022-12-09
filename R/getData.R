@@ -39,9 +39,21 @@
 
 getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...){
     if(is.null(prefix)){
-        prefix <- paste(deparse(substitute(rcp)),
-                        round(as.numeric(Sys.time())), sep="_")  ## "rcp_time.xx"
-    }
+        if(length(rcp@label) > 0){
+            rcp_name <- rcp@label
+        }else{
+            rcp_name <- deparse(substitute(rcp))
+        }
+        xn <- lapply(inputs(rcp), function(x){
+            if(grepl("http|ftp", x@value)){
+                basename(x@value)
+            }else{
+                x@value
+            }
+        })
+        xn <- do.call(paste, list(xn, collapse="_"))
+        prefix <- paste(rcp_name, xn, sep="_")  ## "rcp_inputs.xx" 
+   }
     res <- runCWL(cwl = rcp, outdir = outdir,
                   yml_prefix = prefix,
                   yml_outdir = outdir,
