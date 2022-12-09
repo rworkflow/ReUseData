@@ -44,6 +44,6 @@ getCloudData <- function(datahub, outdir = character()) {
     nyml <- file.path(outdir, basename(yml))
     cts <- readLines(nyml)
     idx <- grep("# output", cts)
-    cts[idx] <- paste0("# output: ", nyml)
+    cts[idx] <- paste0("# output: ", file.path(outdir, basename(url)))
     write(cts, nyml)
 }
