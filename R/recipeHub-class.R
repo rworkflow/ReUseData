@@ -5,9 +5,8 @@
 #' recipeHub
 #'
 #' `recipeHub` class, constructor, and methods. 
-#' @rdname recipeHub-class 
-#' @exportClass recipeHub
-#' 
+#' @rdname recipeHub-class
+#' @export
 recipeHub <- setClass("recipeHub", contains = "cwlHub")
 
 #' @rdname recipeHub-class
@@ -15,7 +14,6 @@ recipeHub <- setClass("recipeHub", contains = "cwlHub")
 #' @return recipeHub: a `recipeHub` object.
 #' @importClassesFrom RcwlPipelines cwlHub
 #' @export
-#' 
 recipeHub <- function(BFC){
     cwlh <- RcwlPipelines::cwlHub(BFC)
     new("recipeHub", cwlh)

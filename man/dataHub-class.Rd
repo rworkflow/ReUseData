@@ -15,7 +15,7 @@
 \alias{[,dataHub,ANY,ANY,ANY-method}
 \alias{c,dataHub-method}
 \alias{toList}
-\title{dataHub}
+\title{dataHub Class}
 \usage{
 dataHub(BFC)
 

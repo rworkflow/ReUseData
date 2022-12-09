@@ -2,11 +2,11 @@
 ## dataHub
 ################
 
-#' dataHub
+#' dataHub Class
 #'
-#' `dataHub` class, constructor, and methods. 
-#' @rdname dataHub-class 
-#' @exportClass dataHub
+#' `dataHub` class, constructor, and methods.
+#' @rdname dataHub-class
+#' @export
 dataHub <- setClass("dataHub", contains = "cwlHub")
 
 #' @rdname dataHub-class
