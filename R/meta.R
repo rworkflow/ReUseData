@@ -10,6 +10,9 @@
 #'     ones that matches the data file. When there are any
 #'     intermediate files that don't match to any data file, `cleanup`
 #'     will also remove those.
+#' @param checkData check if the data (listed as "# output: " in the
+#'     yml file) exists. If not, do not include in the output csv
+#'     file. This argument is added for internal testing purpose.
 #' @return a `data.frame` with yml file name, parameter values, data
 #'     file paths, date, and user-specified notes when generating the
 #'     data with `getData()`.
@@ -19,7 +22,7 @@
 #' outdir <- file.path(tempdir(), "SharedData")
 #' meta_data(outdir)
 
-meta_data <- function(dir = "", cleanup = FALSE) {
+meta_data <- function(dir = "", cleanup = FALSE, checkData = TRUE) {
     ymls <- normalizePath(list.files(dir, pattern = ".yml", full.names = TRUE, recursive = TRUE))
     dnames <- sub(".yml$", "", basename(ymls))  ## file name.
     keys <- c("output", "notes", "date", "tag")
@@ -57,7 +60,8 @@ meta_data <- function(dir = "", cleanup = FALSE) {
                 dfrm <- data.frame(dir = dirname(ymls_rm), ptn = gsub(".yml", "", basename(ymls_rm)))
                 apply(dfrm, 1, function(x) {file.remove(list.files(x[1], x[2], full.names = TRUE))})
             }
-            meta <- meta[!ind, ]
+            if (checkData)
+                meta <- meta[!ind, ]
         }
         
         ## if any duplicated (1 data matches multiple yml files), only keep the most recent ones.

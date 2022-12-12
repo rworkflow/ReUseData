@@ -4,7 +4,7 @@
 \alias{meta_data}
 \title{meta_data}
 \usage{
-meta_data(dir = "", cleanup = FALSE)
+meta_data(dir = "", cleanup = FALSE, checkData = TRUE)
 }
 \arguments{
 \item{dir}{The path to the shared data folder.}
@@ -17,6 +17,10 @@ remove older intermediate files, and only keep the most recent
 ones that matches the data file. When there are any
 intermediate files that don't match to any data file, \code{cleanup}
 will also remove those.}
+
+\item{checkData}{check if the data (listed as "# output: " in the
+yml file) exists. If not, do not include in the output csv
+file. This argument is added for internal testing purpose.}
 }
 \value{
 a \code{data.frame} with yml file name, parameter values, data
