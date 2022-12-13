@@ -58,7 +58,8 @@ toList(x, format = c("list", "json", "yaml"), type = NULL)
 
 \item{x}{A \code{dataHub} object.}
 
-\item{i}{The integer index of the \code{dataHub} object.}
+\item{i}{The integer index of the \code{dataHub} object, or a logical
+vector same length as the \code{dataHub} object.}
 
 \item{...}{More \code{dataHub} objects to combine.}
 

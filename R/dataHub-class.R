@@ -156,7 +156,8 @@ setReplaceMethod("dataTags", "dataHub", function(object, append=FALSE, value){
 #' subset dataHub
 #' @rdname dataHub-class
 #' @param x A `dataHub` object.
-#' @param i The integer index of the `dataHub` object.
+#' @param i The integer index of the `dataHub` object, or a logical
+#'     vector same length as the `dataHub` object.
 #' @export
 setMethod("[", c("dataHub"), function(x, i) {
     rids <- x@rid[i]

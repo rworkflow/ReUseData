@@ -72,8 +72,8 @@ interest.
 ```{r}
 recipeUpdate()
 recipeSearch("liftover")
-rcp <- recipeLoad("ensembl_liftover")
-inputs(rcp)
+recipeLoad("ensembl_liftover", return = TRUE)
+inputs(ensembl_liftover)
 ```
 
 Users can then assign values to the input parameters, and evaluate the
@@ -84,11 +84,11 @@ files). Detailed notes for the data is encouraged which will be used
 for keywords matching for later data search.
 
 ```{r}
-rcp$species <- "human"
-rcp$from <- "GRCh37"
-rcp$to <- "GRCh38"
+ensembl_liftover$species <- "human"
+ensembl_liftover$from <- "GRCh37"
+ensembl_liftover$to <- "GRCh38"
 outdir <- file.path(tempdir(), "SharedData")
-res <- getData(rcp,
+res <- getData(ensembl_liftover,
         outdir = outdir, 
         notes = c("gencode", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
@@ -156,6 +156,8 @@ yaml file.
 
 ```{r}
 dd[1]
+## dd["BFC1"]
+dd[dataNames(dd) == "GRCh37_to_GRCh38.chain"]
 dataNames(dd)
 dataParams(dd)
 dataNotes(dd)
