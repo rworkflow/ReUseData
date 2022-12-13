@@ -32,7 +32,8 @@ Imports:
     utils,
     methods,
     jsonlite,
-    yaml
+    yaml,
+    basilisk
 Suggests: 
     knitr,
     rmarkdown,

@@ -14,6 +14,7 @@
 #'     for an array of files, etc. Can also take "double", "long",
 #'     "null", "Directory". See details.
 #' @param outputID the ID for each output.
+#' @param outputType the output type for each output.
 #' @param outputGlob the glob pattern of output files. E.g., "hg19.*".
 #' @param requireTools the command-line tools to be used for data
 #'     processing/curation in the user-provided shell script. The
@@ -94,7 +95,7 @@ recipeMake <- function(shscript = character(),
                        paramID = c(),  
                        paramType = c(),
                        outputID = c(),
-                       ## outputType = c(), ## default is "File[]" file array
+                       outputType = c("File[]"), ## default is "File[]" file array
                        outputGlob = character(0),
                        requireTools = character(0)) {
     if(file.exists(shscript)){
@@ -124,8 +125,8 @@ recipeMake <- function(shscript = character(),
     output_param_list <- list()
     for (i in seq_along(outputID)) {
         id <- outputID[i]
-        ## tp <- outputType[i]
-        output_param <- OutputParam(id=id, type="File[]", glob=outputGlob)
+        tp <- outputType[i]
+        output_param <- OutputParam(id=id, type=tp, glob=outputGlob)
         output_param_list[[i]] <- output_param
     }
 

@@ -9,6 +9,7 @@ recipeMake(
   paramID = c(),
   paramType = c(),
   outputID = c(),
+  outputType = c("File[]"),
   outputGlob = character(0),
   requireTools = character(0)
 )
@@ -29,6 +30,8 @@ for an array of files, etc. Can also take "double", "long",
 "null", "Directory". See details.}
 
 \item{outputID}{the ID for each output.}
+
+\item{outputType}{the output type for each output.}
 
 \item{outputGlob}{the glob pattern of output files. E.g., "hg19.*".}
 

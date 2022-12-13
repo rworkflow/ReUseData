@@ -21,6 +21,7 @@
 #'     generated data files.
 #' @importFrom Rcwl runCWL
 #' @importFrom tools md5sum
+#' @importFrom basilisk basiliskStart basiliskStop
 #' @export
 #' @examples
 #' library(Rcwl)
@@ -53,7 +54,17 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...)
         })
         xn <- do.call(paste, list(xn, collapse="_"))
         prefix <- paste(rcp_name, xn, sep="_")  ## "rcp_inputs.xx" 
-   }
+    }
+    ## check cwltool version
+    if(file.exists(Sys.which("cwltool"))){
+        cwlver <- system("cwltool --version", intern = TRUE)
+        cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
+        if(cwlver < 3.1){
+            cl <- basiliskStart(Rcwl:::env_Rcwl)
+            basiliskStop(cl)
+        }
+    }
+    
     res <- runCWL(cwl = rcp, outdir = outdir,
                   yml_prefix = prefix,
                   yml_outdir = outdir,
