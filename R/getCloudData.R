@@ -30,20 +30,31 @@ getCloudData <- function(datahub, outdir = character()) {
     if (!length(idx)) {
         stop("The 'data' is not a cloud object. Please double check the data name.")
     }
+
+    ## download data files
     url <- dataPaths(datahub[idx])
     if (!dir.exists(outdir))
         dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
-    download.file(url, destfile = file.path(outdir, basename(url)))
+    for (i in seq_along(url)) {
+        download.file(url[i], destfile = file.path(outdir, basename(url[i])))
+    }
+    
+    ## download unique annotation files
     yml <- dataYml(datahub[idx])
-    pfix <- gsub(".yml", "", basename(yml))
-    ofls <- file.path(dirname(yml), paste0(pfix, c(".yml", ".cwl", ".md5", ".sh")))
-    sapply(ofls, function(x) download.file(x, file.path(outdir, basename(x))))
-    message("The data file is downloaded: ", file.path(outdir, basename(url)))
+    ymlpath <- unique(gsub(".yml", "", yml))
+    for (i in seq_along(ymlpath)) {
+        ofls <- paste0(ymlpath[i], c(".yml", ".cwl", ".md5", ".sh"))
+        sapply(ofls, function(x) download.file(x, file.path(outdir, basename(x))))
+    }
+    message("Data is downloaded: \n", paste(file.path(outdir, basename(url)), collapse = "\n"))
     
     ## change the .yml "# output: " row with new file path
-    nyml <- file.path(outdir, basename(yml))
-    cts <- readLines(nyml)
-    idx <- grep("# output", cts)
-    cts[idx] <- paste0("# output: ", file.path(outdir, basename(url)))
-    write(cts, nyml)
+    nyml <- file.path(outdir, unique(basename(yml)))
+    for (i in seq_along(nyml)) {
+        cts <- readLines(nyml[i])
+        idx <- grep("# output", cts)
+        cts[idx] <- paste0("# output: ", outdir, "/", basename(gsub("# output: ", "", cts[idx])))
+        ## cts[idx] <- paste0("# output: ", file.path(outdir, basename(url[i])))
+        write(cts, nyml[i])
+    }
 }
