@@ -10,7 +10,8 @@ dataUpdate(
   outMeta = FALSE,
   keepTags = TRUE,
   cleanup = FALSE,
-  cloud = FALSE
+  cloud = FALSE,
+  checkData = TRUE
 )
 }
 \arguments{
@@ -45,6 +46,10 @@ will also remove those.}
 
 \item{cloud}{Whether to return the pre-generated data from Google
 Cloud bucket of ReUseData. Default is FALSE.}
+
+\item{checkData}{check if the data (listed as "# output: " in the
+yml file) exists. If not, do not include in the output csv
+file. This argument is added for internal testing purpose.}
 }
 \value{
 a \code{dataHub} object containing the information about local

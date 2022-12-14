@@ -28,7 +28,10 @@
 #'     intermediate files that don't match to any data file, `cleanup`
 #'     will also remove those.
 #' @param cloud Whether to return the pre-generated data from Google
-#'     Cloud bucket of ReUseData. Default is FALSE. 
+#'     Cloud bucket of ReUseData. Default is FALSE.
+#' @param checkData check if the data (listed as "# output: " in the
+#'     yml file) exists. If not, do not include in the output csv
+#'     file. This argument is added for internal testing purpose. 
 #' @details Users can directly retrieve information for all available
 #'     datasets by using `meta_data(dir=)`, which generates a data
 #'     frame in R with same information as described above and can be
@@ -60,7 +63,8 @@
 #' ## newly generated data are now cached and searchable
 #' dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data! 
 #' 
-dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags = TRUE, cleanup = FALSE, cloud = FALSE) {
+dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
+                       keepTags = TRUE, cleanup = FALSE, cloud = FALSE, checkData = TRUE) {
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -83,7 +87,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE, keepTags =
     
     bfcremove(bfc, bfcinfo(bfc)$rid)
     
-    meta <- meta_data(dir = dir, cleanup = cleanup)
+    meta <- meta_data(dir = dir, cleanup = cleanup, checkData = checkData)
 
     ## append pre-generated cloud data
     if (cloud) {
