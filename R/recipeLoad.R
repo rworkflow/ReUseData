@@ -6,7 +6,7 @@
             "loaded!\n",
             "Use inputs(", ifelse(return, value, ""),
             ") to check required input parameters before evaluation.",
-            "\nCheck here: https://rcwl.org/dataRecipes/rcp_", value, ".html",
+            "\nCheck here: https://rcwl.org/dataRecipes/", value, ".html",
             "\nfor recipe instructions (e.g., eligible input values, data source, etc.)\n"
             )
 }
