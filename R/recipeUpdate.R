@@ -56,6 +56,7 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe",
     fpath <- list.files(file.path(cachePath,
                                   paste0(basename(repos), "-master")),
                         full.names=TRUE)
+    fpath <- fpath[basename(fpath) != "dataGen.R"]
     ## add any non-cached recipes to local cache
     if(length(fpath) > 0){
         rnames <- sub(".R$", "", basename(fpath))
