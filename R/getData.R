@@ -80,7 +80,7 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...)
     notes <- paste(notes, collapse = " ")
     apd <- c(paste("# output:", res$output),
              paste("# notes:", notes),
-             paste("# date:", Sys.Date()))
+             paste("# date:", Sys.time()))
     write(apd, yfile, append = TRUE)
     lapply(requirements(rcp), function(x){
         if(x$class == "InitialWorkDirRequirement" &&

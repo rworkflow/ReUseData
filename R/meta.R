@@ -70,13 +70,14 @@ meta_data <- function(dir = "", cleanup = FALSE, checkData = TRUE) {
             yml_keep <- c()
             uniqd <- unique(meta$output)
             for (i in seq_along(uniqd)) {
-                yml <- meta$yml[meta$output == uniqd[i]]
-                ymld <- gsub("[[:alpha:]]|_", "", gsub(".yml$", "", basename(yml)))
-                keep <- which(ymld == max(ymld))
+                ind <- meta$output == uniqd[i]
+                dates <- meta$date[ind]
+                yml <- meta$yml[ind]
+                keep <- which(dates == max(dates))
                 yml_keep <- c(yml_keep, yml[keep])
             }
             idx <- meta$yml %in% yml_keep
-            ymls_rm <- meta$yml[!idx]
+            ymls_rm <- unique(meta$yml[!idx])
             ## remove older intermediate files
             if (cleanup) {
                 dfrm <- data.frame(dir = dirname(ymls_rm), ptn = gsub(".yml", "", basename(ymls_rm)))
