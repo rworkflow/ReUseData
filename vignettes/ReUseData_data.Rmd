@@ -72,8 +72,8 @@ interest.
 ```{r}
 recipeUpdate()
 recipeSearch("liftover")
-recipeLoad("ensembl_liftover", return = TRUE)
-inputs(ensembl_liftover)
+recipeLoad("genome_liftover", return = TRUE)
+inputs(genome_liftover)
 ```
 
 Users can then assign values to the input parameters, and evaluate the
@@ -84,11 +84,11 @@ files). Detailed notes for the data is encouraged which will be used
 for keywords matching for later data search.
 
 ```{r}
-ensembl_liftover$species <- "human"
-ensembl_liftover$from <- "GRCh37"
-ensembl_liftover$to <- "GRCh38"
+genome_liftover$species <- "human"
+genome_liftover$from <- "GRCh37"
+genome_liftover$to <- "GRCh38"
 outdir <- file.path(tempdir(), "SharedData")
-res <- getData(ensembl_liftover,
+res <- getData(genome_liftover,
         outdir = outdir, 
         notes = c("gencode", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
