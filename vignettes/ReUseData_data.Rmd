@@ -72,8 +72,8 @@ interest.
 ```{r}
 recipeUpdate()
 recipeSearch("liftover")
-recipeLoad("genome_liftover", return = TRUE)
-inputs(genome_liftover)
+recipeLoad("ensembl_liftover", return = TRUE)
+inputs(ensembl_liftover)
 ```
 
 Users can then assign values to the input parameters, and evaluate the
@@ -84,11 +84,11 @@ files). Detailed notes for the data is encouraged which will be used
 for keywords matching for later data search.
 
 ```{r}
-genome_liftover$species <- "human"
-genome_liftover$from <- "GRCh37"
-genome_liftover$to <- "GRCh38"
+ensembl_liftover$species <- "human"
+ensembl_liftover$from <- "GRCh37"
+ensembl_liftover$to <- "GRCh38"
 outdir <- file.path(tempdir(), "SharedData")
-res <- getData(genome_liftover,
+res <- getData(ensembl_liftover,
         outdir = outdir, 
         notes = c("gencode", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
@@ -125,17 +125,17 @@ readLines(res$yml)
 
 ## Data caching, updating and searching
 
-`dataUpdate()` creates (if first itme use), syncs and update the local
+`dataUpdate()` creates (if first itme use), syncs and updates the local
 cache for curated datasets. It finds and reads all the `.yml` files
 recursivelly in the provided data folder, creates a cache record for
 each dataset that is associated (including newly generated ones with
-`getData()`, and update the local cache for later data searching and
+`getData()`), and updates the local cache for later data searching and
 reuse. 
 
 **IMPORTANT:** It is recommended that users create a specified folder for
 data archival (e.g., `file/path/to/SharedData`) that other group
 members have access to, and use sub-folders for different kinds of
-datasets.
+datasets (e.g., those generated from same recipe).
 
 ```{r}
 dataUpdate(dir = outdir)
