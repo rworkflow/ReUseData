@@ -25,7 +25,7 @@
 meta_data <- function(dir = "", cleanup = FALSE, checkData = TRUE) {
     ymls <- normalizePath(list.files(dir, pattern = ".yml", full.names = TRUE, recursive = TRUE))
     dnames <- sub(".yml$", "", basename(ymls))  ## file name.
-    keys <- c("output", "notes", "date", "tag")
+    keys <- c("output", "notes", "date")
 
     if (!length(dnames)) {
         meta <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), c("yml", "params", keys))

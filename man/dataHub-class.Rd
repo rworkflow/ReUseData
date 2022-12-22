@@ -13,6 +13,7 @@
 \alias{dataTags<-}
 \alias{dataTags<-,dataHub-method}
 \alias{[,dataHub,ANY,ANY,ANY-method}
+\alias{[<-,dataHub,ANY,ANY,ANY-method}
 \alias{c,dataHub-method}
 \alias{toList}
 \title{dataHub Class}
@@ -37,11 +38,13 @@ dataTags(object)
 
 \S4method{dataTags}{dataHub}(object)
 
-dataTags(object, append = TRUE) <- value
+dataTags(object, append = TRUE, newtag) <- value
 
-\S4method{dataTags}{dataHub}(object, append = FALSE) <- value
+\S4method{dataTags}{dataHub}(object, append = FALSE, newtag) <- value
 
-\S4method{[}{dataHub,ANY,ANY,ANY}(x, i)
+\S4method{[}{dataHub,ANY,ANY,ANY}(x, i, j, drop)
+
+\S4method{[}{dataHub,ANY,ANY,ANY}(x, i, j) <- value
 
 \S4method{c}{dataHub}(x, ...)
 
@@ -54,12 +57,19 @@ toList(x, format = c("list", "json", "yaml"), type = NULL)
 
 \item{append}{Whether to append new tag or replace all tags.}
 
-\item{value}{The tag values to assign to datasets in \code{dataHub} object.}
+\item{newtag}{Character string specifying the tag values to assign
+to datasets in \code{dataHub} object.}
 
 \item{x}{A \code{dataHub} object.}
 
 \item{i}{The integer index of the \code{dataHub} object, or a logical
 vector same length as the \code{dataHub} object.}
+
+\item{j}{inherited from \code{[} generic.}
+
+\item{drop}{Inherited from \code{[} generic.}
+
+\item{value}{A \code{dataHub} object}
 
 \item{...}{More \code{dataHub} objects to combine.}
 

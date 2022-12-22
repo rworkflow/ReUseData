@@ -127,6 +127,7 @@ setGeneric("dataTags", function(object)standardGeneric("dataTags"))
 #' @rdname dataHub-class
 setMethod("dataTags", "dataHub", function(object) {
     if("tag" %in% colnames(mcols(object))){
+        ## mcols(object)[, c("rname", "tag")]
         mcols(object)$tag
     }else{
         NULL
@@ -134,7 +135,8 @@ setMethod("dataTags", "dataHub", function(object) {
 })
 
 #' @rdname dataHub-class
-#' @param value The tag values to assign to datasets in `dataHub` object.
+#' @param value Character string specifying the tag values to assign
+#'     to datasets in `dataHub` object.
 #' @param append Whether to append new tag or replace all tags.
 #' @export
 setGeneric("dataTags<-", function(object, append=TRUE, value)
@@ -158,12 +160,20 @@ setReplaceMethod("dataTags", "dataHub", function(object, append=FALSE, value){
 #' @param x A `dataHub` object.
 #' @param i The integer index of the `dataHub` object, or a logical
 #'     vector same length as the `dataHub` object.
+#' @param j inherited from `[` generic.
+#' @param drop Inherited from `[` generic.
 #' @export
-setMethod("[", c("dataHub"), function(x, i) {
+setMethod("[", c("dataHub"), function(x, i, j, drop) {
     rids <- x@rid[i]
     return(x[rids])
 })
-setGeneric("[")
+
+#' @rdname dataHub-class
+#' @param value A `dataHub` object  
+#' @export
+setReplaceMethod("[", "dataHub", function(x, i, j, value){
+    return(x)
+})
 
 #' combine dataHub
 #' @rdname dataHub-class
