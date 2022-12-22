@@ -38,9 +38,9 @@ dataTags(object)
 
 \S4method{dataTags}{dataHub}(object)
 
-dataTags(object, append = TRUE, newtag) <- value
+dataTags(object, append = TRUE) <- value
 
-\S4method{dataTags}{dataHub}(object, append = FALSE, newtag) <- value
+\S4method{dataTags}{dataHub}(object, append = FALSE) <- value
 
 \S4method{[}{dataHub,ANY,ANY,ANY}(x, i, j, drop)
 
@@ -57,8 +57,7 @@ toList(x, format = c("list", "json", "yaml"), type = NULL)
 
 \item{append}{Whether to append new tag or replace all tags.}
 
-\item{newtag}{Character string specifying the tag values to assign
-to datasets in \code{dataHub} object.}
+\item{value}{A \code{dataHub} object}
 
 \item{x}{A \code{dataHub} object.}
 
@@ -68,8 +67,6 @@ vector same length as the \code{dataHub} object.}
 \item{j}{inherited from \code{[} generic.}
 
 \item{drop}{Inherited from \code{[} generic.}
-
-\item{value}{A \code{dataHub} object}
 
 \item{...}{More \code{dataHub} objects to combine.}
 

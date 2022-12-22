@@ -138,16 +138,11 @@ members have access to, and use sub-folders for different kinds of
 datasets (e.g., those generated from same recipe).
 
 ```{r}
-dataUpdate(dir = outdir)
+(dh <- dataUpdate(dir = outdir))
 ```
 
 `dataUpdate` and `dataSearch` return a `dataHub` object with a list of
 all available or matching datasets. 
-
-```{r}
-dd <- dataSearch(c("liftover", "GRCh38"))
-dd
-```
 
 One can subset the list with `[` and use getter functions to retrieve
 the annotation information about the data, e.g., data names,
@@ -155,14 +150,14 @@ parameters values to the recipe, notes, tags, and the corresponding
 yaml file.
 
 ```{r}
-dd[1]
-## dd["BFC1"]
-dd[dataNames(dd) == "GRCh37_to_GRCh38.chain"]
-dataNames(dd)
-dataParams(dd)
-dataNotes(dd)
-dataTags(dd)
-dataYml(dd)
+dh[1]
+## dh["BFC1"]
+dh[dataNames(dh) == "GRCh37_to_GRCh38.chain"]
+dataNames(dh)
+dataParams(dh)
+dataNotes(dh)
+dataTags(dh)
+dataYml(dh)
 ```
 
 `ReUseData`, as the name suggests, commits to promoting the data reuse.
@@ -171,9 +166,10 @@ YAML and JSON, to be easily integrated in workflow methods that are
 locally or cloud-hosted. 
 
 ```{r}
-toList(dd)
-toList(dd, format = "json")
-toList(dd, format = "yaml")
+(dh1 <- dataSearch(c("liftover", "GRCh38")))
+toList(dh1)
+toList(dh1, format = "json")
+toList(dh1, format = "yaml")
 ```
 
 Data can also be aggregated from different resources by tagging with
@@ -181,7 +177,7 @@ specific software tools (dataTag).
 
 ```{r}
 dataSearch()
-dataTags(dd) <- "#gatk"
+dataTags(dh[1:2]) <- "#gatk"
 dataSearch("#gatk")
 ```
 

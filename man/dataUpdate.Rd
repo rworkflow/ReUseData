@@ -29,8 +29,7 @@ generated in the \code{dir}, containing information about all
 available datasets in the directory: The file path to the yaml
 files, and yaml entries including parameter values for data
 recipe, file path to datasets, notes, version (from
-\code{getData()}), tag (from \code{dataTag()}) if available and data
-generating date.}
+\code{getData()}), if available and data generating date.}
 
 \item{keepTags}{If keep the prior assigned data tags. Default is
 TRUE.}

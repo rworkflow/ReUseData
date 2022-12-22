@@ -15,8 +15,7 @@
 #'     available datasets in the directory: The file path to the yaml
 #'     files, and yaml entries including parameter values for data
 #'     recipe, file path to datasets, notes, version (from
-#'     `getData()`), tag (from `dataTag()`) if available and data
-#'     generating date.
+#'     `getData()`), if available and data generating date.
 #' @param keepTags If keep the prior assigned data tags. Default is
 #'     TRUE.
 #' @param cleanup If remove any invalid intermediate files. Default is
@@ -31,7 +30,7 @@
 #'     Cloud bucket of ReUseData. Default is FALSE.
 #' @param checkData check if the data (listed as "# output: " in the
 #'     yml file) exists. If not, do not include in the output csv
-#'     file. This argument is added for internal testing purpose. 
+#'     file. This argument is added for internal testing purpose.
 #' @details Users can directly retrieve information for all available
 #'     datasets by using `meta_data(dir=)`, which generates a data
 #'     frame in R with same information as described above and can be
@@ -114,16 +113,14 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
             message(basename(add1), " added")
         }
         bm <- data.frame(rid = bfcrid(bfc),
-                         meta[, c("params", "notes", "date", "tag", "yml")])
+                         meta[, c("params", "notes", "date", "yml")], tag = "")
         bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- bm
     }
 
     dh <- dataHub(bfc)
-    ## if(keepTags){
-    ##     dataTags(dh) <- tag_old
-    ## }
+    if(keepTags){
+        dataTags(dh[mcols(dh)$rtype == "local"]) <- tag_old
+    }
     return(dh)
 }
-
-## todo: keepTags!!!! 
 
