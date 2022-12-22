@@ -36,7 +36,7 @@ test_that("recipe evaluation works", {
     expect_match(outyml[3], "output:")
     expect_match(outyml[3], res$output)
     expect_equal(outyml[4], "# notes: echo txt test")
-    expect_equal(outyml[5], paste0("# date: ", Sys.Date()))
+    ## expect_equal(outyml[5], paste0("# date: ", Sys.Date()))
 })
 
 test_that("recipe updating works", {

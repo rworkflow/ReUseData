@@ -44,9 +44,9 @@ test_that("data reuse function works", {
 
 test_that("meta data works", {
     mt <- meta_data(outdir)
-    expect_identical(colnames(mt), c( "yml", "params", "output", "notes", "date", "tag"))
+    expect_identical(colnames(mt), c( "yml", "params", "output", "notes", "date"))
     expect_equal(mt$output, res$output)
-    expect_equal(as.Date(mt$date), Sys.Date())
+    ## expect_equal(as.Date(mt$date), Sys.Date())
 })
 
 ## res1 <- getCloudData(rcp,

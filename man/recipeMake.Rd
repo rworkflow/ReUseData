@@ -78,7 +78,7 @@ rcp <- recipeMake(shscript = shfile,
                   paramID = c("species", "version"),
                   paramType = c("string", "string"),
                   outputID = "annotation", 
-                  outputGlob = "gencode.v*.annotation.gtf"
+                  outputGlob = "*.fa"
                   )
 Rcwl::inputs(rcp)
 rcp$species <- "human"

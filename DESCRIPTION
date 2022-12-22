@@ -33,7 +33,8 @@ Imports:
     methods,
     jsonlite,
     yaml,
-    basilisk
+    basilisk,
+    reticulate
 Suggests: 
     knitr,
     rmarkdown,

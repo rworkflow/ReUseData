@@ -177,7 +177,7 @@ specific software tools (dataTag).
 
 ```{r}
 dataSearch()
-dataTags(dh[1:2]) <- "#gatk"
+dataTags(dh[1]) <- "#gatk"
 dataSearch("#gatk")
 ```
 
