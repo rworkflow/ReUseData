@@ -4,7 +4,15 @@
 \alias{getData}
 \title{getData}
 \usage{
-getData(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...)
+getData(
+  rcp,
+  outdir,
+  prefix = NULL,
+  notes = c(),
+  conda = FALSE,
+  BPPARAM = NULL,
+  ...
+)
 }
 \arguments{
 \item{rcp}{the data recipe in \code{cwlProcess} S4 class.}
@@ -21,6 +29,8 @@ be used for keywords matching in \code{dataSearch(keywords = )}.}
 
 \item{conda}{Whether to use conda to install required software when
 evaluating the data recipe as a CWL workflow. Default is FALSE.}
+
+\item{BPPARAM}{The options for \code{BiocParallel::bpparam}.}
 
 \item{...}{Arguments to be passed into \code{Rcwl:runCWL()}.}
 }
