@@ -12,6 +12,7 @@
 #'     be used for keywords matching in `dataSearch(keywords = )`.
 #' @param conda Whether to use conda to install required software when
 #'     evaluating the data recipe as a CWL workflow. Default is FALSE.
+#' @param BPPARAM The options for `BiocParallel::bpparam`.
 #' @param ... Arguments to be passed into `Rcwl:runCWL()`.
 #' @return The data files and 4 meta files: `.cwl`: The cwl script
 #'     that was internally run to get the data; `.yml`: the input
@@ -39,7 +40,8 @@
 #' dir(outdir)
 #' 
 
-getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...){
+getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
+                    BPPARAM = NULL, ...){
     if(is.null(prefix)){
         if(length(rcp@label) > 0){
             rcp_name <- gsub(" ", "_", rcp@label)
@@ -47,8 +49,10 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...)
             rcp_name <- deparse(substitute(rcp))
         }
         xn <- lapply(inputs(rcp), function(x){
-            if(grepl("http|ftp", x@value)){
+            if(length(x@value) == 1 && grepl("http|ftp", x@value)){
                 basename(x@value)
+            }else if(is(x@value, "list")){
+                basename(x@value$path)
             }else{
                 gsub(" ", "_", x@value)
             }
@@ -70,11 +74,20 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE, ...)
             }
         }
     }
-    
-    res <- runCWL(cwl = rcp, outdir = outdir,
-                  yml_prefix = prefix,
-                  yml_outdir = outdir,
-                  ...)
+
+    if(is.null(BPPARAM)){
+        res <- runCWL(cwl = rcp, outdir = outdir,
+                      yml_prefix = prefix,
+                      yml_outdir = outdir,
+                      conda = conda,
+                      ...)
+    }else{
+        res <- runCWLBP(cwl = rcp, outdir = outdir,
+                      yml_prefix = prefix,
+                      yml_outdir = outdir,
+                      conda = conda, BPPARAM = BPPARAM,
+                      ...)
+    }
     ## if no output generated: 
     if (is.null(res$output)) {
         ## file.remove(file.path(outdir, paste0(prefix, ".yml")))
