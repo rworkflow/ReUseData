@@ -194,15 +194,20 @@ setGeneric("c")
 #' @param format can be "list", "json" or "yaml". Supports partial
 #'     match. Default is list.
 #' @param type The type of workflow input list, such as cwl.
+#' @param file The file name to save the data list in required
+#'     format. The data extension needs to be included, e.g., 
+#'     ".json" or ".yml".
 #' @return toList: A list of datasets in specific format.
 #' @importFrom jsonlite toJSON
 #' @importFrom yaml as.yaml
 #' @export
 #' 
-toList <- function(x, format = c("list", "json", "yaml"), type = NULL){
+toList <- function(x, format = c("list", "json", "yaml"), type = NULL, file = character()){
     format <- match.arg(format)
     ## tl <- dataNames(x)
     pth <- dataPaths(x)
+    isgcp <- grepl("https://storage.googleapis.com", pth)
+    pth[isgcp] <- gsub("https://storage.googleapis.com/", "gs://", pth[isgcp])
     if(!is.null(type) && type == "cwl"){
         dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
         dtype <- ifelse(dtype, "Directory", "File")
@@ -218,7 +223,12 @@ toList <- function(x, format = c("list", "json", "yaml"), type = NULL){
             dl <- jsonlite::toJSON(dl, pretty = TRUE, auto_unbox = TRUE)
         } else if (format == "yaml") {
             dl <- yaml::as.yaml(dl)
+            dl <- gsub("\n$", "", dl)
         }
+    }
+    if (!missing(file)) {
+        writeLines(dl, file)
+        message("File is saved as: \"", file, "\"")
     }
     return(dl)
 }

@@ -48,7 +48,7 @@ dataTags(object, append = TRUE) <- value
 
 \S4method{c}{dataHub}(x, ...)
 
-toList(x, format = c("list", "json", "yaml"), type = NULL)
+toList(x, format = c("list", "json", "yaml"), type = NULL, file = character())
 }
 \arguments{
 \item{BFC}{A BiocFileCache object created for data and recipes.}
@@ -74,6 +74,10 @@ vector same length as the \code{dataHub} object.}
 match. Default is list.}
 
 \item{type}{The type of workflow input list, such as cwl.}
+
+\item{file}{The file name to save the data list in required
+format. The data extension needs to be included, e.g.,
+".json" or ".yml".}
 }
 \value{
 dataHub: a \code{dataHub} object.
