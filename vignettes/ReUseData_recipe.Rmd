@@ -161,7 +161,8 @@ rcp <- recipeMake(shscript = shfile,
                   paramID = c("species", "version"),
                   paramType = c("string", "string"),
                   outputID = "annotation", 
-                  outputGlob = "gencode.v*.annotation.gtf"
+                  outputGlob = "gencode.v*.annotation.gtf",
+                  requireTools = c("wget", "gzip")  ## Only for MacOS
                   )
 rcp
 ```
