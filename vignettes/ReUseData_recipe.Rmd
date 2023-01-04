@@ -162,7 +162,7 @@ rcp <- recipeMake(shscript = shfile,
                   paramType = c("string", "string"),
                   outputID = "annotation", 
                   outputGlob = "gencode.v*.annotation.gtf",
-                  requireTools = c("wget", "gzip")  ## Only for MacOS
+                  requireTools = c("wget", "gzip")
                   )
 rcp
 ```
@@ -175,7 +175,8 @@ rcp$species <- "human"
 rcp$version <- "42"
 res <- getData(rcp,
         outdir = outdir,
-        notes = c("gencode", "human", "42"))
+        notes = c("gencode", "human", "42"),
+        conda = TRUE)
 ```
 
 The file path to newly generated dataset can be easily retrieved. 
