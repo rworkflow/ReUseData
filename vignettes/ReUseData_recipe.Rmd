@@ -151,10 +151,44 @@ res$out
 readLines(res$out)
 ```
 
-An example of converting existing shell script into a `ReUseData`
+A simple example of converting existing shell script into a `ReUseData`
 recipe.
 
 ```{r}
+shfile <- system.file("extdata", "demo_cp.sh", package = "ReUseData")
+readLines(shfile)
+rcp_cp <- recipeMake(shscript = shfile,
+                     paramID = c("original"),
+                     paramType = c("string"),
+                     outputID = "filecopy",
+                     outputGlob = "cp_*") 
+rcp_cp
+```
+Users can then assign values to the input parameters, and evaluate the
+recipe (`getData`) to generate data of interest.
+
+```{r, eval=FALSE}
+rcp_cp$original <- "GRCh37_to_GRCh38.chain"
+rcp_cp$copy <- "cp_GRCh37_to_GRCh38.chain"
+res <- getData(rcp_cp,
+        outdir = outdir,
+        notes = c("GRCh37", "GRCh38", "human", "liftover", "ensembl", "copy"))
+```
+
+Here we show a more complex example where the shell script has
+required command line tools. When specific tools are needed for the
+data processing, users just need to add their names in the
+`requireTools` argument in `recipeMake` function, and then add `conda
+= TRUE` when evaluating the recipe with `getData` function. Then these
+tools will be automatically installed by initiating a conda
+environment and the script can be successfully run in that
+environment. 
+
+This function promotes data reproducibility across different computing
+platforms, and removes barrier of using sophisticated bioinformatics
+tools by less-unexperienced users.
+
+```{r, eval=FALSE}
 shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
 readLines(shfile)
 rcp <- recipeMake(shscript = shfile,
@@ -164,13 +198,7 @@ rcp <- recipeMake(shscript = shfile,
                   outputGlob = "gencode.v*.annotation.gtf",
                   requireTools = c("wget", "gzip")
                   )
-rcp
-```
 
-Users can then assign values to the input parameters, and evaluate the
-recipe (`getData`) to generate data of interest.
-
-```{r, eval=FALSE}
 rcp$species <- "human"
 rcp$version <- "42"
 res <- getData(rcp,
