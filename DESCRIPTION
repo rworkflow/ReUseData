@@ -1,6 +1,6 @@
 Package: ReUseData
 Title: Reproducible and ReUsable Data Resources
-Version: 0.99.14
+Version: 0.99.15
 Authors@R: 
     person(given = "Qian",
            family = "Liu",

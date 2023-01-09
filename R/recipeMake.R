@@ -48,18 +48,19 @@
 #' ##############
 #' library(Rcwl)
 #' 
-#' shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
+#' shfile <- system.file("extdata", "gencode_transcripts.sh", package = "ReUseData")
 #' readLines(shfile)
 #' rcp <- recipeMake(shscript = shfile,
 #'                   paramID = c("species", "version"),
 #'                   paramType = c("string", "string"),
 #'                   outputID = "annotation", 
-#'                   outputGlob = "*.fa"
+#'                   outputGlob = "*.fa",
+#'                   requireTools = c("wget", "gzip", "samtools")
 #'                   )
 #' Rcwl::inputs(rcp)
 #' rcp$species <- "human"
 #' rcp$version <- "42"
-#' \donttest{
+#' \dontrun{
 #' res <- getData(rcp,
 #'         outdir = tempdir(), 
 #'         notes = c("gencode", "human", "42"),
@@ -73,21 +74,21 @@
 #' ##############
 #' 
 #' script <- '
-#' aa=$1
-#' bb=$2
-#' echo "Print the input: $aa" > $bb.txt
+#' input=$1
+#' outfile=$2
+#' echo "Print the input: $input" > $outfile.txt
 #' '
 #' rcp <- recipeMake(shscript = script,
-#'                   paramID = c("aa", "bb"),
+#'                   paramID = c("input", "outfile"),
 #'                   paramType = c("string", "string"),
 #'                   outputID = "echoout",
 #'                   outputGlob = "*.txt")
 #' inputs(rcp)
 #' outputs(rcp)
-#' rcp$aa <- "Hello World!"
-#' rcp$bb <- "outfile"
+#' rcp$input <- "Hello World!"
+#' rcp$outfile <- "outfile"
 #' res <- getData(rcp, outdir = tempdir(),
-#'                notes = c("echo", "txt", "test"),
+#'                notes = c("echo", "hello", "world", "txt"),
 #'                showLog = TRUE)
 #' readLines(res$out)
 #' 

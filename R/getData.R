@@ -27,18 +27,32 @@
 #' @export
 #' @examples
 #' library(Rcwl)
+#' outdir <- file.path(tempdir(), "SharedData")
+#'
+#' ## Example 1
+#' recipeLoad("echo_out", return = TRUE)
+#' Rcwl::inputs(echo_out)
+#' echo_out$input <- "Hello World!"
+#' echo_out$outfile <- "outfile"
+#' res <- getData(echo_out,
+#'                outdir = outdir,
+#'                notes = c("echo", "hello", "world", "txt"),
+#'                showLog = TRUE)
+#'
+#' # Example 2
+#' \dontrun{
 #' recipeLoad("ensembl_liftover", return = TRUE)
 #' Rcwl::inputs(ensembl_liftover)
 #' ensembl_liftover$species <- "human"
 #' ensembl_liftover$from <- "GRCh37"
 #' ensembl_liftover$to <- "GRCh38"
-#' outdir <- file.path(tempdir(), "SharedData")
+#'
 #' res <- getData(ensembl_liftover,
 #'         outdir = outdir, 
 #'         notes = c("ensembl", "liftover", "human", "GRCh37", "GRCh38"),
 #'         showLog = TRUE)
 #' dir(outdir)
-#' 
+#' }
 
 getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
                     BPPARAM = NULL, ...){

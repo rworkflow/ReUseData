@@ -1,10 +1,10 @@
 script <- '
-aa=$1
-bb=$2
-echo "$aa" > $bb.txt
+input=$1
+outfile=$2
+echo "$input" > $outfile.txt
 '
 rcp <- recipeMake(shscript = script,
-                  paramID = c("aa", "bb"),
+                  paramID = c("input", "outfile"),
                   paramType = c("string", "string"),
                   outputID = "echoout",
                   outputGlob = "*.txt")
@@ -18,24 +18,23 @@ test_that("recipeMake works", {
     expect
 })
 
-rcp$aa <- "Hello World!"
-rcp$bb <- "outfile"
+rcp$input <- "Hello World!"
+rcp$outfile <- "outfile"
 res <- getData(rcp,
                outdir = tempdir(),
-               notes = c("echo", "txt", "test"),
-               showLog = TRUE)
+               notes = c("echo", "hello", "world", "txt"))
 out <- readLines(res$output)
 outyml <- readLines(res$yml)
 
 test_that("recipe evaluation works", {
     expect_equal(dirname(res$output), tempdir())
-    expect_equal(basename(res$output), paste0(rcp$bb, ".txt"))
+    expect_equal(basename(res$output), paste0(rcp$outfile, ".txt"))
     expect_equal(out, "Hello World!")
-    expect_match(outyml[1], "aa: ")
-    expect_match(outyml[2], "bb: ")
+    expect_match(outyml[1], "input: ")
+    expect_match(outyml[2], "outfile: ")
     expect_match(outyml[3], "output:")
     expect_match(outyml[3], res$output)
-    expect_equal(outyml[4], "# notes: echo txt test")
+    expect_equal(outyml[4], "# notes: echo hello world txt")
     ## expect_equal(outyml[5], paste0("# date: ", Sys.Date()))
 })
 

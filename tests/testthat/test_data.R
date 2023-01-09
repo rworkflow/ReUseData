@@ -1,15 +1,14 @@
-rcp <- recipeLoad("ensembl_liftover")
-rcp$species <- "mouse"
-rcp$from <- "NCBIM37"
-rcp$to <- "GRCm38"
+rcp <- recipeLoad("echo_out")
+rcp$input <- "Hello World!"
+rcp$outfile <- "outfile"
 outdir <- file.path(tempdir(), "test_SharedData")
 res <- getData(rcp,
                outdir = outdir,
-               notes = c("ensembl", "liftover", "NCBIM37", "GRCm38"))
+               notes = c("echo", "hello", "world", "txt"))
 
 test_that("recipe evaluation works", {
     expect_equal(dirname(res$output), outdir)
-    expect_equal(basename(res$output), "NCBIM37_to_GRCm38.chain")
+    expect_equal(basename(res$output), "outfile.txt")
     expect_vector(dir(outdir, pattern = "rcp_"))
     expect_vector(dir(outdir, pattern = "sh"))
     expect_vector(dir(outdir, pattern = "yml"))
@@ -33,7 +32,7 @@ test_that("data updating and getter function works", {
 ds <- dataSearch(cachePath = "ReUseData")
 test_that("data searching works", {
     expect_s4_class(ds, "dataHub")
-    expect_equal(dataNames(ds), "NCBIM37_to_GRCm38.chain")
+    expect_equal(dataNames(ds), "outfile.txt")
 })
 
 test_that("data reuse function works", {
@@ -46,12 +45,11 @@ test_that("meta data works", {
     mt <- meta_data(outdir)
     expect_identical(colnames(mt), c( "yml", "params", "output", "notes", "date"))
     expect_equal(mt$output, res$output)
-    ## expect_equal(as.Date(mt$date), Sys.Date())
 })
 
 ## res1 <- getCloudData(rcp,
 ##                outdir = outdir,
-##                notes = c("ensembl", "liftover", "NCBIM37", "GRCm38"))
+##                notes = c("echo", "hello", "world", "txt"))
 
 ## test_that("get cloud data works", {
 ##     dh <- dataUpdate(dir = outdir, cloud = TRUE)

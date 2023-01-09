@@ -121,24 +121,32 @@ are two examples:
 
 ```{r}
 script <- '
-aa=$1
-bb=$2
-echo "Print the input: $aa" > $bb.txt
+input=$1
+outfile=$2
+echo "Print the input: $input" > $outfile.txt
 '
+```
+
+Equivalently, we can load the shell script directly: 
+
+```{r}
+script <- system.file("extdata", "echo_out.sh", package = "ReUseData")
+```
+
+```{r}
 rcp <- recipeMake(shscript = script,
-                  paramID = c("aa", "bb"),
+                  paramID = c("input", "outfile"),
                   paramType = c("string", "string"),
                   outputID = "echoout",
                   outputGlob = "*.txt")
 inputs(rcp)
 outputs(rcp)
-rcp$aa <- "Hello World!"
-rcp$bb <- "outfile"
+rcp$input <- "Hello World!"
+rcp$outfile <- "outfile"
 outdir <- file.path(tempdir(), "SharedData")
 res <- getData(rcp,
                outdir = outdir,
-               notes = c("echo", "txt", "test"),
-               showLog = TRUE)
+               notes = c("echo", "hello", "world", "txt"))
 ```
 
 Let's take a look at the output file, which is successfully generated
@@ -149,30 +157,6 @@ evaluation, check the other vignette for `ReUseData` data management.
 ```{r}
 res$out
 readLines(res$out)
-```
-
-A simple example of converting existing shell script into a `ReUseData`
-recipe.
-
-```{r}
-shfile <- system.file("extdata", "demo_cp.sh", package = "ReUseData")
-readLines(shfile)
-rcp_cp <- recipeMake(shscript = shfile,
-                     paramID = c("original"),
-                     paramType = c("string"),
-                     outputID = "filecopy",
-                     outputGlob = "cp_*") 
-rcp_cp
-```
-Users can then assign values to the input parameters, and evaluate the
-recipe (`getData`) to generate data of interest.
-
-```{r, eval=FALSE}
-rcp_cp$original <- "GRCh37_to_GRCh38.chain"
-rcp_cp$copy <- "cp_GRCh37_to_GRCh38.chain"
-res <- getData(rcp_cp,
-        outdir = outdir,
-        notes = c("GRCh37", "GRCh38", "human", "liftover", "ensembl", "copy"))
 ```
 
 Here we show a more complex example where the shell script has
@@ -189,14 +173,14 @@ platforms, and removes barrier of using sophisticated bioinformatics
 tools by less-unexperienced users.
 
 ```{r, eval=FALSE}
-shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
+shfile <- system.file("extdata", "gencode_transcripts.sh", package = "ReUseData")
 readLines(shfile)
 rcp <- recipeMake(shscript = shfile,
                   paramID = c("species", "version"),
                   paramType = c("string", "string"),
                   outputID = "annotation", 
                   outputGlob = "gencode.v*.annotation.gtf",
-                  requireTools = c("wget", "gzip")
+                  requireTools = c("wget", "gzip", "samtools")
                   )
 
 rcp$species <- "human"

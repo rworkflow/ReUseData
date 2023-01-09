@@ -44,22 +44,34 @@
 #' @examples
 #' ## Generate data 
 #' library(Rcwl)
+#' outdir <- file.path(tempdir(), "SharedData")
+#'
+#' recipeLoad("echo_out", return = TRUE)
+#' Rcwl::inputs(echo_out)
+#' echo_out$input <- "Hello World!"
+#' echo_out$outfile <- "outfile"
+#' res <- getData(echo_out,
+#'                outdir = outdir,
+#'                notes = c("echo", "hello", "world", "txt"),
+#'                showLog = TRUE)
+#' 
+#' \dontrun{
 #' recipeLoad("ensembl_liftover", return = TRUE)
 #' Rcwl::inputs(ensembl_liftover)
 #' ensembl_liftover$species <- "human"
 #' ensembl_liftover$from <- "GRCh37"
 #' ensembl_liftover$to <- "GRCh38"
-#' outdir <- file.path(tempdir(), "SharedData")
 #' res <- getData(ensembl_liftover,
 #'         outdir = outdir, 
 #'         notes = c("ensembl", "liftover", "human", "GRCh37", "GRCh38"),
 #'         showLog = TRUE)
-#'
+#'}
 #' ## Update data cache (with or without pre-built data sets from ReUseData cloud bucket)
 #' dataUpdate(dir = outdir)
 #' dataUpdate(dir = outdir, cloud = TRUE)
 #'
 #' ## newly generated data are now cached and searchable
+#' dataSearch(c("hello", "world"))
 #' dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data! 
 #' 
 dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,

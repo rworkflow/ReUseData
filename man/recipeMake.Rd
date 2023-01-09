@@ -83,7 +83,7 @@ rcp <- recipeMake(shscript = shfile,
 Rcwl::inputs(rcp)
 rcp$species <- "human"
 rcp$version <- "42"
-\donttest{
+\dontrun{
 res <- getData(rcp,
         outdir = tempdir(), 
         notes = c("gencode", "human", "42"),
@@ -97,21 +97,21 @@ dir(tempdir())
 ##############
 
 script <- '
-aa=$1
-bb=$2
-echo "Print the input: $aa" > $bb.txt
+input=$1
+outfile=$2
+echo "Print the input: $input" > $outfile.txt
 '
 rcp <- recipeMake(shscript = script,
-                  paramID = c("aa", "bb"),
+                  paramID = c("input", "outfile"),
                   paramType = c("string", "string"),
                   outputID = "echoout",
                   outputGlob = "*.txt")
 inputs(rcp)
 outputs(rcp)
-rcp$aa <- "Hello World!"
-rcp$bb <- "outfile"
+rcp$input <- "Hello World!"
+rcp$outfile <- "outfile"
 res <- getData(rcp, outdir = tempdir(),
-               notes = c("echo", "txt", "test"),
+               notes = c("echo", "hello", "world", "txt"),
                showLog = TRUE)
 readLines(res$out)
 
