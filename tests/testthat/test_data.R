@@ -17,8 +17,7 @@ test_that("recipe evaluation works", {
 })
 
 test_that("data updating and getter function works", {
-    dh <- dataUpdate(dir = outdir,
-                     cachePath = "ReUseData")
+    dh <- dataUpdate(dir = outdir, cachePath = "ReUseData")
     expect_s4_class(dh, "dataHub")
     expect_vector(dataNames(dh))
     expect_vector(dataParams(dh))
@@ -47,14 +46,13 @@ test_that("meta data works", {
     expect_equal(mt$output, res$output)
 })
 
-## res1 <- getCloudData(rcp,
-##                outdir = outdir,
-##                notes = c("echo", "hello", "world", "txt"))
+new_outdir <- file.path(tempdir(), "test_gcpData")
 
-## test_that("get cloud data works", {
-##     dh <- dataUpdate(dir = outdir, cloud = TRUE)
-##     expect_true(any(grepl("web", mcols(dh)$rtype)))
-##     getCloudData(dh[2], outdir = outdir)
-##     expect_vector(dir(outdir, pattern = dataNames(dh[2])))  ## cloud data downloaded!
-##     expect_vector(dir(outdir, pattern = basename(dataYml(dh[2]))))  ## yaml file downloaded!
-## })
+test_that("get cloud data works", {
+    dh <- dataUpdate(dir = new_outdir, cloud = TRUE)
+    expect_true(any(grepl("web", mcols(dh)$rtype)))
+    getCloudData(dh[dataNames(dh) == "outfile.txt"], outdir = new_outdir)
+    expect_vector(dir(new_outdir))  ## cloud data downloaded!
+    expect_true("outfile.txt" %in% dir(new_outdir))
+    expect_vector(dir(new_outdir, pattern = basename(dataYml(dh[1]))))  ## yaml file downloaded!
+})
