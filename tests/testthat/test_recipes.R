@@ -27,7 +27,7 @@ out <- readLines(res$output)
 outyml <- readLines(res$yml)
 
 test_that("recipe evaluation works", {
-    expect_equal(dirname(res$output), tempdir())
+    expect_equal(normalizePath(dirname(res$output)), normalizePath(tempdir()))
     expect_equal(basename(res$output), paste0(rcp$outfile, ".txt"))
     expect_equal(out, "Hello World!")
     expect_match(outyml[1], "input: ")

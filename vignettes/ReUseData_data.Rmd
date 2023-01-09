@@ -1,0 +1,249 @@
+---
+title: "ReUseData: ReUsable and Reproducible Data Management"
+author: "Qian Liu"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_document:
+    toc: true
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{ReUseDataData}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`ReUseData` provides functionalities to construct workflow-based data
+recipes for fully tracked and reproducible data processing. Evaluation
+of data recipes generates curated data resources in their generic
+formats (e.g., VCF, bed), as well as a YAML manifest file recording
+the recipe parameters, data annotations, and data file paths for
+subsequent reuse. The datasets are locally cached using a database
+infrastructure, where updating and searching of specific data is made easy.  
+
+The data reusability is assured through cloud hosting and enhanced
+interoperability with downstream software tools or analysis
+workflows. The workflow strategy enables cross platform
+reproducibility of curated data resources.
+
+# Installation
+1. Install the package from _Bioconductor_.
+
+```{r, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ReUseData")
+```
+The development version is also available to download from GitHub. 
+```{r getDevel, eval=FALSE}
+BiocManager::install("rworkflow/ReUseData")
+```
+
+2. Load the package and other packages into the R session.
+```{r Load, message=FALSE}
+library(ReUseData)
+library(Rcwl)
+```
+ 
+# `ReUseData` core functions for data management 
+
+Here we introduce the core functions of `ReUseData` for data
+management and reuse: `getData` for reproducible data generation,
+`dataUpdate` for syncing and updating data cache, and `dataSearch` for
+multi-keywords searching of dataset of interest.
+
+
+## Data generation
+
+First, we can construct data recipes by transforming shell or other ad
+hoc data preprocessing scripts into workflow-based data recipes. Some
+pre-built data recipes for public data resources (e.g., downloading,
+unzipping and indexing) are available for direct use through
+`recipeSearch` and `recipeLoad` functions. Then we will assign values
+to the input parameters and evaluate the recipe to generate data of
+interest.
+
+```{r}
+recipeUpdate()
+recipeSearch("echo")
+recipeLoad("echo_out", return = TRUE)
+inputs(echo_out)
+```
+
+Users can then assign values to the input parameters, and evaluate the
+recipe (`getData`) to generate data of interest. Users need to specify
+an output directory for all files (desired data file, intermediate
+files that are internally generated as workflow scripts or annotation
+files). Detailed notes for the data is encouraged which will be used
+for keywords matching for later data search.
+
+```{r}
+echo_out$input <- "Hello World!"
+echo_out$outfile <- "outfile"
+outdir <- file.path(tempdir(), "SharedData")
+res <- getData(echo_out,
+               outdir = outdir,
+               notes = c("echo", "hello", "world", "txt"))
+```
+
+The file path to newly generated dataset can be easily retrieved. It
+can also be retrieved using `dataSearch()` functions with multiple
+keywords. Before that, `dataUpdate()` needs to be done.  
+
+```{r}
+res$output
+```
+
+There are some automatically generated files to help track the data
+recipe evaluation, including `*.sh` to record the original shell
+script, `*.cwl` file as the official workflow script which was
+internally submitted for data recipe evaluation, `*.yml` file as part
+of CWL workflow evalution, which also record data annotations, and
+`*.md5` checksum file to check/verify the integrity of generated data
+file.
+
+```{r}
+dir(outdir)
+```
+
+The `*.yml` file contains information about recipe input parameters,
+the file path to output file, the notes for the dataset, and
+auto-added date for data generation time. A later data search using
+`dataSearch()` will refer to this file for keywords match.
+
+```{r}
+readLines(res$yml)
+```
+
+## Data caching, updating and searching
+
+`dataUpdate()` creates (if first itme use), syncs and updates the local
+cache for curated datasets. It finds and reads all the `.yml` files
+recursivelly in the provided data folder, creates a cache record for
+each dataset that is associated (including newly generated ones with
+`getData()`), and updates the local cache for later data searching and
+reuse. 
+
+**IMPORTANT:** It is recommended that users create a specified folder for
+data archival (e.g., `file/path/to/SharedData`) that other group
+members have access to, and use sub-folders for different kinds of
+datasets (e.g., those generated from same recipe).
+
+```{r}
+(dh <- dataUpdate(dir = outdir))
+```
+
+`dataUpdate` and `dataSearch` return a `dataHub` object with a list of
+all available or matching datasets. 
+
+One can subset the list with `[` and use getter functions to retrieve
+the annotation information about the data, e.g., data names,
+parameters values to the recipe, notes, tags, and the corresponding
+yaml file.
+
+```{r}
+dh[1]
+## dh["BFC1"]
+dh[dataNames(dh) == "outfile.txt"]
+dataNames(dh)
+dataParams(dh)
+dataNotes(dh)
+dataTags(dh)
+dataYml(dh)
+```
+
+`ReUseData`, as the name suggests, commits to promoting the data reuse.
+Data can be prepared in standard input formats (`toList`), e.g.,
+YAML and JSON, to be easily integrated in workflow methods that are
+locally or cloud-hosted. 
+
+```{r}
+(dh1 <- dataSearch(c("echo", "hello", "world")))
+toList(dh1)
+toList(dh1, format = "json")
+toList(dh1, format = "yaml")
+```
+
+Data can also be aggregated from different resources by tagging with
+specific software tools (dataTag). 
+
+```{r}
+dataSearch()
+dataTags(dh[1]) <- "#gatk"
+dataSearch("#gatk")
+```
+
+**NOTE:** if the argument `cloud=TRUE` is enabled, `dataUpdate()` will
+also cache the pre-generated data sets (from evaluation of public
+ReUseData recipes) that are available on ReUseData google bucket and
+return in the `dataHub` object that are fully searchable.
+
+```{r}
+dataUpdate(dir = outdir, cloud = TRUE)
+dataSearch(c("gencode"))
+```
+
+# Cloud data resources 
+
+With the pre-built data recipes for curation (e.g., downloading,
+unzipping, indexing) of commonly used public data resources (recipes
+can be restrieved using `recipeSearch` and `recipeLoad`, see the other
+vignette for data recipe), we have pre-generated some data sets and
+put them on the cloud space for direct use.
+
+Before searching, one need to use `dataUpdate(cloud=TRUE)` to sync the
+existing data sets on cloud, then `dataSearch()` can be used to search
+any available data set either in local cache and on the cloud. 
+
+```{r}
+gcpdir <- file.path(tempdir(), "gcpData")
+dataUpdate(gcpdir, cloud=TRUE)
+dh <- dataSearch(c("ensembl", "GRCh38"))
+```
+
+If the data of interest already exist on the cloud, then
+`getCloudData` will directly download the data to your computer. Add
+it to the local caching system using `dataUpdate()` for later use.
+
+```{r}
+getCloudData(dh[1], outdir = gcpdir)
+dataUpdate(gcpdir)  ## Update local data cache (without cloud data)
+dataSearch()  ## data is available locally!!!
+```
+
+The data supports user-friendly discovery and access through the
+`ReUseData` portal, where detailed instructions are provided for
+straight-forward incorporation into data analysis pipelines run on
+local computing nodes, web resources, and cloud computing platforms
+(e.g., Terra, CGC).
+
+
+# Know your data
+
+Here we provide a function `meta_data()` to create a data frame that
+contains all information about the data sets in the specified file
+path (recursively), including the annotation file (`$yml` column),
+parameter values for the recipe (`$params` column), data file path
+(`$output` column), keywords for data file (`notes` columns), date of
+data generation (`date` column), and any tag if available (`tag`
+column).
+
+Use `cleanup = TRUE` to cleanup any invalid or expired/older
+intermediate files.
+
+```{r}
+mt <- meta_data(outdir)
+head(mt)
+```
+
+# SessionInfo
+```{r}
+sessionInfo()
+```
+

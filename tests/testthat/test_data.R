@@ -7,7 +7,7 @@ res <- getData(rcp,
                notes = c("echo", "hello", "world", "txt"))
 
 test_that("recipe evaluation works", {
-    expect_equal(dirname(res$output), outdir)
+    expect_equal(normalizePath(dirname(res$output)), normalizePath(outdir))
     expect_equal(basename(res$output), "outfile.txt")
     expect_vector(dir(outdir, pattern = "rcp_"))
     expect_vector(dir(outdir, pattern = "sh"))

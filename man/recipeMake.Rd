@@ -72,13 +72,14 @@ https://github.com/rworkflow/ReUseDataRecipe/blob/master/reference_genome.R
 ##############
 library(Rcwl)
 
-shfile <- system.file("extdata", "demo_script.sh", package = "ReUseData")
+shfile <- system.file("extdata", "gencode_transcripts.sh", package = "ReUseData")
 readLines(shfile)
 rcp <- recipeMake(shscript = shfile,
                   paramID = c("species", "version"),
                   paramType = c("string", "string"),
                   outputID = "annotation", 
-                  outputGlob = "*.fa"
+                  outputGlob = "*.fa",
+                  requireTools = c("wget", "gzip", "samtools")
                   )
 Rcwl::inputs(rcp)
 rcp$species <- "human"
