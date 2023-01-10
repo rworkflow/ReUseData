@@ -44,7 +44,7 @@ getCloudData <- function(datahub, outdir = character()) {
     ymlpath <- unique(gsub(".yml", "", yml))
     for (i in seq_along(ymlpath)) {
         ofls <- paste0(ymlpath[i], c(".yml", ".cwl", ".md5", ".sh"))
-        sapply(ofls, function(x) download.file(x, file.path(outdir, basename(x))))
+        vapply(ofls, function(x) download.file(x, file.path(outdir, basename(x))), numeric(1))
     }
     message("Data is downloaded: \n", paste(file.path(outdir, basename(url)), collapse = "\n"))
     

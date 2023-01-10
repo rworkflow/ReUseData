@@ -41,7 +41,6 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe",
         bfcremove(bfc, bfcinfo(bfc)$rid)
     }
 
-    ## FIXME: CREATE A private github repo for private data recipes. 
     message("Update recipes...")
     rcpfls <- list.files(
         system.file("extdata/dataRecipes", package = "ReUseData"),
@@ -62,7 +61,7 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe",
             }            
         }
     }
-    cat("\n")
+    message()
     recipeHub(bfc)
 }
 

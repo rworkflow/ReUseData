@@ -1,0 +1,13 @@
+CHANGE IN VERSION 1.0.1
+----------------------------
+
+Initial version: 
+----------------------------
+- `ReUseData` helps create data recipes for reproducible data
+  processing, where any necessary command-line tools are managed using
+  conda and docker.
+- `ReUseData` has pre-built data recipes for data downloading/curation
+  for common biomedical data resources.
+- `ReUseData` supports cloud downloading of pre-generated curated data.
+- `ReUseData` has recipe landing pages (https://rcwl.org/dataRecipes/)
+  with full annotations and instructions.

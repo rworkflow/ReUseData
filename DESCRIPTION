@@ -1,6 +1,6 @@
 Package: ReUseData
 Title: Reproducible and ReUsable Data Resources
-Version: 0.99.19
+Version: 0.99.20
 Authors@R: 
     person(given = "Qian",
            family = "Liu",
@@ -41,5 +41,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-biocViews: Infrastructure, DataImport, Preprocessing, ImmunoOncology
-License: GPL (>= 3)
+biocViews: Infrastructure, DataImport, Preprocessing, ImmunoOncology, WorkflowManagement
+License: GPL-3

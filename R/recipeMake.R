@@ -43,10 +43,34 @@
 #' @export
 #' @examples
 #'
+#' library(Rcwl)
+#'
 #' ##############
 #' ### example 1
 #' ##############
-#' library(Rcwl)
+#' 
+#' script <- '
+#' input=$1
+#' outfile=$2
+#' echo "Print the input: $input" > $outfile.txt
+#' '
+#' rcp <- recipeMake(shscript = script,
+#'                   paramID = c("input", "outfile"),
+#'                   paramType = c("string", "string"),
+#'                   outputID = "echoout",
+#'                   outputGlob = "*.txt")
+#' inputs(rcp)
+#' outputs(rcp)
+#' rcp$input <- "Hello World!"
+#' rcp$outfile <- "outfile"
+#' res <- getData(rcp, outdir = tempdir(),
+#'                notes = c("echo", "hello", "world", "txt"),
+#'                showLog = TRUE)
+#' readLines(res$out)
+#' 
+#' ##############
+#' ### example 2
+#' ##############
 #' 
 #' shfile <- system.file("extdata", "gencode_transcripts.sh", package = "ReUseData")
 #' readLines(shfile)
@@ -68,29 +92,6 @@
 #' res$output
 #' dir(tempdir())
 #' }
-#' 
-#' ##############
-#' ### example 2
-#' ##############
-#' 
-#' script <- '
-#' input=$1
-#' outfile=$2
-#' echo "Print the input: $input" > $outfile.txt
-#' '
-#' rcp <- recipeMake(shscript = script,
-#'                   paramID = c("input", "outfile"),
-#'                   paramType = c("string", "string"),
-#'                   outputID = "echoout",
-#'                   outputGlob = "*.txt")
-#' inputs(rcp)
-#' outputs(rcp)
-#' rcp$input <- "Hello World!"
-#' rcp$outfile <- "outfile"
-#' res <- getData(rcp, outdir = tempdir(),
-#'                notes = c("echo", "hello", "world", "txt"),
-#'                showLog = TRUE)
-#' readLines(res$out)
 #' 
 recipeMake <- function(shscript = character(),
                        paramID = c(),  

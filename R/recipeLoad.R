@@ -14,7 +14,7 @@
     .env <- new.env()
     source(rscript, .env)
     objs <- ls(.env)
-    idx <- sapply(objs, function(x) is(get(x, envir = .env), "cwlProcess"))
+    idx <- vapply(objs, function(x) is(get(x, envir = .env), "cwlProcess"), logical(1))
 
     .loadmsg(return = return, value = objs[idx])
 
