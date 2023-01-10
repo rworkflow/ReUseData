@@ -9,18 +9,8 @@
 #'     `recipeSearch`, and `recipeLoad`. Default is "ReUseDataRecipe".
 #' @param force Whether to remove existing and regenerate recipes
 #'     cache. Default is FALSE. Only use if any old recipes that have
-#'     been previously cached locally are updated remotely (on GitHub
-#'     `repos`).
-#' @param remote Whether to download the data recipes directly from a
-#'     GitHub repository. Default is FALSE.
-#' @param repos The GitHub repository containing data recipes that are
-#'     to be synced to local cache. Only works when
-#'     `remote=TRUE`. Default is "rworkflows/ReUseDataRecipes" GitHub
-#'     repository where public data recipes are saved, which might be
-#'     more up-to-date than the recipes contained in`ReUseData`
-#'     package. It can also be a private GitHub repository where users
-#'     save their own data recipes.
-#' @return a `recipeHub` object.
+#'     been previously cached locally are updated.
+##' @return a `recipeHub` object.
 #' @importFrom tools R_user_dir
 #' @import BiocFileCache
 #' @import Rcwl
@@ -28,14 +18,11 @@
 #' @export
 #' @examples
 #' recipeUpdate()
-#' recipeUpdate(force=TRUE)
-#' recipeUpdate(force = TRUE, remote = TRUE)
+#' ## recipeUpdate(force=TRUE)
 
 recipeUpdate <- function(cachePath = "ReUseDataRecipe",
-                         force = FALSE,
-                         remote = FALSE,
-                         repos = "rworkflow/ReUseDataRecipe"){
-    
+                         force = FALSE){
+     
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -47,8 +34,8 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe",
     }
     bfc <- BiocFileCache(cachePath, ask = FALSE)
 
-    ## if "force=TRUE", remove local recipes, and reload/update all
-    ## recipes from remote repo.
+    ## if "force=TRUE", remove local cache and reload/update all
+    ## recipes for a new cache.
     if(force){
         message("Warning: existing caches will be removed and regenerated!")
         bfcremove(bfc, bfcinfo(bfc)$rid)
@@ -56,23 +43,12 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe",
 
     ## FIXME: CREATE A private github repo for private data recipes. 
     message("Update recipes...")
-    if (remote) {
-        dlpath <- file.path(cachePath, "recipes.zip")
-        download.file(paste0("https://github.com/", repos,
-                             "/archive/refs/heads/master.zip"),
-                      dlpath)
-        unzip(dlpath, exdir = cachePath)
-        fpath <- list.files(
-            file.path(cachePath, paste0(basename(repos), "-master")),
-            full.names=TRUE)
-        fpath <- fpath[basename(fpath) != "dataGen.R"]
-    } else {
-        rcpfls <- list.files(
-            system.file("extdata/dataRecipes", package = "ReUseData"),
-            full.names = TRUE)
-        file.copy(rcpfls, cachePath)
-        fpath <- list.files(cachePath, pattern = ".R", full.names = TRUE)
-    }
+    rcpfls <- list.files(
+        system.file("extdata/dataRecipes", package = "ReUseData"),
+        full.names = TRUE)
+    file.copy(rcpfls, cachePath)
+    fpath <- list.files(cachePath, pattern = ".R", full.names = TRUE)
+    
     ## add any non-cached recipes to local cache
     if(length(fpath) > 0){
         rnames <- sub(".R$", "", basename(fpath))

@@ -211,11 +211,6 @@ _R_.
 `recipeLoad` and `recipeSearch` functions.
 - use `force=TRUE` when any old recipes that are previously cached are
 updated.
-- use `remote = TRUE`to sync with remote GitHub repositories. By
-  default, it syncs with `ReUseDataRecipe` GitHub
-  repository](https://github.com/rworkflow/ReUseDataRecipe) for
-  public, pre-built data recipes. `repo` can also be a private GitHub
-  repository.
 
 ```{r}
 ## First time use
@@ -223,13 +218,6 @@ recipeUpdate(cachePath = "ReUseDataRecipe",
              force = TRUE)
 ## afterwards
 recipeUpdate()
-```
-
-To sync the local recipe cache with remote GitHub repository.  
-
-```{r, eval=FALSE}
-recipeUpdate(remote = TRUE,
-             repos = "rworkflow/ReUseDataRecipe")  ## can be private repo
 ```
 
 `recipeUpdate` returns a `recipeHub` object with a list of all

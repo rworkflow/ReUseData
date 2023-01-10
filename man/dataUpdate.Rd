@@ -11,7 +11,6 @@ dataUpdate(
   keepTags = TRUE,
   cleanup = FALSE,
   cloud = FALSE,
-  remote = FALSE,
   checkData = TRUE
 )
 }
@@ -46,11 +45,6 @@ will also remove those.}
 
 \item{cloud}{Whether to return the pre-generated data from Google
 Cloud bucket of ReUseData. Default is FALSE.}
-
-\item{remote}{Whether to use the csv file (containing information
-about pre-generated data on Google Cloud) from GitHub, which is
-most up-to-date. Only works when \code{cloud = TRUE}. Default is
-FALSE.}
 
 \item{checkData}{check if the data (listed as "# output: " in the
 yml file) exists. If not, do not include in the output csv

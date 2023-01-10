@@ -4,12 +4,7 @@
 \alias{recipeUpdate}
 \title{recipeUpdate}
 \usage{
-recipeUpdate(
-  cachePath = "ReUseDataRecipe",
-  force = FALSE,
-  remote = FALSE,
-  repos = "rworkflow/ReUseDataRecipe"
-)
+recipeUpdate(cachePath = "ReUseDataRecipe", force = FALSE)
 }
 \arguments{
 \item{cachePath}{A character string specifying the name for the
@@ -19,19 +14,7 @@ specified here, must use the same for \code{cachePath} argument in
 
 \item{force}{Whether to remove existing and regenerate recipes
 cache. Default is FALSE. Only use if any old recipes that have
-been previously cached locally are updated remotely (on GitHub
-\code{repos}).}
-
-\item{remote}{Whether to download the data recipes directly from a
-GitHub repository. Default is FALSE.}
-
-\item{repos}{The GitHub repository containing data recipes that are
-to be synced to local cache. Only works when
-\code{remote=TRUE}. Default is "rworkflows/ReUseDataRecipes" GitHub
-repository where public data recipes are saved, which might be
-more up-to-date than the recipes contained in\code{ReUseData}
-package. It can also be a private GitHub repository where users
-save their own data recipes.}
+been previously cached locally are updated.}
 }
 \value{
 a \code{recipeHub} object.
@@ -43,6 +26,5 @@ repository or user-specified private GitHub repo.
 }
 \examples{
 recipeUpdate()
-recipeUpdate(force=TRUE)
-recipeUpdate(force = TRUE, remote = TRUE)
+## recipeUpdate(force=TRUE)
 }

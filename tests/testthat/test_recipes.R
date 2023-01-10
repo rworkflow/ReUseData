@@ -40,7 +40,6 @@ test_that("recipe evaluation works", {
 
 test_that("recipe updating works", {
     rcphub <- recipeUpdate(cachePath = "ReUseDataRecipe",
-                           repos = "rworkflow/ReUseDataRecipe",
                            force = TRUE)
     expect_s4_class(rcphub, "recipeHub")
     expect_vector(recipeNames(rcphub))

@@ -28,10 +28,6 @@
 #'     will also remove those.
 #' @param cloud Whether to return the pre-generated data from Google
 #'     Cloud bucket of ReUseData. Default is FALSE.
-#' @param remote Whether to use the csv file (containing information
-#'     about pre-generated data on Google Cloud) from GitHub, which is
-#'     most up-to-date. Only works when `cloud = TRUE`. Default is
-#'     FALSE.
 #' @param checkData check if the data (listed as "# output: " in the
 #'     yml file) exists. If not, do not include in the output csv
 #'     file. This argument is added for internal testing purpose.
@@ -79,7 +75,7 @@
 #' dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data! 
 #' 
 dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
-                       keepTags = TRUE, cleanup = FALSE, cloud = FALSE, remote = FALSE, checkData = TRUE) {
+                       keepTags = TRUE, cleanup = FALSE, cloud = FALSE, checkData = TRUE) {
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -106,13 +102,7 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
 
     ## append pre-generated cloud data
     if (cloud) {
-        if (remote) {
-            download.file("https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
-                          file.path(tempdir(), "meta_gcp.csv"))
-            meta_gcp <- read.csv(file.path(tempdir(), "meta_gcp.csv"))
-        } else {
-            meta_gcp <- read.csv(system.file("extdata", "meta_gcp.csv", package = "ReUseData"))
-        }
+        meta_gcp <- read.csv(system.file("extdata", "meta_gcp.csv", package = "ReUseData"))
         meta <- rbind(meta, meta_gcp)
     }
     
