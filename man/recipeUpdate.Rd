@@ -7,6 +7,7 @@
 recipeUpdate(
   cachePath = "ReUseDataRecipe",
   force = FALSE,
+  remote = FALSE,
   repos = "rworkflow/ReUseDataRecipe"
 )
 }
@@ -21,10 +22,16 @@ cache. Default is FALSE. Only use if any old recipes that have
 been previously cached locally are updated remotely (on GitHub
 \code{repos}).}
 
-\item{repos}{The GitHub repository where data recipes are saved. By
-default, it reads the "rworkflows/ReUseDataRecipes" GitHub
-repository where recipes are publicly shared for direct use and
-as examples for users to build their own recipes.}
+\item{remote}{Whether to download the data recipes directly from a
+GitHub repository. Default is FALSE.}
+
+\item{repos}{The GitHub repository containing data recipes that are
+to be synced to local cache. Only works when
+\code{remote=TRUE}. Default is "rworkflows/ReUseDataRecipes" GitHub
+repository where public data recipes are saved, which might be
+more up-to-date than the recipes contained in\code{ReUseData}
+package. It can also be a private GitHub repository where users
+save their own data recipes.}
 }
 \value{
 a \code{recipeHub} object.
@@ -36,4 +43,6 @@ repository or user-specified private GitHub repo.
 }
 \examples{
 recipeUpdate()
+recipeUpdate(force=TRUE)
+recipeUpdate(force = TRUE, remote = TRUE)
 }

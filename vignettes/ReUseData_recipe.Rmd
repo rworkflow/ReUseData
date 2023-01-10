@@ -78,8 +78,8 @@ and`RcwlPipelines`, `Rcwl` tutorial e-book, case studies of using
 
 # `ReUseData` recipe scripts
 
-The pre-built `ReUseData` recipe scripts are now residing in a
-dedicated [GitHub
+The pre-built data recipe scripts are included in the package, and are
+physically residing in a dedicated [GitHub
 repository](https://github.com/rworkflow/ReUseDataRecipes), which
 demonstrates the recipe construction for different situations. The
 most common case is that a data recipe can manage multiple data
@@ -91,7 +91,7 @@ a specific file can be written as a data recipe without any input
 parameter. For example, the data recipe
 `gcp_broad_gatk_hg38_1000G_omni2.5`) downloads the
 `1000G_omni2.5.hg38.vcf.gz` and the `tbi` index files from Google
-Cloud Platform bucket for Broad reference data GATK hg38. 
+Cloud Platform bucket for Broad reference data GATK hg38.
 
 If the data curation gets more complicated, say, multiple command-line
 tools are to be involved, and `conda` can be used to install required
@@ -211,18 +211,25 @@ _R_.
 `recipeLoad` and `recipeSearch` functions.
 - use `force=TRUE` when any old recipes that are previously cached are
 updated.
-- The recipes can be synced with private GitHub repositories. By
-  default, it syncs `ReUseDataRecipe` GitHub
+- use `remote = TRUE`to sync with remote GitHub repositories. By
+  default, it syncs with `ReUseDataRecipe` GitHub
   repository](https://github.com/rworkflow/ReUseDataRecipe) for
-  pre-built data recipes.
+  public, pre-built data recipes. `repo` can also be a private GitHub
+  repository.
 
 ```{r}
 ## First time use
 recipeUpdate(cachePath = "ReUseDataRecipe",
-             repos = "rworkflow/ReUseDataRecipe",  ## can be private GitHub repo
              force = TRUE)
 ## afterwards
 recipeUpdate()
+```
+
+To sync the local recipe cache with remote GitHub repository.  
+
+```{r, eval=FALSE}
+recipeUpdate(remote = TRUE,
+             repos = "rworkflow/ReUseDataRecipe")  ## can be private repo
 ```
 
 `recipeUpdate` returns a `recipeHub` object with a list of all
