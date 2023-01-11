@@ -44,7 +44,7 @@ subsequent reuse.
 ```{r, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("ReUseData")
+BiocManager::install(c("ReUseData", "Rcwl"))
 ```
 The development version is also available to download from GitHub. 
 ```{r getDevel, eval=FALSE}
@@ -178,22 +178,16 @@ readLines(shfile)
 rcp <- recipeMake(shscript = shfile,
                   paramID = c("species", "version"),
                   paramType = c("string", "string"),
-                  outputID = "annotation", 
-                  outputGlob = "gencode.v*.annotation.gtf",
+                  outputID = "transcripts", 
+                  outputGlob = "*.transcripts.fa*",
                   requireTools = c("wget", "gzip", "samtools")
                   )
-
 rcp$species <- "human"
 rcp$version <- "42"
 res <- getData(rcp,
         outdir = outdir,
-        notes = c("gencode", "human", "42"),
+        notes = c("gencode", "transcripts", "human", "42"),
         conda = TRUE)
-```
-
-The file path to newly generated dataset can be easily retrieved. 
-
-```{r}
 res$output
 ```
 
@@ -216,8 +210,6 @@ updated.
 ## First time use
 recipeUpdate(cachePath = "ReUseDataRecipe",
              force = TRUE)
-## afterwards
-recipeUpdate()
 ```
 
 `recipeUpdate` returns a `recipeHub` object with a list of all
@@ -226,10 +218,10 @@ functions `recipeNames()` to get the recipe names which can then be
 passed to the `recipeSearch()` or `recipeLoad()`.
 
 ```{r}
-rcphub <- recipeUpdate(force=TRUE)
-is(rcphub)
-rcphub[1]
-recipeNames(rcphub)
+rh <- recipeUpdate()
+is(rh)
+rh[1]
+recipeNames(rh)
 ```
 
 ## Recipe searching and loading
@@ -250,24 +242,33 @@ is successfully loaded, a message will be returned with recipe
 instructions.
 
 ```{r}
-rcphub <- recipeSearch("gencode")
-recipeNames(rcphub)
-rcp <- recipeLoad("gencode_annotation")
+rcp <- recipeLoad("STAR_index")
 ```
 
-**NOTE** that if multiple recipes are to be loaded, users need to use
-`return=TRUE` and do not assign new names for the recipes.
+**NOTE** Use `return=TRUE` if you want to keep the original recipe
+name, or if multiple recipes are to be loaded.
+
 
 ```{r}
-recipeLoad(recipeNames(rcphub), return=TRUE)
+recipeLoad("STAR_index", return = TRUE)
 ```
 
-It's important to check the input parameters of a data recipe, and
-assign values before evaluting a recipe to generate data of interest.
+```{r}
+identical(rcp, STAR_index)
+```
 
 ```{r}
-inputs(rcp)
-inputs(gencode_transcripts)
+recipeLoad(c("ensembl_liftover", "gencode_annotation"), return=TRUE)
+```
+
+It's important to check the required `inputs()` of the recipe and the
+recipe landing page for eligible input parameter values before
+evaluting the recipe to generate data of interest.
+
+```{r}
+inputs(STAR_index)
+inputs(ensembl_liftover)
+inputs(gencode_annotation)
 ```
 
 # SessionInfo

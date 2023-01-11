@@ -1,6 +1,8 @@
 ---
 title: "ReUseData: ReUsable and Reproducible Data Management"
-author: "Qian Liu"
+author:
+  - name: "Qian Liu, Qiang Hu, Song Liu, Alan Hutson, Martin Morgan"
+    affiliation: Roswell Park Comprehensive Cancer Center
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_document:
@@ -38,7 +40,7 @@ reproducibility of curated data resources.
 ```{r, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("ReUseData")
+BiocManager::install(c("ReUseData", "Rcwl"))
 ```
 The development version is also available to download from GitHub. 
 ```{r getDevel, eval=FALSE}
@@ -109,7 +111,7 @@ of CWL workflow evalution, which also record data annotations, and
 file.
 
 ```{r}
-dir(outdir)
+list.files(outdir, pattern = "echo")
 ```
 
 The `*.yml` file contains information about recipe input parameters,
@@ -166,8 +168,8 @@ locally or cloud-hosted.
 ```{r}
 (dh1 <- dataSearch(c("echo", "hello", "world")))
 toList(dh1)
-toList(dh1, format = "json")
 toList(dh1, format = "yaml")
+toList(dh1, format = "json", file = "data.json")
 ```
 
 Data can also be aggregated from different resources by tagging with
@@ -182,12 +184,8 @@ dataSearch("#gatk")
 **NOTE:** if the argument `cloud=TRUE` is enabled, `dataUpdate()` will
 also cache the pre-generated data sets (from evaluation of public
 ReUseData recipes) that are available on ReUseData google bucket and
-return in the `dataHub` object that are fully searchable.
-
-```{r}
-dataUpdate(dir = outdir, cloud = TRUE)
-dataSearch(c("gencode"))
-```
+return in the `dataHub` object that are fully searchable. Please see
+the following section for details.
 
 # Cloud data resources 
 
@@ -204,7 +202,6 @@ any available data set either in local cache and on the cloud.
 ```{r}
 gcpdir <- file.path(tempdir(), "gcpData")
 dataUpdate(gcpdir, cloud=TRUE)
-dh <- dataSearch(c("ensembl", "GRCh38"))
 ```
 
 If the data of interest already exist on the cloud, then
@@ -212,7 +209,14 @@ If the data of interest already exist on the cloud, then
 it to the local caching system using `dataUpdate()` for later use.
 
 ```{r}
+(dh <- dataSearch(c("ensembl", "GRCh38")))
 getCloudData(dh[1], outdir = gcpdir)
+```
+
+Now we create the data cache with only local data files, and we can
+see that the downloaded data is available.
+
+```{r}
 dataUpdate(gcpdir)  ## Update local data cache (without cloud data)
 dataSearch()  ## data is available locally!!!
 ```

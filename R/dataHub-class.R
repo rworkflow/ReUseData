@@ -38,8 +38,9 @@ dataHub <- function(BFC){
 #' dataTags(dd)
 #' dataYml(dd)
 #' toList(dd)
-#' toList(dd, format = "json")
 #' toList(dd, format = "yaml")
+#' toList(dd, format = "json", file = "data.json")
+
 
 
 setMethod("show", "dataHub", function(object){
@@ -195,9 +196,10 @@ setGeneric("c")
 #'     match. Default is list.
 #' @param type The type of workflow input list, such as cwl.
 #' @param file The file name to save the data list in required
-#'     format. The data extension needs to be included, e.g., 
-#'     ".json" or ".yml".
-#' @return toList: A list of datasets in specific format.
+#'     format. The data extension needs to be included, e.g., ".json"
+#'     or ".yml".
+#' @return toList: A list of datasets in specific format, and a file
+#'     if `file` argument is specified.
 #' @importFrom jsonlite toJSON
 #' @importFrom yaml as.yaml
 #' @export

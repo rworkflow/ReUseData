@@ -76,8 +76,8 @@ match. Default is list.}
 \item{type}{The type of workflow input list, such as cwl.}
 
 \item{file}{The file name to save the data list in required
-format. The data extension needs to be included, e.g.,
-".json" or ".yml".}
+format. The data extension needs to be included, e.g., ".json"
+or ".yml".}
 }
 \value{
 dataHub: a \code{dataHub} object.
@@ -94,7 +94,8 @@ dataYml: the yaml file paths of datasets in \code{dataHub} object.
 
 dataTags: the tags of datasets in \code{dataHub} object.
 
-toList: A list of datasets in specific format.
+toList: A list of datasets in specific format, and a file
+if \code{file} argument is specified.
 }
 \description{
 \code{dataHub} class, constructor, and methods.
@@ -109,6 +110,6 @@ dataNotes(dd)
 dataTags(dd)
 dataYml(dd)
 toList(dd)
-toList(dd, format = "json")
 toList(dd, format = "yaml")
+toList(dd, format = "json", file = "data.json")
 }

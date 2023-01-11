@@ -101,8 +101,8 @@ readLines(shfile)
 rcp <- recipeMake(shscript = shfile,
                   paramID = c("species", "version"),
                   paramType = c("string", "string"),
-                  outputID = "annotation", 
-                  outputGlob = "*.fa",
+                  outputID = "transcripts", 
+                  outputGlob = "*.transcripts.fa*",
                   requireTools = c("wget", "gzip", "samtools")
                   )
 Rcwl::inputs(rcp)
@@ -111,7 +111,7 @@ rcp$version <- "42"
 \dontrun{
 res <- getData(rcp,
         outdir = tempdir(), 
-        notes = c("gencode", "human", "42"),
+        notes = c("gencode", "transcripts", "human", "42"),
         showLog = TRUE)
 res$output
 dir(tempdir())
