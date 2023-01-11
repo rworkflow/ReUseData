@@ -169,7 +169,7 @@ locally or cloud-hosted.
 (dh1 <- dataSearch(c("echo", "hello", "world")))
 toList(dh1)
 toList(dh1, format = "yaml")
-toList(dh1, format = "json", file = "data.json")
+toList(dh1, format = "json", file = file.path(tempdir(), "data.json"))
 ```
 
 Data can also be aggregated from different resources by tagging with
