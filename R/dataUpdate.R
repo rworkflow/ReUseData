@@ -109,7 +109,8 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
         if (remote) {
             dltry <- tryCatch(
                 download.file(
-                    "https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
+                    paste0("https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/",
+                           "meta_gcp.csv"),
                     file.path(tempdir(), "meta_gcp.csv")),
                 error = identity)
             if (inherits(dltry, "error")) {
