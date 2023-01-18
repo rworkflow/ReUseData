@@ -27,7 +27,7 @@ GitHub repository. Default is FALSE.}
 
 \item{repos}{The GitHub repository containing data recipes that are
 to be synced to local cache. Only works when
-\code{remote=TRUE}. Default is "rworkflows/ReUseDataRecipes" GitHub
+\code{remote=TRUE}. Default is "rworkflow/ReUseDataRecipe" GitHub
 repository where public data recipes are saved, which might be
 more up-to-date than the recipes contained in\code{ReUseData}
 package. It can also be a private GitHub repository where users
@@ -38,8 +38,8 @@ a \code{recipeHub} object.
 }
 \description{
 Function to sync and get the most updated and newly added data
-recipes through the pubic "rworkflows/ReUseDataRecipes" GitHub
-repository or user-specified private GitHub repo.
+recipes through the pubic "rworkflow/ReUseDataRecipe" GitHub
+repository or user-specified private GitHub repository.
 }
 \examples{
 ## recipeUpdate()

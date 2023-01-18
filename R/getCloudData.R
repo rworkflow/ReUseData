@@ -1,4 +1,4 @@
-#' getCloudData Download the pre-generated curated data sets from
+#' getCloudData Download the pregenerated curated data sets from
 #' ReUseData cloud bucket
 #' @param datahub The `dataHub` object returned from `dataSearch()`
 #'     with 1 data record available on ReUseData cloud bucket.
@@ -6,7 +6,7 @@
 #'     annotation files) to be downloaded. It is recommended to use a
 #'     new folder under a shared folder for a new to-be-downloaded
 #'     data.
-#' @return Data and comcomitant annotation files will be downloaded to
+#' @return Data and concomitant annotation files will be downloaded to
 #'     the user-specified folder that is locally searchable with
 #'     `dataSearch()`.
 #' @export 
@@ -27,8 +27,8 @@
 getCloudData <- function(datahub, outdir = character()) {
     tp <- mcols(datahub)$rtype
     idx <- which(tp == "web")
-    if (!length(idx)) {
-        stop("The 'data' is not a cloud object. Please double check the data name.")
+    if (length(idx) == 0) {
+        stop("The 'data' is not a cloud object. Please double check the data name(s).")
     }
 
     ## download data files
@@ -54,7 +54,6 @@ getCloudData <- function(datahub, outdir = character()) {
         cts <- readLines(nyml[i])
         idx <- grep("# output", cts)
         cts[idx] <- paste0("# output: ", outdir, "/", basename(gsub("# output: ", "", cts[idx])))
-        ## cts[idx] <- paste0("# output: ", file.path(outdir, basename(url[i])))
         write(cts, nyml[i])
     }
 }

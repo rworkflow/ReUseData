@@ -33,12 +33,12 @@
 #' 
 #' To load data recipe(s) into R environment.
 #' @param rcp The (vector of) character string of recipe name or
-#'     filepath (`recipeNames()` or `mcols()$fpath` column of the
+#'     file path (`recipeNames()` or `mcols()$fpath` column of the
 #'     `recipeHub` object returned from `recipeSearch`).
 #' @param cachePath A character string for the recipe cache. Must
 #'     match the one specified in `recipeUpdate()`. Default is
 #'     "ReUseDataRecipe".
-#' @param env The R enviroment to export to. Default is `.GlobalEnv`.
+#' @param env The R environment to export to. Default is `.GlobalEnv`.
 #' @param return Whether to use the original recipe name. Default is
 #'     FALSE, where user need to assign a variable name to the
 #'     recipe. e.g., `rcp1 <- recipeLoad()`. If TRUE, it loads the
@@ -85,17 +85,17 @@ recipeLoad <- function(rcp = c(),
     }
     bfc <- BiocFileCache(cachePath, ask = FALSE)
     if (missing(rcp))
-        stop("Please provide a valid name or filepath for the data recipe.")
+        stop("Please provide a valid name or file path for the data recipe.")
     idx <- match(rcp, bfcinfo(bfc)$rname)
     idx <- idx[!is.na(idx)]
-    if (length(idx)) {
+    if (length(idx) > 0) {
         fpath <- bfcrpath(bfc)[idx]
     } else {
         isfile <- file.exists(rcp)
         if (any(isfile)) {
             fpath <- rcp[isfile]
         } else {
-            stop("Please provide a valid name or filepath for the data recipe.")
+            stop("Please provide a valid name or file path for the data recipe.")
         }
     }
     if (!return) {

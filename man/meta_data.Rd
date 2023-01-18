@@ -12,7 +12,7 @@ meta_data(dir = "", cleanup = FALSE, checkData = TRUE)
 \item{cleanup}{If remove any invalid intermediate files. Default is
 FALSE. In cases one data recipe (with same parameter values)
 was evaluated multiple times, the same data file(s) will match
-to multiple intermeidate files (e.g., .yml). \code{cleanup} will
+to multiple intermediate files (e.g., .yml). \code{cleanup} will
 remove older intermediate files, and only keep the most recent
 ones that matches the data file. When there are any
 intermediate files that don't match to any data file, \code{cleanup}

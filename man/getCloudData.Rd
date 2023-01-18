@@ -2,7 +2,7 @@
 % Please edit documentation in R/getCloudData.R
 \name{getCloudData}
 \alias{getCloudData}
-\title{getCloudData Download the pre-generated curated data sets from
+\title{getCloudData Download the pregenerated curated data sets from
 ReUseData cloud bucket}
 \usage{
 getCloudData(datahub, outdir = character())
@@ -17,12 +17,12 @@ new folder under a shared folder for a new to-be-downloaded
 data.}
 }
 \value{
-Data and comcomitant annotation files will be downloaded to
+Data and concomitant annotation files will be downloaded to
 the user-specified folder that is locally searchable with
 \code{dataSearch()}.
 }
 \description{
-getCloudData Download the pre-generated curated data sets from
+getCloudData Download the pregenerated curated data sets from
 ReUseData cloud bucket
 }
 \examples{

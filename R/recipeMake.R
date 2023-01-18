@@ -111,9 +111,6 @@ recipeMake <- function(shscript = character(),
     req3 <- requireJS()
     reqs <- list(req1, req2, req3)
     if (length(requireTools) > 0) {
-        ## dockerfile <- CondaTool(tools = requireTools)
-        ## req4 <- requireDocker(File = dockerfile, ImageId = paste0(gsub("=.*", "", requireTools), collapse="_"))
-        ## reqs[[4]] <- req4
         hint1 <- requireSoftware(packages = lapply(requireTools, condaPackage))
     }else{
         hint1 <- list()
@@ -135,11 +132,11 @@ recipeMake <- function(shscript = character(),
     }
 
     rcpinputs <- input_param_list ## if empty, rcpinputs is list()
-    if (length(input_param_list))
+    if (length(input_param_list) > 0)
         rcpinputs <- do.call(InputParamList, input_param_list)
 
     rcpoutputs <- output_param_list ## if empty, rcpoutputs is list()
-    if (length(output_param_list))
+    if (length(output_param_list) > 0)
         rcpoutputs <- do.call(OutputParamList, output_param_list)
 
     rcp <- cwlProcess(cwlVersion = "v1.2",
@@ -148,7 +145,7 @@ recipeMake <- function(shscript = character(),
                       inputs = rcpinputs,
                       outputs = rcpoutputs,
                       )
-    if(length(hint1)>0){
+    if(length(hint1) > 0){
         hints(rcp) <- list(hint1)
     }
     return(rcp)

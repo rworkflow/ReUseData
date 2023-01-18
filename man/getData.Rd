@@ -38,7 +38,7 @@ evaluating the data recipe as a CWL workflow. Default is FALSE.}
 The data files and 4 meta files: \code{.cwl}: The cwl script
 that was internally run to get the data; \code{.yml}: the input
 parameter values for the data recipe and user specified data
-annoation notes, versions etc; \code{.sh}: The script for data
+annotation notes, versions etc; \code{.sh}: The script for data
 processing; \code{.md}: checksum file to verify the integrity of
 generated data files.
 }

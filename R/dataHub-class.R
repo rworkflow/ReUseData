@@ -49,8 +49,6 @@ setMethod("show", "dataHub", function(object){
 
     cat("dataHub with", length(rid), "records\n")
     cat("cache path: ", bfccache(object), "\n")
-    ## mdate <- tail(sort(as.Date(mc$mtime)), 1)
-    ## cat("# last modified date: ", as.character(mdate), "\n")
     cat("# dataUpdate() to update the local data cache\n")
     cat("# dataSearch() to query a specific dataset\n")
     cat("# Additional information can be retrieved using: \n")
@@ -73,10 +71,8 @@ setMethod("show", "dataHub", function(object){
         rownames <- paste0("  ", .some(rid, nhead, ntail))
         out <- matrix(c(.some(rep("|", length(rid)), nhead, ntail, fill=""),
                         .some(mc$rname, nhead, ntail),
-                        ## .some(mc$params, nhead, ntail),
                         .some(mc$fpath, nhead, ntail)),
                       ncol=3L,
-                      ## dimnames=list(rownames, c("", "name", "params", "Path")))
                       dimnames=list(rownames, c("", "name", "Path")))
         cat("\n")
         print(out, quote=FALSE, right=FALSE)
@@ -128,7 +124,6 @@ setGeneric("dataTags", function(object)standardGeneric("dataTags"))
 #' @rdname dataHub-class
 setMethod("dataTags", "dataHub", function(object) {
     if("tag" %in% colnames(mcols(object))){
-        ## mcols(object)[, c("rname", "tag")]
         mcols(object)$tag
     }else{
         NULL
@@ -206,7 +201,6 @@ setGeneric("c")
 #' 
 toList <- function(x, format = c("list", "json", "yaml"), type = NULL, file = character()){
     format <- match.arg(format)
-    ## tl <- dataNames(x)
     pth <- dataPaths(x)
     isgcp <- grepl("https://storage.googleapis.com", pth)
     pth[isgcp] <- gsub("https://storage.googleapis.com/", "gs://", pth[isgcp])

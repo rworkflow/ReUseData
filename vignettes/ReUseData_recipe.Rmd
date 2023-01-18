@@ -19,14 +19,20 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Introduction
+
 The growth in the volume and complexity of genomic data resources over
 the past few decades poses both opportunities and challenges for data
 reuse. Presently, reuse of data often involves similar preprocessing
 steps in different research projects. Lack of a standardized
 annotation strategy can lead to difficult-to-find and even duplicated
 datasets, resulting in substantial inefficiencies and wasted computing
-resources. 
-
+resources, especially for research collaborations and bioinformatics
+core facilities. Tools such as `GoGetData` and `AnnotationHub` have
+been developed to mitigate common problems in managing and accessing
+curated genomic datasets. However, their use can be limited due to
+software requirements (e.g., Conda https://conda.io), forms of data
+representation or scope of data resources.  
 To respond to the FAIR (findability, accessibility, interoperability,
 and reusability) data principles that are being widely adopted and
 organizational requirements for Data Management Plans (DMPs), here, we
@@ -38,23 +44,30 @@ recipes. Evaluation of data recipes generate curated data files in
 their generic formats (e.g., VCF, bed) with full annotations for
 subsequent reuse.
 
+This package focuses on the management of genomic data resources and
+uses classes and functions from existing _Bioconductor_ packages. So
+we think it should be a good fit for the _Bioconductor_.
+
 # Installation
 1. Install the package from _Bioconductor_.
 
-```{r, eval=FALSE}
+```{r install, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install(c("ReUseData", "Rcwl"))
-```
-The development version is also available to download from GitHub. 
-```{r getDevel, eval=FALSE}
-BiocManager::install("rworkflow/ReUseData")
+BiocManager::install("ReUseData")
 ```
 
-2. Load the package and other packages into the R session.
-```{r Load, message=FALSE}
+Use the development version: 
+```{r installDevel, eval=FALSE}
+BiocManager::install("ReUseData", version = "devel")
+```
+
+2. Load the package and other packages used in this vignette into the
+   R session.
+
+```{r load}
+suppressPackageStartupMessages(library(Rcwl))
 library(ReUseData)
-library(Rcwl)
 ```
 		
 # Project resources 
@@ -62,12 +75,12 @@ library(Rcwl)
 ## `ReUseData` recipe landing pages
 
 The project website https://rcwl.org/dataRecipes/ contains all
-pre-built data recipes for public data downloading and curation. They
+prebuilt data recipes for public data downloading and curation. They
 are available for direct use with convenient webpage searching. Each
 data recipe has a landing page including recipe description (inputs,
 outputs, etc.) and user instructions. **Make sure to check the
 instructions of eligible input parameter values before recipe
-evaluation.** These pre-built data recipes demonstrate the use of
+evaluation.** These prebuilt data recipes demonstrate the use of
 software and can be taken as templates for users to create their own
 recipes for protected datasets.
 
@@ -78,7 +91,7 @@ and`RcwlPipelines`, `Rcwl` tutorial e-book, case studies of using
 
 # `ReUseData` recipe scripts
 
-The pre-built data recipe scripts are included in the package, and are
+The prebuilt data recipe scripts are included in the package, and are
 physically residing in a dedicated [GitHub
 repository](https://github.com/rworkflow/ReUseDataRecipes), which
 demonstrates the recipe construction for different situations. The
@@ -141,6 +154,15 @@ rcp <- recipeMake(shscript = script,
                   outputGlob = "*.txt")
 inputs(rcp)
 outputs(rcp)
+```
+
+Evaluation of the data recipes are internally submitted as CWL
+workflow tasks, which requires the latest version of `cwltool`. Here
+we have used `basilisk` to initiate a conda environment and install
+the `cwltool` in that environment if it is not available (or only
+older versions are available) in the computer system.
+
+```{r} 
 rcp$input <- "Hello World!"
 rcp$outfile <- "outfile"
 outdir <- file.path(tempdir(), "SharedData")
@@ -170,10 +192,14 @@ environment.
 
 This function promotes data reproducibility across different computing
 platforms, and removes barrier of using sophisticated bioinformatics
-tools by less-unexperienced users.
+tools by less experienced users.
+
+The following code chunk is not evaluated for time-limit of package
+building but can be evaluated by users. 
 
 ```{r, eval=FALSE}
-shfile <- system.file("extdata", "gencode_transcripts.sh", package = "ReUseData")
+shfile <- system.file("extdata", "gencode_transcripts.sh",
+                      package = "ReUseData")
 readLines(shfile)
 rcp <- recipeMake(shscript = shfile,
                   paramID = c("species", "version"),
@@ -208,7 +234,7 @@ updated.
 - use `remote = TRUE`to sync with remote GitHub repositories. By
   default, it syncs with `ReUseDataRecipe` GitHub
   repository](https://github.com/rworkflow/ReUseDataRecipe) for
-  public, pre-built data recipes. `repo` can also be a private GitHub
+  public, prebuilt data recipes. `repo` can also be a private GitHub
   repository.
 
 ```{r}
@@ -217,7 +243,11 @@ recipeUpdate(cachePath = "ReUseDataRecipe",
              force = TRUE)
 ```
 
-To sync the local recipe cache with remote GitHub repository.  
+To sync the local recipe cache with remote GitHub
+repository. Currently the remote data recipes on GitHub are the same
+as the recipes in package (so not evaluted here to avoid duplicate
+messages). We will do our best to keep current of the data recipes in
+package development version with the remote GitHub repository. 
 
 ```{r, eval=FALSE}
 recipeUpdate(remote = TRUE,
@@ -275,7 +305,7 @@ recipeLoad(c("ensembl_liftover", "gencode_annotation"), return=TRUE)
 
 It's important to check the required `inputs()` of the recipe and the
 recipe landing page for eligible input parameter values before
-evaluting the recipe to generate data of interest.
+evaluating the recipe to generate data of interest.
 
 ```{r}
 inputs(STAR_index)

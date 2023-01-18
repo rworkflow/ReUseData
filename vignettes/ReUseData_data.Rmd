@@ -1,5 +1,5 @@
 ---
-title: "ReUseData: ReUsable and Reproducible Data Management"
+title: "ReUseData: Reusable and Reproducible Data Management"
 author:
   - name: "Qian Liu, Qiang Hu, Song Liu, Alan Hutson, Martin Morgan"
     affiliation: Roswell Park Comprehensive Cancer Center
@@ -37,20 +37,23 @@ reproducibility of curated data resources.
 # Installation
 1. Install the package from _Bioconductor_.
 
-```{r, eval=FALSE}
+```{r install, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install(c("ReUseData", "Rcwl"))
-```
-The development version is also available to download from GitHub. 
-```{r getDevel, eval=FALSE}
-BiocManager::install("rworkflow/ReUseData")
+BiocManager::install("ReUseData")
 ```
 
-2. Load the package and other packages into the R session.
-```{r Load, message=FALSE}
+Use the development version: 
+```{r installDevel, eval=FALSE}
+BiocManager::install("ReUseData", version = "devel")
+```
+
+2. Load the package and other packages used in this vignette into the
+   R session.
+
+```{r Load}
+suppressPackageStartupMessages(library(Rcwl))
 library(ReUseData)
-library(Rcwl)
 ```
  
 # `ReUseData` core functions for data management 
@@ -65,7 +68,7 @@ multi-keywords searching of dataset of interest.
 
 First, we can construct data recipes by transforming shell or other ad
 hoc data preprocessing scripts into workflow-based data recipes. Some
-pre-built data recipes for public data resources (e.g., downloading,
+prebuilt data recipes for public data resources (e.g., downloading,
 unzipping and indexing) are available for direct use through
 `recipeSearch` and `recipeLoad` functions. Then we will assign values
 to the input parameters and evaluate the recipe to generate data of
@@ -106,7 +109,7 @@ There are some automatically generated files to help track the data
 recipe evaluation, including `*.sh` to record the original shell
 script, `*.cwl` file as the official workflow script which was
 internally submitted for data recipe evaluation, `*.yml` file as part
-of CWL workflow evalution, which also record data annotations, and
+of CWL workflow evaluation, which also record data annotations, and
 `*.md5` checksum file to check/verify the integrity of generated data
 file.
 
@@ -125,9 +128,9 @@ readLines(res$yml)
 
 ## Data caching, updating and searching
 
-`dataUpdate()` creates (if first itme use), syncs and updates the local
+`dataUpdate()` creates (if first time use), syncs and updates the local
 cache for curated datasets. It finds and reads all the `.yml` files
-recursivelly in the provided data folder, creates a cache record for
+recursively in the provided data folder, creates a cache record for
 each dataset that is associated (including newly generated ones with
 `getData()`), and updates the local cache for later data searching and
 reuse. 
@@ -173,7 +176,7 @@ toList(dh1, format = "json", file = file.path(tempdir(), "data.json"))
 ```
 
 Data can also be aggregated from different resources by tagging with
-specific software tools (dataTag). 
+specific software tools. 
 
 ```{r}
 dataSearch()
@@ -182,17 +185,17 @@ dataSearch("#gatk")
 ```
 
 **NOTE:** if the argument `cloud=TRUE` is enabled, `dataUpdate()` will
-also cache the pre-generated data sets (from evaluation of public
+also cache the pregenerated data sets (from evaluation of public
 ReUseData recipes) that are available on ReUseData google bucket and
 return in the `dataHub` object that are fully searchable. Please see
 the following section for details.
 
 # Cloud data resources 
 
-With the pre-built data recipes for curation (e.g., downloading,
+With the prebuilt data recipes for curation (e.g., downloading,
 unzipping, indexing) of commonly used public data resources (recipes
-can be restrieved using `recipeSearch` and `recipeLoad`, see the other
-vignette for data recipe), we have pre-generated some data sets and
+can be retrieved using `recipeSearch` and `recipeLoad`, see the other
+vignette for data recipe), we have pregenerated some data sets and
 put them on the cloud space for direct use.
 
 Before searching, one need to use `dataUpdate(cloud=TRUE)` to sync the

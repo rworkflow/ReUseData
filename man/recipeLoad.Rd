@@ -13,14 +13,14 @@ recipeLoad(
 }
 \arguments{
 \item{rcp}{The (vector of) character string of recipe name or
-filepath (\code{recipeNames()} or \code{mcols()$fpath} column of the
+file path (\code{recipeNames()} or \code{mcols()$fpath} column of the
 \code{recipeHub} object returned from \code{recipeSearch}).}
 
 \item{cachePath}{A character string for the recipe cache. Must
 match the one specified in \code{recipeUpdate()}. Default is
 "ReUseDataRecipe".}
 
-\item{env}{The R enviroment to export to. Default is \code{.GlobalEnv}.}
+\item{env}{The R environment to export to. Default is \code{.GlobalEnv}.}
 
 \item{return}{Whether to use the original recipe name. Default is
 FALSE, where user need to assign a variable name to the

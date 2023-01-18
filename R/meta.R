@@ -5,7 +5,7 @@
 #' @param cleanup If remove any invalid intermediate files. Default is
 #'     FALSE. In cases one data recipe (with same parameter values)
 #'     was evaluated multiple times, the same data file(s) will match
-#'     to multiple intermeidate files (e.g., .yml). `cleanup` will
+#'     to multiple intermediate files (e.g., .yml). `cleanup` will
 #'     remove older intermediate files, and only keep the most recent
 #'     ones that matches the data file. When there are any
 #'     intermediate files that don't match to any data file, `cleanup`
@@ -27,7 +27,7 @@ meta_data <- function(dir = "", cleanup = FALSE, checkData = TRUE) {
     dnames <- sub(".yml$", "", basename(ymls))  ## file name.
     keys <- c("output", "notes", "date")
 
-    if (!length(dnames)) {
+    if (length(dnames) == 0) {
         meta <- setNames(data.frame(matrix(ncol = 6, nrow = 0)), c("yml", "params", keys))
     } else {
         meta <- c()

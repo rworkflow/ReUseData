@@ -21,15 +21,15 @@
 #' @param cleanup If remove any invalid intermediate files. Default is
 #'     FALSE. In cases one data recipe (with same parameter values)
 #'     was evaluated multiple times, the same data file(s) will match
-#'     to multiple intermeidate files (e.g., .yml). `cleanup` will
+#'     to multiple intermediate files (e.g., .yml). `cleanup` will
 #'     remove older intermediate files, and only keep the most recent
 #'     ones that matches the data file. When there are any
 #'     intermediate files that don't match to any data file, `cleanup`
 #'     will also remove those.
-#' @param cloud Whether to return the pre-generated data from Google
+#' @param cloud Whether to return the pregenerated data from Google
 #'     Cloud bucket of ReUseData. Default is FALSE.
 #' @param remote Whether to use the csv file (containing information
-#'     about pre-generated data on Google Cloud) from GitHub, which is
+#'     about pregenerated data on Google Cloud) from GitHub, which is
 #'     most up-to-date. Only works when `cloud = TRUE`. Default is
 #'     FALSE.
 #' @param checkData check if the data (listed as "# output: " in the
@@ -70,7 +70,7 @@
 #'         notes = c("ensembl", "liftover", "human", "GRCh37", "GRCh38"),
 #'         showLog = TRUE)
 #'}
-#' ## Update data cache (with or without pre-built data sets from ReUseData cloud bucket)
+#' ## Update data cache (with or without prebuilt data sets from ReUseData cloud bucket)
 #' dataUpdate(dir = outdir)
 #' dataUpdate(dir = outdir, cloud = TRUE)
 #'
@@ -104,11 +104,16 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
     
     meta <- meta_data(dir = dir, cleanup = cleanup, checkData = checkData)
 
-    ## append pre-generated cloud data
+    ## append pregenerated cloud data
     if (cloud) {
         if (remote) {
-            download.file("https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
-                          file.path(tempdir(), "meta_gcp.csv"))
+            dltry <- tryCatch(
+                download.file("https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
+                              file.path(tempdir(), "meta_gcp.csv")),
+                error = identity)
+            if (inherits(dltry, "error")) {
+                stop(conditionMessage(dltry))
+            }
             meta_gcp <- read.csv(file.path(tempdir(), "meta_gcp.csv"))
         } else {
             meta_gcp <- read.csv(system.file("extdata", "meta_gcp.csv", package = "ReUseData"))

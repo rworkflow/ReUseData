@@ -1,7 +1,4 @@
-CHANGE IN VERSION 1.0.1
-----------------------------
-
-Initial version: 
+VERSION 0.99.23
 ----------------------------
 - `ReUseData` helps create data recipes for reproducible data
   processing, where any necessary command-line tools are managed using

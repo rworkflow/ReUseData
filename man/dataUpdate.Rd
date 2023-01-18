@@ -38,17 +38,17 @@ TRUE.}
 \item{cleanup}{If remove any invalid intermediate files. Default is
 FALSE. In cases one data recipe (with same parameter values)
 was evaluated multiple times, the same data file(s) will match
-to multiple intermeidate files (e.g., .yml). \code{cleanup} will
+to multiple intermediate files (e.g., .yml). \code{cleanup} will
 remove older intermediate files, and only keep the most recent
 ones that matches the data file. When there are any
 intermediate files that don't match to any data file, \code{cleanup}
 will also remove those.}
 
-\item{cloud}{Whether to return the pre-generated data from Google
+\item{cloud}{Whether to return the pregenerated data from Google
 Cloud bucket of ReUseData. Default is FALSE.}
 
 \item{remote}{Whether to use the csv file (containing information
-about pre-generated data on Google Cloud) from GitHub, which is
+about pregenerated data on Google Cloud) from GitHub, which is
 most up-to-date. Only works when \code{cloud = TRUE}. Default is
 FALSE.}
 
@@ -98,7 +98,7 @@ res <- getData(ensembl_liftover,
         notes = c("ensembl", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
 }
-## Update data cache (with or without pre-built data sets from ReUseData cloud bucket)
+## Update data cache (with or without prebuilt data sets from ReUseData cloud bucket)
 dataUpdate(dir = outdir)
 dataUpdate(dir = outdir, cloud = TRUE)
 

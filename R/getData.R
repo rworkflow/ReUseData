@@ -17,7 +17,7 @@
 #' @return The data files and 4 meta files: `.cwl`: The cwl script
 #'     that was internally run to get the data; `.yml`: the input
 #'     parameter values for the data recipe and user specified data
-#'     annoation notes, versions etc; `.sh`: The script for data
+#'     annotation notes, versions etc; `.sh`: The script for data
 #'     processing; `.md`: checksum file to verify the integrity of
 #'     generated data files.
 #' @importFrom Rcwl runCWL
@@ -77,12 +77,12 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
     }
     ## check cwltool version
     if(file.exists(Sys.which("cwltool"))){
-        cwlver <- system("cwltool --version", intern = TRUE)
+        cwlver <- system2("cwltool", "--version", stdout = TRUE)
         cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
         if(cwlver < 3.1){
             cl <- basiliskStart(env_Rcwl)
             basiliskStop(cl)
-            cwlver <- system("cwltool --version", intern = TRUE)
+            cwlver <- system2("cwltool", "--version", stdout = TRUE)
             cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
             if(cwlver < 3.1){
                 py_install(gsub("==", ">=", env_Rcwl@packages), pip=TRUE)
@@ -106,10 +106,10 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
     ## if no output generated: 
     if (is.null(res$output)) {
         ## file.remove(file.path(outdir, paste0(prefix, ".yml")))
-        stop(paste0("HINT: The output file was not successfully generated. ",
-                    "Please check the recipe (output globbing pattern, ",
-                    "input parameters, parameter types, etc.)\n"))
-        }
+        stop("HINT: The output file was not successfully generated. ",
+             "Please check the recipe (output globbing pattern, ",
+             "input parameters, parameter types, etc.)\n")
+    }
     yfile <- file.path(outdir, paste0(prefix, ".yml"))
     notes <- paste(notes, collapse = " ")
     apd <- c(paste("# output:", res$output),
@@ -129,20 +129,6 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
     res$yml <- yfile
     return(res)
 }
-
-## docker2sif <- function(Dockerfile, sif, buildArgs = ""){
-##     if(!file.exists(Dockerfile) & grepl("FROM", Dockerfile)){
-##         df <- tempfile()
-##         write(Dockerfile, df)
-##         Dockerfile <- df
-##     }
-##     cmd1 <- paste("spython recipe --parser docker", Dockerfile, paste0(Dockerfile, ".snowflake"))
-##     message(cmd1)
-##     system(cmd1)
-##     cmd2 <- paste("singularity build", buildArgs, sif, paste0(Dockerfile, ".snowflake"))
-##     message(cmd2)
-##     system(cmd2)
-## }
 
 runBatch <- function(idx, libs, fun, ...){
     lapply(libs, library, character.only = TRUE)

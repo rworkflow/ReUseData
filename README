@@ -1,0 +1,64 @@
+# ReUseData
+
+ReUseData is an _R/Bioconductor_ software tool to provide a systematic
+and versatile approach for standardized and reproducible data
+management. ReUseData facilitates transformation of shell or other ad
+hoc scripts for data preprocessing into workflow-based data
+recipes. Evaluation of data recipes generate curated data files in
+their generic formats (e.g., VCF, bed). Both recipes and data are
+cached using database infrastructure for easy data management and
+reuse. Prebuilt data recipes are available through ReUseData portal
+("https://rcwl.org/dataRecipes/") with full annotation and user
+instructions. Pregenerated data are available through ReUseData cloud
+bucket that is directly downloadable through "getCloudData()".
+
+## Load the package
+
+```
+BiocManager::install(c("ReUseData", "Rcwl"))
+library(ReUseData)
+```
+
+## search and load a data recipe
+```
+recipeUpdate(cachePath = "ReUseDataRecipe", force = TRUE)
+recipeSearch("echo")
+recipeLoad("echo_out", return = TRUE)
+```
+
+## evaluate a data recipe
+
+```
+inputs(echo_out)
+echo_out$input <- "Hello World!"
+echo_out$outfile <- "outfile"
+outdir <- file.path(tempdir(), "SharedData")
+res <- getData(echo_out,
+               outdir = outdir,
+               notes = c("echo", "hello", "world", "txt"))
+res$out
+readLines(res$out)
+```
+
+## Update data files that are generated using `ReUseData`
+
+```
+dh <- dataUpdate(dir = outdir)
+dataSearch(c("echo", "hello"))
+dataNames(dh)
+dataParams(dh)
+dataNotes(dh)
+```
+
+## Export data into workflow-ready files
+
+```
+toList(dh, format="json", file = file.path(outdir, "data.json"))
+```
+
+## Download pregenerated data (by evaluation of existing data recipes) that are on Google Cloud
+
+```
+dh <- dataUpdate(dir = outdir, cloud = TRUE)
+getCloudData(dh[2], outdir = outdir)
+```
