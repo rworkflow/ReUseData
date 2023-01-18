@@ -50,7 +50,7 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe",
     ## if "force=TRUE", remove local cache and reload/update all
     ## recipes for a new cache. 
     if(force){
-        message("Warning: existing caches will be removed and regenerated!")
+        message("NOTE: existing caches will be removed and regenerated!")
         bfcremove(bfc, bfcinfo(bfc)$rid)
     }
 

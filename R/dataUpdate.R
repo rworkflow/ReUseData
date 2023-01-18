@@ -108,8 +108,9 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
     if (cloud) {
         if (remote) {
             dltry <- tryCatch(
-                download.file("https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
-                              file.path(tempdir(), "meta_gcp.csv")),
+                download.file(
+                    "https://raw.githubusercontent.com/rworkflow/ReUseDataRecipe/master/meta_gcp.csv",
+                    file.path(tempdir(), "meta_gcp.csv")),
                 error = identity)
             if (inherits(dltry, "error")) {
                 stop(conditionMessage(dltry))
@@ -122,8 +123,10 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
     }
     
     if (outMeta) {
-        write.csv(meta, file = file.path(dir, "meta_data.csv"), quote=FALSE, row.names=FALSE)
-        message("\nMeta file for all available datasets generated: ", file.path(dir, "meta_data.csv"))
+        write.csv(meta, file = file.path(dir, "meta_data.csv"),
+                  quote=FALSE, row.names=FALSE)
+        message("\nMeta file for all available datasets generated: ",
+                file.path(dir, "meta_data.csv"))
     }
 
     message("\nUpdating data record...")

@@ -1,6 +1,6 @@
 Package: ReUseData
 Title: Reusable and reproducible Data Management
-Version: 0.99.23
+Version: 0.99.24
 Authors@R: 
     person(given = "Qian",
            family = "Liu",
@@ -41,8 +41,7 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-biocViews: Software, Infrastructure, DataImport, Preprocessing, ImmunoOncology, WorkflowManagement
+biocViews: Software, Infrastructure, DataImport, Preprocessing, ImmunoOncology
 License: GPL-3
 URL: https://github.com/rworkflow/ReUseData
 BugReports: https://github.com/rworkflow/ReUseData/issues
-

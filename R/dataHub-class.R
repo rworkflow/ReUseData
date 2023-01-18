@@ -20,8 +20,12 @@ dataHub <- function(BFC){
 }
 
 ## Methods
-## 'mcols()' inherited from cwlHub, returns a DataFrame with all info including bfcmeta(bfc, "dataMeta"). 
-## 'title()' inherited to return the 'rname' column in mcols(cwlHub). Here use `dataName()`
+
+## 'mcols()' inherited from cwlHub, returns a DataFrame with all info
+## including bfcmeta(bfc, "dataMeta").
+
+## 'title()' inherited to return the 'rname' column in
+## mcols(cwlHub). Here use `dataName()`
 
 #' @rdname dataHub-class
 #' @param object A `dataHub` object
@@ -52,15 +56,17 @@ setMethod("show", "dataHub", function(object){
     cat("# dataUpdate() to update the local data cache\n")
     cat("# dataSearch() to query a specific dataset\n")
     cat("# Additional information can be retrieved using: \n")
-    cat("# dataNames(), dataParams(), dataNotes(), dataPaths(), dataTag() or mcols()\n")
+    cat("# dataNames(), dataParams(), dataNotes(), dataPaths(),",
+        "dataTag() or mcols()\n")
     ## https://github.com/Bioconductor/AnnotationHub/blob/master/R/Hub-class.R#L602
-    .some <-
-        function(elt, nh, nt, fill="...", width=getOption("width") - 13L)
+    .some <- function(elt, nh, nt, fill="...",
+                      width=getOption("width") - 13L)
     {
-        answer <- if (length(elt) < nh + nt + 1L)
+        answer <- if (length(elt) < nh + nt + 1L) {
                       elt
-                  else
+                  } else {
                       c(head(elt, nh), fill, tail(elt, nt))
+                  }
         ifelse(nchar(answer) > width,
                sprintf("%s...", substring(answer, 1L, width-3L)),
                answer)
@@ -69,11 +75,12 @@ setMethod("show", "dataHub", function(object){
         nhead <- get_showHeadLines()
         ntail <- get_showTailLines()
         rownames <- paste0("  ", .some(rid, nhead, ntail))
-        out <- matrix(c(.some(rep("|", length(rid)), nhead, ntail, fill=""),
-                        .some(mc$rname, nhead, ntail),
-                        .some(mc$fpath, nhead, ntail)),
-                      ncol=3L,
-                      dimnames=list(rownames, c("", "name", "Path")))
+        out <- matrix(
+            c(.some(rep("|", length(rid)), nhead, ntail, fill=""),
+              .some(mc$rname, nhead, ntail),
+              .some(mc$fpath, nhead, ntail)),
+            ncol=3L,
+            dimnames=list(rownames, c("", "name", "Path")))
         cat("\n")
         print(out, quote=FALSE, right=FALSE)
     }
@@ -87,7 +94,8 @@ dataNames <- function(object){
 }
 
 #' @rdname dataHub-class
-#' @return dataParams: the data recipe parameter values for datasets in `dataHub` object.
+#' @return dataParams: the data recipe parameter values for datasets
+#'     in `dataHub` object.
 #' @export
 dataParams <- function(object){
     mcols(object)$params
@@ -199,11 +207,15 @@ setGeneric("c")
 #' @importFrom yaml as.yaml
 #' @export
 #' 
-toList <- function(x, format = c("list", "json", "yaml"), type = NULL, file = character()){
+
+toList <- function(x, format = c("list", "json", "yaml"),
+                   type = NULL, file = character())
+{
     format <- match.arg(format)
     pth <- dataPaths(x)
     isgcp <- grepl("https://storage.googleapis.com", pth)
-    pth[isgcp] <- gsub("https://storage.googleapis.com/", "gs://", pth[isgcp])
+    pth[isgcp] <- gsub("https://storage.googleapis.com/", "gs://",
+                       pth[isgcp])
     if(!is.null(type) && type == "cwl"){
         dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
         dtype <- ifelse(dtype, "Directory", "File")
