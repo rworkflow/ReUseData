@@ -1,10 +1,10 @@
 ## This s cript is modified from "RcwlPipelines::cwlLoad". 
 
 .loadmsg <- function(return = TRUE, value) {
-    message("Data recipe ",
-            ifelse(!return, paste0("'", value, "' "), ""),
-            "loaded!\n",
-            "Use inputs(", ifelse(!return, value, ""),
+    ## rcpnm <- ifelse(!return, paste0("'", value, "' "), "")
+    rcpnm <- ifelse(!return, value, "")
+    message("Data recipe loaded!\n",
+            "Use inputs(", rcpnm, 
             ") to check required input parameters before evaluation.",
             "\nCheck here: https://rcwl.org/dataRecipes/", value, ".html",
             "\nfor user instructions (e.g., eligible input values, data source, etc.)\n"

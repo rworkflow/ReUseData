@@ -124,7 +124,7 @@ updating, searching and loading `ReUseData` recipes in _R_.
 
 ## Recipe construction and evaluation
 
-One can construct a data recipe from scratch or convert an existing
+One can construct a data recipe from scratch or convert existing
 shell scripts for data processing into data recipes, by specifying
 input parameters, and output globbing patterns using `recipeMake`
 function. Then the data recipe is represented in _R_ as an S4 class

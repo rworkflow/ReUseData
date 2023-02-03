@@ -1,3 +1,26 @@
+---
+title: "ReUseData: Reusable and Reproducible Data Management - quick start"
+author:
+  - name: "Qian Liu, Qiang Hu, Song Liu, Alan Hutson, Martin Morgan"
+    affiliation: Roswell Park Comprehensive Cancer Center
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{ReUseDataQS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
 # Introduction
 
 ReUseData is an _R/Bioconductor_ software tool to provide a systematic
@@ -23,7 +46,7 @@ Details for each section can be found in the other vignettes
 
 # Package installation
 
-```
+```{r, eval=FALSE}
 BiocManager::install(c("ReUseData", "Rcwl"))
 library(ReUseData)
 ```
@@ -37,7 +60,7 @@ vignette `ReUseData_recipe.html`.
 
 ## Search and load a data recipe
 
-```
+```{r}
 recipeUpdate(cachePath = "ReUseDataRecipe", force = TRUE)
 recipeSearch("echo")
 recipeLoad("echo_out", return = TRUE)
@@ -49,7 +72,7 @@ A data recipe can be evaluated by assigning values to the recipe
 parameters. `getData` runs the recipe as a CWL scripts internally, and
 generates the data of interest with annotation files for future reuse.
 
-```
+```{r}
 Rcwl::inputs(echo_out)
 echo_out$input <- "Hello World!"
 echo_out$outfile <- "outfile"
@@ -67,7 +90,7 @@ One can create a data recipe from scratch or by converting an existing
 shell script for data processing, by specifying input parameters,
 output globbing patterns using `recipeMake` function.
 
-```
+```{r}
 script <- system.file("extdata", "echo_out.sh", package = "ReUseData")
 rcp <- recipeMake(shscript = script,
                   paramID = c("input", "outfile"),
@@ -112,4 +135,10 @@ toList(dh, format="json", file = file.path(outdir, "data.json"))
 ```
 dh <- dataUpdate(dir = outdir, cloud = TRUE)
 getCloudData(dh[2], outdir = outdir)
+```
+
+# SessionInfo
+
+```{r}
+sessionInfo()
 ```
