@@ -54,7 +54,7 @@ recipeUpdate <- function(cachePath = "ReUseDataRecipe",
         bfcremove(bfc, bfcinfo(bfc)$rid)
     }
 
-    message("Update recipes...")
+    message("Updating recipes...")
     if (remote) {
         dlpath <- file.path(cachePath, "recipes.zip")
         dltry <- tryCatch(

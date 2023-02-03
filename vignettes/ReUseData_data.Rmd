@@ -5,7 +5,7 @@ author:
     affiliation: Roswell Park Comprehensive Cancer Center
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_document:
+  BiocStyle::html_document:
     toc: true
     toc_float: true
 vignette: >
@@ -77,7 +77,7 @@ interest.
 ```{r}
 recipeUpdate()
 recipeSearch("echo")
-recipeLoad("echo_out", return = TRUE)
+echo_out <- recipeLoad("echo_out")
 inputs(echo_out)
 ```
 

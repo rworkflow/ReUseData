@@ -8,12 +8,12 @@ recipeLoad(
   rcp = c(),
   cachePath = "ReUseDataRecipe",
   env = .GlobalEnv,
-  return = FALSE
+  return = TRUE
 )
 }
 \arguments{
-\item{rcp}{The (vector of) character string of recipe name or
-file path (\code{recipeNames()} or \code{mcols()$fpath} column of the
+\item{rcp}{The (vector of) character string of recipe name or file
+path (\code{recipeNames()} or \code{mcols()$fpath} column of the
 \code{recipeHub} object returned from \code{recipeSearch}).}
 
 \item{cachePath}{A character string for the recipe cache. Must
@@ -22,12 +22,12 @@ match the one specified in \code{recipeUpdate()}. Default is
 
 \item{env}{The R environment to export to. Default is \code{.GlobalEnv}.}
 
-\item{return}{Whether to use the original recipe name. Default is
-FALSE, where user need to assign a variable name to the
-recipe. e.g., \code{rcp1 <- recipeLoad()}. If TRUE, it loads the
-recipe and uses its original name, and user doesn't need to
-assign a new name. e.g., \code{recipeLoad(return=TRUE)}. If multiple
-recipes are to be loaded, \code{return=TRUE} must be used.}
+\item{return}{Whether to return the recipe to a user-assigned R
+object. Default is TRUE, where user need to assign a variable
+name to the recipe. e.g., \code{rcp1 <- recipeLoad()}. If FALSE, it
+loads the recipe and uses its original name, and user doesn't
+need to assign a new name. e.g., \code{recipeLoad(return=TRUE)}. If
+multiple recipes are to be loaded, \code{return=FALSE} must be used.}
 }
 \value{
 A data recipe of \code{cwlProcess} S4 class, which is ready to
@@ -47,7 +47,7 @@ rcp <- recipeLoad("ensembl_liftover")
 Rcwl::inputs(rcp)
 rm(rcp)
 
-recipeLoad("gencode_annotation", return=TRUE)
+gencode_annotation <- recipeLoad("gencode_annotation")
 inputs(gencode_annotation)
 rm(gencode_annotation)
 
@@ -57,6 +57,6 @@ rm(gencode_annotation)
 
 rcphub <- recipeSearch("gencode")
 recipeNames(rcphub)
-recipeLoad(recipeNames(rcphub), return=TRUE)
+recipeLoad(recipeNames(rcphub), return=FALSE)
 inputs(gencode_transcripts)
 }

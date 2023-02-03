@@ -3,7 +3,7 @@ title: "ReUseData: Workflow-based Data Recipes for Management of Reusable and Re
 author: "Qian Liu"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_document:
+  BiocStyle::html_document:
     toc: true
     toc_float: true
 vignette: >
@@ -287,12 +287,12 @@ instructions.
 rcp <- recipeLoad("STAR_index")
 ```
 
-**NOTE** Use `return=TRUE` if you want to keep the original recipe
+**NOTE** Use `return=FALSE` if you want to keep the original recipe
 name, or if multiple recipes are to be loaded.
 
 
 ```{r}
-recipeLoad("STAR_index", return = TRUE)
+recipeLoad("STAR_index", return = FALSE)
 ```
 
 ```{r}
@@ -300,7 +300,7 @@ identical(rcp, STAR_index)
 ```
 
 ```{r}
-recipeLoad(c("ensembl_liftover", "gencode_annotation"), return=TRUE)
+recipeLoad(c("ensembl_liftover", "gencode_annotation"), return=FALSE)
 ```
 
 It's important to check the required `inputs()` of the recipe and the

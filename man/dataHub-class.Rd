@@ -84,7 +84,8 @@ dataHub: a \code{dataHub} object.
 
 dataNames: the names of datasets in \code{dataHub} object.
 
-dataParams: the data recipe parameter values for datasets in \code{dataHub} object.
+dataParams: the data recipe parameter values for datasets
+in \code{dataHub} object.
 
 dataNotes: the notes of datasets in \code{dataHub} object.
 

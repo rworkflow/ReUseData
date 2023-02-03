@@ -54,6 +54,6 @@ test_that("recipe searching works", {
 })
 
 test_that("recipe loading works", {
-    recipeLoad("ensembl_liftover", return=TRUE)
+    recipeLoad("ensembl_liftover", return = FALSE)
     expect_s4_class(ensembl_liftover, "cwlProcess")
 })

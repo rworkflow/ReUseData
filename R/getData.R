@@ -31,7 +31,7 @@
 #' outdir <- file.path(tempdir(), "SharedData")
 #'
 #' ## Example 1
-#' recipeLoad("echo_out", return = TRUE)
+#' echo_out <- recipeLoad("echo_out")
 #' Rcwl::inputs(echo_out)
 #' echo_out$input <- "Hello World!"
 #' echo_out$outfile <- "outfile"
@@ -42,7 +42,7 @@
 #'
 #' # Example 2
 #' \dontrun{
-#' recipeLoad("ensembl_liftover", return = TRUE)
+#' ensembl_liftover <- recipeLoad("ensembl_liftover")
 #' Rcwl::inputs(ensembl_liftover)
 #' ensembl_liftover$species <- "human"
 #' ensembl_liftover$from <- "GRCh37"
