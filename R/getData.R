@@ -22,7 +22,7 @@
 #'     generated data files.
 #' @importFrom Rcwl runCWL
 #' @importFrom tools md5sum
-#' @importFrom basilisk basiliskStart basiliskStop
+#' @importFrom basilisk.utils activateEnvironment deactivateEnvironment
 #' @importFrom reticulate py_install
 #' @importFrom Rcwl env_Rcwl
 #' @export
@@ -80,8 +80,8 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
         cwlver <- system2("cwltool", "--version", stdout = TRUE)
         cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
         if(cwlver < 3.1){
-            cl <- basiliskStart(env_Rcwl)
-            basiliskStop(cl)
+            cl <- basilisk.utils::activateEnvironment(env_Rcwl)
+            on.exit(basilisk.utils::deactivateEnvironment(env_Rcwl))
             cwlver <- system2("cwltool", "--version", stdout = TRUE)
             cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
             if(cwlver < 3.1){
