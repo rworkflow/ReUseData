@@ -80,8 +80,8 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
         cwlver <- system2("cwltool", "--version", stdout = TRUE)
         cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
         if(cwlver < 3.1){
-            cl <- basilisk.utils::activateEnvironment(env_Rcwl)
-            on.exit(basilisk.utils::deactivateEnvironment(env_Rcwl))
+            cl <- activateEnvironment(env_Rcwl)
+            on.exit(deactivateEnvironment(env_Rcwl))
             cwlver <- system2("cwltool", "--version", stdout = TRUE)
             cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
             if(cwlver < 3.1){
