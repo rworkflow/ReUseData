@@ -1,6 +1,6 @@
 Package: ReUseData
 Title: Reusable and reproducible Data Management
-Version: 0.99.29
+Version: 0.99.30
 Authors@R: 
     person(given = "Qian",
            family = "Liu",
@@ -33,7 +33,7 @@ Imports:
     methods,
     jsonlite,
     yaml,
-    basilisk.utils,
+    basilisk,
     reticulate
 Suggests: 
     knitr,
