@@ -33,7 +33,7 @@ Imports:
     methods,
     jsonlite,
     yaml,
-    basilisk.utils,
+    basilisk,
     reticulate
 Suggests: 
     knitr,
