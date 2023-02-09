@@ -174,7 +174,7 @@ res <- getData(rcp,
 Let's take a look at the output file, which is successfully generated
 in user-specified directory and grabbed through the `outputGlob`
 argument. For more details of the `getData` function for recipe
-evaluation, check the other vignette for `ReUseData` data management.
+evaluation, check the other vignette for [reusable data management](ReUseData_data.html).
 
 ```{r}
 res$out

@@ -41,8 +41,8 @@ categories for managing:
 - Data recipes
 - Reusable data 
 
-Details for each section can be found in the other vignettes
-`ReUseData_recipe.html` and `ReUseData_data.html`.
+Details for each section can be found in the companion vignettes for
+[data recipes](ReUseData_recipe.html) and [reusable data](ReUseData_data.html).
 
 # Package installation
 

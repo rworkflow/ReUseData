@@ -195,8 +195,8 @@ the following section for details.
 With the prebuilt data recipes for curation (e.g., downloading,
 unzipping, indexing) of commonly used public data resources (recipes
 can be retrieved using `recipeSearch` and `recipeLoad`, see the other
-vignette for data recipe), we have pregenerated some data sets and
-put them on the cloud space for direct use.
+vignette for [data recipe](ReUseData_recipe.html)), we have pregenerated
+some data sets and put them on the cloud space for direct use.
 
 Before searching, one need to use `dataUpdate(cloud=TRUE)` to sync the
 existing data sets on cloud, then `dataSearch()` can be used to search
