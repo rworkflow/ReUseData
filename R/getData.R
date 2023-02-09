@@ -23,7 +23,6 @@
 #' @importFrom Rcwl runCWL
 #' @importFrom tools md5sum
 #' @importFrom basilisk basiliskStart basiliskStop
-#' @importFrom reticulate py_install
 #' @importFrom Rcwl env_Rcwl
 #' @export
 #' @examples
@@ -82,11 +81,6 @@ getData <- function(rcp, outdir, prefix = NULL, notes = c(), conda = FALSE,
         if(cwlver < 3.1){
             cl <- basiliskStart(env_Rcwl)
             on.exit(basiliskStop(cl))
-            cwlver <- system2("cwltool", "--version", stdout = TRUE)
-            cwlver <- as.numeric(sub("\\.[0-9]*$", "", sub(".* ", "", cwlver)))
-            if(cwlver < 3.1){
-                py_install(gsub("==", ">=", env_Rcwl@packages), pip=TRUE)
-            }
         }
     }
 
