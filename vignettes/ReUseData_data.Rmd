@@ -193,14 +193,17 @@ the following section for details.
 # Cloud data resources 
 
 With the prebuilt data recipes for curation (e.g., downloading,
-unzipping, indexing) of commonly used public data resources (recipes
-can be retrieved using `recipeSearch` and `recipeLoad`, see the other
-vignette for [data recipe](ReUseData_recipe.html)), we have pregenerated
-some data sets and put them on the cloud space for direct use.
+unzipping, indexing) of commonly used public data resources we have
+pregenerated some data sets and put them on the cloud space for direct
+use. 
 
 Before searching, one need to use `dataUpdate(cloud=TRUE)` to sync the
 existing data sets on cloud, then `dataSearch()` can be used to search
 any available data set either in local cache and on the cloud. 
+
+Note that the prebuilt recipes can be retrieved using `recipeSearch`
+and `recipeLoad`, see the other vignette for [data recipes](ReUseData_recipe.html).
+
 
 ```{r}
 gcpdir <- file.path(tempdir(), "gcpData")
