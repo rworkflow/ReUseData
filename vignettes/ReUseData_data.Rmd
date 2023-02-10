@@ -201,10 +201,6 @@ Before searching, one need to use `dataUpdate(cloud=TRUE)` to sync the
 existing data sets on cloud, then `dataSearch()` can be used to search
 any available data set either in local cache and on the cloud. 
 
-Note that the prebuilt recipes can be retrieved using `recipeSearch`
-and `recipeLoad`, see the other vignette for [data recipes](ReUseData_recipe.html).
-
-
 ```{r}
 gcpdir <- file.path(tempdir(), "gcpData")
 dataUpdate(gcpdir, cloud=TRUE)
