@@ -44,10 +44,13 @@ categories for managing:
 Details for each section can be found in the companion vignettes for
 [data recipes](ReUseData_recipe.html) and [reusable data](ReUseData_data.html).
 
-# Package installation
+# Package installation and loading
 
 ```{r, eval=FALSE}
 BiocManager::install(c("ReUseData", "Rcwl"))
+```
+
+```{r}
 library(ReUseData)
 ```
 

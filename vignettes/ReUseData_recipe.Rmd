@@ -165,7 +165,7 @@ older versions are available) in the computer system.
 ```{r} 
 rcp$input <- "Hello World!"
 rcp$outfile <- "outfile"
-outdir <- file.path(tempdir(), "SharedData")
+outdir <- normalizePath(file.path(tempdir(), "SharedData"))
 res <- getData(rcp,
                outdir = outdir,
                notes = c("echo", "hello", "world", "txt"))
