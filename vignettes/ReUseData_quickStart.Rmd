@@ -66,7 +66,7 @@ vignette `ReUseData_recipe.html`.
 ```{r}
 recipeUpdate(cachePath = "ReUseDataRecipe", force = TRUE)
 recipeSearch("echo")
-recipeLoad("echo_out", return = TRUE)
+echo_out <- recipeLoad("echo_out")
 ```
 
 ## Evaluate a data recipe
