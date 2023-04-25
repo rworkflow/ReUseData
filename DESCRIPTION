@@ -1,6 +1,6 @@
 Package: ReUseData
 Title: Reusable and reproducible Data Management
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: 
     person(given = "Qian",
            family = "Liu",
