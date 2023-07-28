@@ -27,9 +27,14 @@ gcp_gatk_mutect2_b37 <- addMeta(
         date = Sys.Date(),
         url = "https://console.cloud.google.com/storage/browser/gatk-best-practices/somatic-b37",
         example = paste(
-            "recipeLoad('gcp_gatk_mutect2_b37', return = TRUE)",
+            "gcp_gatk_mutect2_b37 <- recipeLoad('gcp_gatk_mutect2_b37')",
             "gcp_gatk_mutect2_b37$filename <- 'small_exac_common_3.vcf'",
             "gcp_gatk_mutect2_b37$idx <- 'idx'",
-            "getData(gcp_gatk_mutect2_b37, outdir = 'data/folder', notes = c('gcp', 'broad', 'mutect2', 'small_exac_common'))",
+            "getData(gcp_gatk_mutect2_b37, outdir = 'data/folder', notes = c('gcp', 'gatk', 'mutect2', 'b37', 'small_exac_common'))",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('gcp', 'gatk', 'b37'))",
+            "", 
             sep="\n"))
 )

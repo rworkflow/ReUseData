@@ -25,11 +25,15 @@ echo_out <- addMeta(
         date = Sys.Date(),
         example = paste(
             "## Get data from evaluting recipe",
-            "recipeLoad('echo_out', return = TRUE)",
+            "echo_out <- recipeLoad('echo_out')",
             "echo_out$input <- 'Hello World'",
             "echo_out$outfile <- 'echoHelloWorld'",
             "getData(echo_out, outdir = 'data/folder', notes = c('echo', 'hello', 'world'))",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('echo', 'hello'))",
+            "", 
             sep="\n"))
-
 )
 

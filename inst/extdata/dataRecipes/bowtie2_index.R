@@ -25,8 +25,13 @@ bowtie2_index <- addMeta(
         date = Sys.Date(),
         url = "https://bowtie-bio.sourceforge.net/bowtie2/index.shtml",
         example = paste(
-            "recipeLoad('bowtie2_index.R', return = TRUE)",
-            "bowtie2_index$genome <- 'GRCh38.primary_assembly.genome.fa'",
+            "bowtie2_index <- recipeLoad('bowtie2_index')",
+            "bowtie2_index$genome <- 'GRCh38.primary_assembly.genome.fa' ## need to be a valid file path", 
             "getData(bowtie2_index, outdir = 'data/folder', notes = c('bowtie2_index', 'GRCh38.primary_assembly'))",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('bowtie2_index', 'GRCh38'))",
+            "", 
             sep="\n"))
 )

@@ -48,12 +48,17 @@ STAR_index <- addMeta(
         date = Sys.Date(),
         url = "https://github.com/alexdobin/STAR",
         example = paste(
-            "recipeLoad('STAR_index.R', return = TRUE)",
+            "STAR_index <- recipeLoad('STAR_index.R')",
             "STAR_index$ref <- 'gcpData/reference_genome/GRCh38.primary_assembly.genome.fa'",
             "STAR_index$gtf <- 'gcpData/gencode_annotation/gencode.v42.annotation.gtf'",
             "STAR_index$sjdb <- 100",
             "STAR_index$genomeDir <- 'GRCh38.GENCODE.v42_100'",
             "STAR_index$threads <- 16",
             "getData(STAR_index, outdir = 'gcpData', notes =c('STAR_index', 'GRCh38.primary_assembly', 'gencode.v42', 'star_2.7.9a'))",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('STAR_index', 'GRCh38.primary_assembly', 'gencode.v42', 'star_2.7.9a'))",
+            "", 
             sep="\n"))
 )
