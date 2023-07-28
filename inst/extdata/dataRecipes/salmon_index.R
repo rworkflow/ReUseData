@@ -31,9 +31,14 @@ salmon_index <- addMeta(
         date = Sys.Date(),
         url = "https://salmon.readthedocs.io/en/latest/salmon.html",
         example = paste(
-            "recipeLoad('salmon_index.R', return = TRUE)",
+            "salmon_index <- recipeLoad('salmon_index.R')",
             "salmon_index$genome <- 'GRCh38.primary_assembly.genome.fa'",
             "salmon_index$transcript <- 'gencode.v42.transcripts.fa'",
             "getData(salmon_index, outdir = 'data/folder', notes = c('salmon_index', 'GRCh38.primary_assembly', 'gencode.v42'))",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('salmon_index', 'GRCh38.primary_assembly', 'gencode.v42'))",
+            "", 
             sep="\n"))
 )

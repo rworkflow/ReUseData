@@ -28,9 +28,14 @@ ucsc_database <- addMeta(
         date = Sys.Date(),
         example = paste(
             "## Get data from evaluting recipe",
-            "recipeLoad('ucsc_database', return = TRUE)",
+            "ucsc_database <- recipeLoad('ucsc_database')",
             "ucsc_database$build <- 'hg38'",
             "ucsc_database$dbname <- 'refGene'",
             "getData(ucsc_database, outdir = 'data/folder', notes = c('ucsc', 'annotation', 'database', 'hg38', 'refGene'))",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('ucsc', 'annotation', 'database', 'hg38', 'refGene'))",
+            "", 
             sep="\n"))
 )

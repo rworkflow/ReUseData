@@ -26,9 +26,14 @@ gcp_gatk_mutect2_hg38 <- addMeta(
         date = Sys.Date(),
         url = "https://console.cloud.google.com/storage/browser/gatk-best-practices/somatic-hg38",
         example = paste(
-            "recipeLoad('gcp_gatk_mutect2_hg38', return = TRUE)",
+            "gcp_gatk_mutect2_hg38 <- recipeLoad('gcp_gatk_mutect2_hg38')",
             "gcp_gatk_mutect2_hg38$filename <- 'small_exac_common_3.hg38.vcf.gz'",
             "gcp_gatk_mutect2_hg38$idx <- 'tbi'",
-            "getData(gcp_gatk_mutect2_hg38, outdir = 'data/folder', notes = c('gcp', 'broad', 'mutect2', 'small_exac_common'))",
+            "getData(gcp_gatk_mutect2_hg38, outdir = 'data/folder', notes = c('gcp', 'gatk', 'mutect2', 'hg38', 'small_exac_common'))",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('gcp', 'gatk', 'hg38'))",
+            "", 
             sep="\n"))
 )

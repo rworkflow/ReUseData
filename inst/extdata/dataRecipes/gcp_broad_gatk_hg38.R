@@ -26,8 +26,14 @@ gcp_broad_gatk_hg38 <- addMeta(
         date = Sys.Date(),
         url = "https://console.cloud.google.com/storage/browser/gcp-public-data--broad-references/hg38/v0",
         example = paste(
-            "recipeLoad('gcp_broad_gatk_hg38', return = TRUE)",
+            "gcp_broad_gatk_hg38 <- recipeLoad('gcp_broad_gatk_hg38')",
             "gcp_broad_gatk_hg38$filename <- '1000G_omni2.5.hg38.vcf.gz'",
             "getData(gcp_broad_gatk_hg38, outdir = 'data/folder', notes = c('gcp', 'broad', 'reference', 'hg38', 'v0', '1000G', 'omni2.5')",
+            "",
+            "## Get data from local catch",
+            "dataUpdate('data/folder')", 
+            "dataSearch(c('gcp', 'broad', 'hg38'))",
+            "", 
+
             sep="\n"))
 )
