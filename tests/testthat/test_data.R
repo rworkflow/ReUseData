@@ -31,7 +31,8 @@ test_that("data updating and getter function works", {
 ds <- dataSearch(cachePath = "ReUseData")
 test_that("data searching works", {
     expect_s4_class(ds, "dataHub")
-    expect_equal(dataNames(ds), "outfile.txt")
+    ## expect_equal(dataNames(ds), "outfile.txt")
+    expect_true("outfile.txt" %in% dataNames(ds))
 })
 
 test_that("data reuse function works", {

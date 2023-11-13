@@ -75,6 +75,9 @@ to the input parameters and evaluate the recipe to generate data of
 interest.
 
 ```{r}
+## set cache in tempdir for test
+Sys.setenv(cachePath = file.path(tempdir(), "cache"))
+
 recipeUpdate()
 recipeSearch("echo")
 echo_out <- recipeLoad("echo_out")

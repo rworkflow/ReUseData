@@ -12,7 +12,8 @@ dataUpdate(
   cleanup = FALSE,
   cloud = FALSE,
   remote = FALSE,
-  checkData = TRUE
+  checkData = TRUE,
+  duplicate = FALSE
 )
 }
 \arguments{
@@ -55,6 +56,9 @@ FALSE.}
 \item{checkData}{check if the data (listed as "# output: " in the
 yml file) exists. If not, do not include in the output csv
 file. This argument is added for internal testing purpose.}
+
+\item{duplicate}{Whether to remove duplicates. If TRUE, older
+version of duplicates will be removed.}
 }
 \value{
 a \code{dataHub} object containing the information about local

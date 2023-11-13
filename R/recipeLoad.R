@@ -79,7 +79,7 @@ recipeLoad <- function(rcp = c(),
                        return = TRUE) {
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
-        cachePath <- file.path(bfcpath, "ReUseData")
+        cachePath <- file.path(bfcpath, "ReUseDataRecipe")
     } else if(!file.exists(cachePath) & !grepl("^/", cachePath)){
         cachePath <- R_user_dir(cachePath, which="cache")
     }

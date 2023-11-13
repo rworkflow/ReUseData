@@ -155,6 +155,7 @@ setReplaceMethod("dataTags", "dataHub", function(object, append=FALSE, value){
     idx <- match(object@rid, dm$rid)
     dm$tag[idx] <- value
     bfc <- BiocFileCache(object@cache, ask = FALSE)
+    dm <- dm[match(bfcinfo(bfc)$rid, dm$rid),]
     bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- dm
     return(object)
 })

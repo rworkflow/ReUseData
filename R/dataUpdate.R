@@ -35,6 +35,8 @@
 #' @param checkData check if the data (listed as "# output: " in the
 #'     yml file) exists. If not, do not include in the output csv
 #'     file. This argument is added for internal testing purpose.
+#' @param duplicate Whether to remove duplicates. If TRUE, older
+#'     version of duplicates will be removed.
 #' @details Users can directly retrieve information for all available
 #'     datasets by using `meta_data(dir=)`, which generates a data
 #'     frame in R with same information as described above and can be
@@ -79,7 +81,8 @@
 #' dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data! 
 #' 
 dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
-                       keepTags = TRUE, cleanup = FALSE, cloud = FALSE, remote = FALSE, checkData = TRUE) {
+                       keepTags = TRUE, cleanup = FALSE, cloud = FALSE, remote = FALSE,
+                       checkData = TRUE, duplicate = FALSE) {
     ## find/create the cache path, and create a BFC object.
     bfcpath <- Sys.getenv("cachePath")
     if(bfcpath != ""){
@@ -90,17 +93,16 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
         }
     }
     bfc <- BiocFileCache(cachePath, ask = FALSE)
-
-
     if("tag" %in% colnames(mcols(dataHub(bfc)))){
         if(keepTags) {
-            tag_old <- dataTags(dataHub(bfc))
+            tag_old <- data.frame(rid=bfcinfo(bfc)$rid,
+                                  tags=dataTags(dataHub(bfc)))
         }
     }else{
         keepTags <- FALSE
     }
     
-    bfcremove(bfc, bfcinfo(bfc)$rid)
+    ## bfcremove(bfc, bfcinfo(bfc)$rid)
     
     meta <- meta_data(dir = dir, cleanup = cleanup, checkData = checkData)
 
@@ -136,19 +138,39 @@ dataUpdate <- function(dir, cachePath = "ReUseData", outMeta = FALSE,
     ## add any non-cached recipes to local cache
     if(length(fpath) > 0){
         rnames <- basename(fpath)
+        new_rid <- c()
         for(i in seq_along(fpath)){
             add1 <- bfcadd(bfc, rnames[i], fpath = fpath[i],
                            rtype = "auto", action = "asis", download=FALSE)
+            new_rid <- c(new_rid, names(add1))
             message(basename(add1), " added")
         }
-        bm <- data.frame(rid = bfcrid(bfc),
+        bm <- data.frame(rid = new_rid,
                          meta[, c("params", "notes", "date", "yml")], tag = "")
+        if("dataMeta" %in% bfcmetalist(bfc)){
+            bm_o <- bfcmeta(bfc, "dataMeta")
+            bm <- rbind(bm_o, bm)
+        }
+        bm <- bm[match(bfcinfo(bfc)$rid, bm$rid),,drop=FALSE]
         bfcmeta(bfc, "dataMeta", overwrite = TRUE) <- bm
     }
 
+    if(!duplicate){
+        binfo <- bfcinfo(bfc)
+        binfo <- binfo[nrow(binfo):1,] # reverse
+        d_id <- binfo$rid[duplicated(binfo$fpath)]
+        bfc <- bfcremove(bfc, d_id)
+    }
+
     dh <- dataHub(bfc)
-    if(keepTags){
-        dataTags(dh[mcols(dh)$rtype == "local"]) <- tag_old
+    if(keepTags && any(tag_old$tags!="")){
+        idx <- match(tag_old$rid, bfcinfo(bfc)$rid)
+        idx_a <- !is.na(idx)
+        idx <- idx[idx_a]
+        ## dataTags(dh[mcols(dh)$rtype == "local"]) <- tag_old
+        if(length(idx)>0){
+            dataTags(dh[idx]) <- tag_old$tags[idx_a]
+        }
     }
     return(dh)
 }

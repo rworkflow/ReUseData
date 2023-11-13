@@ -21,7 +21,7 @@ Description: ReUseData is an _R/Bioconductor_ software tool to provide
     downloadable through "getCloudData()".
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports:
     Rcwl,
     RcwlPipelines,
