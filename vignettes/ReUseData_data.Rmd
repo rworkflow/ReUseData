@@ -173,8 +173,8 @@ locally or cloud-hosted.
 
 ```{r}
 (dh1 <- dataSearch(c("echo", "hello", "world")))
-toList(dh1)
-toList(dh1, format = "yaml")
+toList(dh1, listNames = c("input_file"))
+toList(dh1, format = "yaml", listNames = c("input_file"))
 toList(dh1, format = "json", file = file.path(tempdir(), "data.json"))
 ```
 
@@ -185,6 +185,32 @@ specific software tools.
 dataSearch()
 dataTags(dh[1]) <- "#gatk"
 dataSearch("#gatk")
+```
+
+## Existing data annotation
+The package can also be used to add annotation and notes to existing
+data resources or experiment data for management. Here we add
+exisiting "exp_data" to local data repository.
+
+```{r}
+exp_data <- file.path(tempdir(), "exp_data")
+dir.create(exp_data)
+```
+
+We first add notes to the data, and then update data repository with
+information from the new dataset.
+
+```{r}
+annData(exp_data, notes = c("experiment data"))
+dataUpdate(exp_data)
+```
+
+Now our data hub cached meta information from two different
+directories, one from data recipe and one from exisiting data. Data
+can be retrieved by keywords.
+
+```{r}
+dataSearch("experiment")
 ```
 
 **NOTE:** if the argument `cloud=TRUE` is enabled, `dataUpdate()` will

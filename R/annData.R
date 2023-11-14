@@ -14,9 +14,13 @@
 annData <- function(path, notes, date=Sys.Date(),
                     recursive=TRUE, md5=FALSE,
                     skip="*.md|meta.yml", force=FALSE, ...){
-    files <- normalizePath(list.files(path, recursive=recursive,
-                                      full.names=TRUE, ...))
+    path <- normalizePath(path)
+    files <- list.files(path, recursive=recursive,
+                        full.names=TRUE, ...)
     files <- files[!grepl(skip, files)]
+    if(length(files) == 0){
+        files <- path
+    }
     pms <- paste("path:", path)
     ots <- paste("# output:", files)
     nts <- paste("# notes:", notes)

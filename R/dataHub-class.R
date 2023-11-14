@@ -196,6 +196,7 @@ setGeneric("c")
 #' dataHub to list
 #' @rdname dataHub-class
 #' @param x A `dataHub` object.
+#' @param listNames A vector of names for the output list.
 #' @param format can be "list", "json" or "yaml". Supports partial
 #'     match. Default is list.
 #' @param type The type of workflow input list, such as cwl.
@@ -207,16 +208,19 @@ setGeneric("c")
 #' @importFrom jsonlite toJSON
 #' @importFrom yaml as.yaml
 #' @export
-#' 
-
-toList <- function(x, format = c("list", "json", "yaml"),
+toList <- function(x, listNames = NULL, format = c("list", "json", "yaml"),
                    type = NULL, file = character())
 {
     format <- match.arg(format)
     pth <- dataPaths(x)
     isgcp <- grepl("https://storage.googleapis.com", pth)
     pth[isgcp] <- gsub("https://storage.googleapis.com/", "gs://",
-                       pth[isgcp])
+                       pth[isgcp])    
+    ## set list names
+    if(is.null(listNames)){
+        listNames <- dataNames(x)
+    }
+    
     if(!is.null(type) && type == "cwl"){
         dtype <- unlist(lapply(pth, function(x)file.info(x)$isdir))
         dtype <- ifelse(dtype, "Directory", "File")
@@ -225,9 +229,10 @@ toList <- function(x, format = c("list", "json", "yaml"),
             dl[[i]] <- list(class = dtype[i],
                             path = pth[i])
         }
+        names(dl) <- listNames
     } else {
         dl <- as.list(pth)
-        names(dl) <- dataNames(x)
+        names(dl) <- listNames
         if (format == "json") {
             dl <- jsonlite::toJSON(dl, pretty = TRUE, auto_unbox = TRUE)
         } else if (format == "yaml") {

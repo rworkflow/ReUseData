@@ -48,7 +48,13 @@ dataTags(object, append = TRUE) <- value
 
 \S4method{c}{dataHub}(x, ...)
 
-toList(x, format = c("list", "json", "yaml"), type = NULL, file = character())
+toList(
+  x,
+  listNames = NULL,
+  format = c("list", "json", "yaml"),
+  type = NULL,
+  file = character()
+)
 }
 \arguments{
 \item{BFC}{A BiocFileCache object created for data and recipes.}
@@ -69,6 +75,8 @@ vector same length as the \code{dataHub} object.}
 \item{drop}{Inherited from \code{[} generic.}
 
 \item{...}{More \code{dataHub} objects to combine.}
+
+\item{listNames}{A vector of names for the output list.}
 
 \item{format}{can be "list", "json" or "yaml". Supports partial
 match. Default is list.}
