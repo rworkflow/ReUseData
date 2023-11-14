@@ -162,6 +162,11 @@ we have used `basilisk` to initiate a conda environment and install
 the `cwltool` in that environment if it is not available (or only
 older versions are available) in the computer system.
 
+We can install cwltool first to make sure a cwl-runner is available.
+```{r}
+invisible(Rcwl::install_cwltool())
+```
+
 ```{r} 
 rcp$input <- "Hello World!"
 rcp$outfile <- "outfile"

@@ -91,6 +91,11 @@ files that are internally generated as workflow scripts or annotation
 files). Detailed notes for the data is encouraged which will be used
 for keywords matching for later data search.
 
+We can install cwltool first to make sure a cwl-runner is available.
+```{r}
+invisible(Rcwl::install_cwltool())
+```
+
 ```{r}
 echo_out$input <- "Hello World!"
 echo_out$outfile <- "outfile"

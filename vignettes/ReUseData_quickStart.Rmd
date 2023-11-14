@@ -70,6 +70,10 @@ echo_out <- recipeLoad("echo_out")
 ```
 
 ## Evaluate a data recipe
+We can install cwltool first to make sure a cwl-runner is available.
+```{r}
+invisible(Rcwl::install_cwltool())
+```
 
 A data recipe can be evaluated by assigning values to the recipe
 parameters. `getData` runs the recipe as a CWL scripts internally, and
