@@ -66,19 +66,17 @@ multiple types, etc. Refer to this recipe as an example:
 https://github.com/rworkflow/ReUseDataRecipe/blob/master/reference_genome.R
 }
 \examples{
-
 \dontrun{
 library(Rcwl)
-
 ##############
 ### example 1
 ##############
 
-script <- '
+script <- "
 input=$1
 outfile=$2
-echo "Print the input: $input" > $outfile.txt
-'
+echo \"Print the input: $input\" > $outfile.txt
+"
 rcp <- recipeMake(shscript = script,
                   paramID = c("input", "outfile"),
                   paramType = c("string", "string"),
@@ -109,7 +107,6 @@ rcp <- recipeMake(shscript = shfile,
 Rcwl::inputs(rcp)
 rcp$species <- "human"
 rcp$version <- "42"
-\dontrun{
 res <- getData(rcp,
         outdir = tempdir(), 
         notes = c("gencode", "transcripts", "human", "42"),
@@ -117,6 +114,4 @@ res <- getData(rcp,
 res$output
 dir(tempdir())
 }
-}
-
 }

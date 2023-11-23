@@ -1,3 +1,5 @@
+[![R-CMD-check](https://github.com/rworkflow/ReUseData/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rworkflow/ReUseData/actions/workflows/R-CMD-check.yaml)
+
 # Introduction
 
 ReUseData is an _R/Bioconductor_ software tool to provide a systematic
