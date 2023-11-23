@@ -1,3 +1,5 @@
+Rcwl::install_cwltool()
+
 script <- '
 input=$1
 outfile=$2

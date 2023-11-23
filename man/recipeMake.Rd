@@ -67,6 +67,7 @@ https://github.com/rworkflow/ReUseDataRecipe/blob/master/reference_genome.R
 }
 \examples{
 
+\dontrun{
 library(Rcwl)
 
 ##############
@@ -115,6 +116,7 @@ res <- getData(rcp,
         showLog = TRUE)
 res$output
 dir(tempdir())
+}
 }
 
 }

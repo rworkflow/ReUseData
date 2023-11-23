@@ -27,8 +27,8 @@ ReUseData cloud bucket
 }
 \examples{
 outdir <- file.path(tempdir(), "gcpData")
-dataUpdate(outdir, cloud=TRUE)
 dh <- dataSearch(c("ensembl", "GRCh38"))
+dh <- dh[grep("http", dataPaths(dh))]
 
 ## download data from google bucket
 getCloudData(dh[1], outdir = outdir)

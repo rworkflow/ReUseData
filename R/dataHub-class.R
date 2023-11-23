@@ -43,9 +43,7 @@ dataHub <- function(BFC){
 #' dataYml(dd)
 #' toList(dd)
 #' toList(dd, format = "yaml")
-#' toList(dd, format = "json", file = "data.json")
-
-
+#' toList(dd, format = "json", file = tempfile())
 
 setMethod("show", "dataHub", function(object){
     rid <- object@rid

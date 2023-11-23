@@ -26,6 +26,7 @@
 #' @importFrom Rcwl env_Rcwl
 #' @export
 #' @examples
+#' \dontrun{
 #' library(Rcwl)
 #' outdir <- file.path(tempdir(), "SharedData")
 #'
@@ -40,7 +41,6 @@
 #'                showLog = TRUE)
 #'
 #' # Example 2
-#' \dontrun{
 #' ensembl_liftover <- recipeLoad("ensembl_liftover")
 #' Rcwl::inputs(ensembl_liftover)
 #' ensembl_liftover$species <- "human"

@@ -78,7 +78,8 @@ e.g., empty or non-existing file path, and create a data cache
 for all valid datasets.
 }
 \examples{
-## Generate data 
+## Generate data
+\dontrun{
 library(Rcwl)
 outdir <- file.path(tempdir(), "SharedData")
 
@@ -91,7 +92,6 @@ res <- getData(echo_out,
                notes = c("echo", "hello", "world", "txt"),
                showLog = TRUE)
 
-\dontrun{
 ensembl_liftover <- recipeLoad("ensembl_liftover")
 Rcwl::inputs(ensembl_liftover)
 ensembl_liftover$species <- "human"
@@ -101,7 +101,7 @@ res <- getData(ensembl_liftover,
         outdir = outdir, 
         notes = c("ensembl", "liftover", "human", "GRCh37", "GRCh38"),
         showLog = TRUE)
-}
+
 ## Update data cache (with or without prebuilt data sets from ReUseData cloud bucket)
 dataUpdate(dir = outdir)
 dataUpdate(dir = outdir, cloud = TRUE)
@@ -109,5 +109,5 @@ dataUpdate(dir = outdir, cloud = TRUE)
 ## newly generated data are now cached and searchable
 dataSearch(c("hello", "world"))
 dataSearch(c("ensembl", "liftover"))  ## both locally generated data and google cloud data! 
-
+}
 }

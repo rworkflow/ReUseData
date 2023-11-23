@@ -42,6 +42,7 @@ To load data recipe(s) into R environment.
 ########################
 
 library(Rcwl)
+recipeUpdate()
 recipeSearch("liftover")
 rcp <- recipeLoad("ensembl_liftover")
 Rcwl::inputs(rcp)

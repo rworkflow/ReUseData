@@ -43,6 +43,7 @@
 #' @export
 #' @examples
 #'
+#' \dontrun{
 #' library(Rcwl)
 #'
 #' ##############
@@ -91,6 +92,7 @@
 #'         showLog = TRUE)
 #' res$output
 #' dir(tempdir())
+#' }
 #' }
 #' 
 recipeMake <- function(shscript = character(),

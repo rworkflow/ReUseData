@@ -38,6 +38,6 @@ recipeNames: the recipe names for the \code{recipeHub} object.
 }
 \examples{
 rcps <- recipeSearch(c("gencode"))
-rcp1 <- rcps[1]
-recipeNames(rcp1)
+## rcp1 <- rcps[1]
+## recipeNames(rcp1)
 }

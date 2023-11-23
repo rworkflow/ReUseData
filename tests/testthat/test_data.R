@@ -1,3 +1,5 @@
+Rcwl::install_cwltool()
+
 rcp <- recipeLoad("echo_out")
 rcp$input <- "Hello World!"
 rcp$outfile <- "outfile"

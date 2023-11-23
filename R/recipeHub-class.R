@@ -32,8 +32,8 @@ recipeHub <- function(BFC){
 #' @exportMethod show
 #' @examples
 #' rcps <- recipeSearch(c("gencode"))
-#' rcp1 <- rcps[1]
-#' recipeNames(rcp1)
+#' ## rcp1 <- rcps[1]
+#' ## recipeNames(rcp1)
 
 setMethod("show", "recipeHub", function(object){
     rid <- object@rid
